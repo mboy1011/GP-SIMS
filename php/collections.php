@@ -1,0 +1,351 @@
+<?php
+include 'session.php';
+include 'crud.php';
+$oop = new CRUD();
+?>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Golden Pharmaceutical</title>
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="../css/style.css">
+    <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
+    <!-- DataTables Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="../css/dataTables.bootstrap.min.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<style type="text/css" media="screen">
+.modal-header{
+  background-color: #4dffb8;
+  color: #fff;
+}
+.modal-footer{
+    background-color: #333333;
+} 
+/*Full View for Modals*/
+/*.modal-dialog {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin:0;
+}
+.modal-content {    
+      height: 100%;
+      border-radius: 0;
+      color:white;
+      overflow:auto;
+}*/
+</style>
+ </head>
+<body>
+<div id="wrapper">
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-brand">
+            <b style="background-color: transparent;font-family: 'Impact', Georgia, sans-serif;"><b class="fa fa-address-book-o fa-bg" style="font-size: 50px;"></b>|<i>SIMS</i></b>
+        </div>
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <!-- Top Menu Items -->
+        <ul class="nav navbar-right top-nav">            
+            <li>
+                    <a href="index.php"><i class="fa fa-fw fa-tachometer">&nbsp;</i>Dashboard</a>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fa fa-fw fa-user-md"></b><?php echo $name;?><b class="fa fa-angle-down"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="#"><i class="fa fa-fw fa-user"></i> Edit Profile</a></li>
+                    <li class="divider"></li>
+                    <li><a href="logout.php"><i class="fa fa-fw fa-power-off"></i> Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav side-nav">
+                <li>
+                    <a href="collections.php"><i class="fa fa-fw fa-inbox">&nbsp;</i> Collections</a>
+                </li>
+                <li>
+                    <a href="viewPayments.php"><i class="fa fa-fw fa-credit-card fa-bg">&nbsp;</i>Payment Reports</a>
+                </li>
+                <li>
+                    <a href="#" data-toggle="collapse" data-target="#submenu-1"><i class="fa fa-fw fa-tags"></i> Sales <i class="fa fa-fw fa-angle-down pull-right"></i></a>
+                    <ul id="submenu-1" class="collapse">
+                        <li><a href="addInvoice.php"><i class="fa fa-plus">&nbsp;</i>Add Invoice</a></li>
+                        <li><a href="viewInvoice.php"><i class="fa fa-list">&nbsp;</i>Sales Report</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" data-toggle="collapse" data-target="#submenu-2"><i class="fa fa-fw fa-archive">&nbsp;</i>Inventory<i class="fa fa-fw fa-angle-down pull-right"></i></a>
+                    <ul id="submenu-2" class="collapse">
+                        <li><a href="addProduct.php"><i class="fa fa-plus">&nbsp;</i>Add Products</a></li>
+                        <li><a href="viewProduct.php"><i class="fa fa-list">&nbsp;</i>List Products</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" data-toggle="collapse" data-target="#submenu-3"><i class="fa fa-fw fa-user-o"></i> Customers <i class="fa fa-fw fa-angle-down pull-right"></i></a>
+                    <ul id="submenu-3" class="collapse">
+                        <li><a href="addCustomer.php"><i class="fa fa-user-plus">&nbsp;</i>Add Customer</a></li>
+                        <li><a href="viewCustomers.php"><i class="fa fa-users">&nbsp;</i>View Customers</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" data-toggle="collapse" data-target="#submenu-4"><i class="fa fa-fw fa-id-card"></i> Employee <i class="fa fa-fw fa-angle-down pull-right"></i></a>
+                    <ul id="submenu-4" class="collapse">
+                        <li><a href="addEmployee.php"><i class="fa fa-user-plus">&nbsp;</i>Add Employees</a></li>
+                        <li><a href="viewEmployee.php"><i class="fa fa-users">&nbsp;</i>View Employees</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" data-toggle="collapse" data-target="#submenu-5"><i class="fa fa-fw fa-user"></i> Users <i class="fa fa-fw fa-angle-down pull-right"></i></a>
+                    <ul id="submenu-5" class="collapse">
+                        <li><a href="addUser.php"><i class="fa fa-user-plus">&nbsp;</i>Add Users</a></li>
+                        <li><a href="viewUser.php"><i class="fa fa-users">&nbsp;</i>View Users</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="settings.php"><i class="fa fa-fw fa-cogs">&nbsp;</i> Settings</a>
+                </li>
+                <li>
+                    <hr>
+                    <center>
+                        <div class="container-fluid" style="color: #fff;">
+                            <p><b style="font-size:16px;">Golden Pharmaceutical</b><br>
+                            <i style="font-size: 10px;">Bolonsiri Road, Camaman-an,</i><br><i style="font-size: 9px"> Cagayan De Oro City</i><br><i style="font-size: 8px;">Telefax (088) 857-3088</i></p> 
+                             <p>All Rights Reserved 2017.</p>   
+                        </div>
+                    </center>                    
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+          <div class="col-sm-12">
+            <ol class="breadcrumb">
+            <li><a href="index.php">Dashboard</a></li>
+            <li class="active">View Sales Report</li>
+            </ol>
+            <hr>
+          </div>  
+        </div>
+        <div class="row">
+<?php
+            if (isset($_POST['addpay'])) {
+                $cusid = mysqli_real_escape_string($db,$_POST['customerid']);
+                $sino = mysqli_real_escape_string($db,$_POST['sales']);
+                $ptype = mysqli_real_escape_string($db,$_POST['paytype']);
+                $am = mysqli_real_escape_string($db,$_POST['amount']);
+                $ta = mysqli_real_escape_string($db,$_POST['total']);
+                $sql = mysqli_query($db,"SELECT * FROM tbl_payments WHERE sales_no=$sino AND cus_id=$cusid");
+                $row = mysqli_fetch_assoc($sql);
+                $paymentid = $row['pay_id'];
+                $bal = $row['balance'];
+                if ($row>0) {
+                  $total = $bal - $am;
+                  $insert1 = mysqli_query($db,"UPDATE tbl_payments SET sales_no='$sino',cus_id='$cusid',amount='$am',balance='$total' WHERE sales_no='$sino' AND cus_id='$cusid'");                  
+                  if (!$insert1) {
+                     ?>
+                      <div class="alert alert-warning alert-dismissable">
+                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Add Payments to Customer!</strong> Try Again.
+                      </div>
+                    <?php
+                  }else{
+                      $insert2 = mysqli_query($db,"INSERT INTO tbl_paymentsdetails(pay_id,pay_type,amount) VALUES('".$paymentid."','".$ptype."','".$am."')");
+                      if (!$insert2) {
+                        ?>
+                          <div class="alert alert-warning alert-dismissable">
+                              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Add Payments to Customer!</strong> Try Again.
+                          </div>
+                        <?php
+                      }else{
+                        $oop->upStat($total,$sino);
+                         ?>
+                            <div class="alert alert-success alert-dismissable">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                              <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Added!</strong>
+                            </div>
+                          <?php
+                      }
+                  }
+                }else{
+                  $total = $ta - $am;
+                  $insert1a = mysqli_query($db,"INSERT INTO tbl_payments(sales_no,cus_id,pay_type,amount,balance) VALUES ('".$sino."','".$cusid."','".$ptype."','".$am."','".$total."')");
+                  if (!$insert1a) {
+                    ?>
+                      <div class="alert alert-warning alert-dismissable">
+                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Add Payments to Customer!</strong> Try Again.
+                      </div>
+                    <?php
+                  }else{
+                      $select1 = mysqli_query($db,"SELECT pay_id FROM tbl_payments WHERE sales_no='$sino' AND cus_id='$cusid'");
+                      $rows = mysqli_fetch_assoc($select1);
+                      $payid = $rows['pay_id'];
+                      $sqli = mysqli_query($db,"INSERT INTO tbl_paymentsdetails(pay_id,pay_type,amount) VALUES('".$payid."','".$ptype."','".$am."')");
+                      if ($sqli) {
+                        $oop->upStat($total,$sino);
+                         ?>
+                            <div class="alert alert-success alert-dismissable">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                              <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Added!</strong>
+                            </div>
+                          <?php
+                      }
+                  }
+                }
+            }
+        ?>        
+          <div class="col-sm-12">
+            <div class="table-responsive">
+                <table class="table table-hover" id="datatables">
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th>ID</th>
+                            <th>Sales No.</th>
+                            <th>Customer Name</th>
+                            <th>Total Amount Due</th>
+                            <th>Amount Paid</th>
+                            <th>Balance</th>
+                            <th>Status</th>
+                            <th>Actions</th> 
+                        </tr>
+                    </thead>
+                    <?php
+                    $i=1;
+                     $result = mysqli_query($db,"SELECT tbl_customers.full_name,tbl_payments.amount,tbl_sales.sales_no,tbl_payments.balance,tbl_sales.total_amount,tbl_sales.status,tbl_customers.cus_id FROM tbl_customers INNER JOIN tbl_sales ON tbl_sales.cus_id=tbl_customers.cus_id AND tbl_sales.status!='PAID' LEFT JOIN tbl_payments ON tbl_sales.sales_no=tbl_payments.sales_no AND tbl_sales.cus_id=tbl_payments.cus_id AND tbl_payments.balance!=0") or die(mysqli_error());
+                      // $result = mysqli_query($db, "SELECT * FROM tbl_sales") or die(mysql_error());
+
+                    ?>
+                    <tbody>
+                      <?php while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){?>
+                          <tr>
+                            <td><?php echo $i++; ?></td>
+                            <td><?php echo $row['sales_no']; ?></td>
+                            <td><?php echo $row['full_name']; ?></td>            
+                            <td>₱<?php echo number_format($row['total_amount'],2); ?></td> 
+                            <td>₱<?php echo number_format($row['amount'],2); ?></td> 
+                            <td>₱<?php echo number_format($row['balance'],2); ?></td> 
+                            <td>
+                            <?php
+                              if ($row['status']=='UNPAID') {
+                                ?>
+                                <span class="label label-warning"><?php echo $row['status'];?></span>
+                                <?php
+                              }else if ($row['status']=='PARTIALLY PAID') {
+                                ?>
+                                <span class="label label-info"><?php echo $row['status'];?></span>
+                                <?php
+                              }else if($row['status']=='PAID'){
+                                ?>
+                                <span class="label label-success"><?php echo $row['status'];?></span>
+                                <?php
+                              }else{
+                                ?>
+                                <span class="label label-danger"><?php echo $row['status'];?></span>
+                                <?php
+                              }
+                             ?>
+                             </td>  
+                             <td>
+                             <button type="button" data-toggle="modal" data-target="#addpay" data-toggle="tooltip" data-cus="<?php echo $row['cus_id'];?>" data-total="<?php echo $row['total_amount'];?>" data-sino="<?php echo $row['sales_no'];?>" data-fn="<?php echo $row['full_name'];?>" title="Add Payment" class="bt-pay btn btn-primary btn-sm"><b class="fa fa-money fa-bg"></b></button>
+                               <button type="button" data-toggle="tooltip" title="Print" class="btn btn-info btn-sm"><b class="fa fa-print fa-bg"></b></button>
+                             </td>
+                          </tr>
+                      <?php } ?>
+                    </tbody>
+                </table>            
+                </div>
+          </div>
+<!-- Modal -->
+<div id="addpay" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Add Payment</h4>
+      </div>
+      <!-- Form -->
+      <form method="POST" action="">
+      <div class="modal-body">
+          <div class="input-group">
+              <span class="input-group-addon">Sales No</span>
+              <input type="text" name="sales_no" id="si_no" class="form-control" disabled="">
+              <input type="text" name="sales" id="sino" hidden="">
+              <input type="text" name="customerid" id="cust" hidden="">
+              <input type="text" name="total" id="total" hidden="">
+          </div>   
+          <div class="input-group">
+              <span class="input-group-addon">Customer Name</span>
+              <input type="text" name="" id="payname" class="form-control" disabled="">
+          </div>   
+          <div class="input-group">
+              <span class="input-group-addon">Payment Type</span>
+              <select name="paytype" class="form-control">
+                <option value="Cash">Cash</option>
+                <option value="Check">Check</option>
+              </select>
+          </div>   
+          <div class="input-group">
+              <span class="input-group-addon">Amount: <b>₱</b></span>
+              <input type="number" step="any" name="amount" class="form-control" >
+          </div>   
+      </div>
+      <div class="modal-footer">
+      <button type="submit" name="addpay" class="btn btn-success">Submit</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+      <!-- End Form -->
+      </form>
+    </div>
+
+  </div>
+</div>          
+        </div>
+            <!-- /.row -->
+        <!-- /.container-fluid -->
+     </div>
+    <!-- /#page-wrapper -->
+</div><!-- /#wrapper -->
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+<script type="text/javascript" src="../js/script.js"></script>
+<script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="../js/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#datatables').dataTable({
+        "pageLength": -1,
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+    });
+    $(".bt-pay").click(function(event) {
+        var si_no = $(this).data("sino");
+        var fn = $(this).data("fn");
+        var cus = $(this).data("cus");
+        var total = $(this).data("total");
+        $("#si_no").val(si_no);
+        $("#sino").val(si_no);
+        $("#payname").val(fn);
+        $("#cust").val(cus);
+        $("#total").val(total);
+    });
+});
+</script>
+</body>
+</html>
+<?php
+// "SELECT (SELECT SUM(amount) FROM tbl_payments WHERE tbl_payments.sales_no=tbl_sales.sales_no AND tbl_customers.cus_id=tbl_payments.cus_id) Amount,tbl_customers.full_name,tbl_sales.sales_no,tbl_payments.balance,tbl_sales.total_amount,tbl_sales.status FROM tbl_customers INNER JOIN tbl_sales ON tbl_sales.cus_id=tbl_customers.cus_id AND tbl_sales.status!='PAID' LEFT JOIN tbl_payments ON tbl_sales.sales_no=tbl_payments.sales_no AND tbl_sales.cus_id=tbl_payments.cus_id AND tbl_payments.balance!=0"
+?>
