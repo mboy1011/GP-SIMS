@@ -27,7 +27,7 @@ tbl_salesdetails.prod_id=tbl_products.prod_id AND tbl_salesdetails.sales_no='$si
 		<td>₱&nbsp;<?php echo number_format($row['amount'],2);?></td>
 		<td>
 		<input type="number" id="totalamounts" value="<?php echo $tad;?>" hidden>
-		<button class="btn btn btn-danger btn-xs" id="btn-delete" name="btn-delete" data-dids=<?php echo $row['id'];?>><b class="fa fa-times">&nbsp;</b></button></b>   
+		<button class="btn btn btn-danger btn-xs" id="btn-delete" name="btn-delete" data-dids=<?php echo $row['id'];?> data-qty=<?php echo $row['quantity'];?>><b class="fa fa-times">&nbsp;</b></button></b>   
 		</td>
 	</tr>
 <?php

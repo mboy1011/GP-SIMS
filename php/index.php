@@ -120,11 +120,11 @@ include 'session.php';
                         echo $result1['total'];
                     ?>
                 </b>
-                    <input type="hidden" name="" id="si" value="<?php echo $result1['total'];?>">
                     <div class="caption" style="color: #fff;">
                         SALES INVOICES
                     </div>
                 </div>
+                <input type="hidden" name="" id="si" value="<?php echo $result1['total'];?>">
             </div>
             <div class="col-sm-4 col-md-2">
                 <div class="thumbnail" style="background-color: #00e673;color: #fff; text-align: center;">
@@ -135,11 +135,11 @@ include 'session.php';
                         echo $result2['total'];
                     ?>
                     </b>
-                    <input type="hidden" name="" id="pd" value="<?php echo $result2['total'];?>">
                     <div class="caption" style="color:#fff;">
                         PAID
                     </div>
                 </div>
+                <input type="hidden" name="" id="pd" value="<?php echo $result2['total'];?>">
             </div>
             <div class="col-sm-4 col-md-2">
                 <div class="thumbnail" style="background-color: #ff8000;color: #fff; text-align: center;">
@@ -150,11 +150,11 @@ include 'session.php';
                         echo $result3['total'];
                     ?>
                     </b>
-                    <input type="hidden" name="" id="up" value="<?php echo $result3['total'];?>">
                     <div class="caption" style="color:#fff;">
                         UNPAID
                     </div>
                 </div>
+                <input type="hidden" name="" id="up" value="<?php echo $result3['total'];?>">
             </div>
             <div class="col-sm-4 col-md-2">
                 <div class="thumbnail" style="background-color: #0000ff;color: #fff; text-align: center;">
@@ -165,11 +165,11 @@ include 'session.php';
                         echo $result4['total'];
                     ?>
                     </b>
-                    <input type="hidden" name="" id="pp" value="<?php echo $result4['total'];?>">
                     <div class="caption" style="color:#fff;">
                         PARTIALLY PAID
                     </div>
                 </div>
+                <input type="hidden" name="" id="pp" value="<?php echo $result4['total'];?>">
             </div>
             <div class="col-sm-4 col-md-2">
                 <div class="thumbnail" style="background-color: #4d1919;color: #fff; text-align: center;">
@@ -180,11 +180,11 @@ include 'session.php';
                         echo $result6['total'];
                     ?>
                     </b>
-                    <input type="hidden" name="" id="cn" value="<?php echo $result6['total'];?>">
                     <div class="caption" style="color:#fff;">
                         CANCELLED
                     </div>
                 </div>
+                <input type="hidden" name="" id="cn" value="<?php echo $result6['total'];?>">
             </div>
             <div class="col-sm-4 col-md-2">
                 <div class="thumbnail" style="background-color: #ff0000;color: #fff; text-align: center;">
@@ -196,17 +196,20 @@ include 'session.php';
                         echo $result5['total'];
                     ?>
                     </b>
-                    <input type="hidden" name="" id="od" value="<?php echo $result5['total'];?>">
                     <div class="caption" style="color:#fff;">
                         OVERDUE
                     </div>
                 </div>
+                <input type="hidden" name="" id="od" value="<?php echo $result5['total'];?>">
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-8">
                 <!-- ChartJS -->
-                <canvas id="myChart" width="100" height="100"></canvas>            
+                <canvas id="myChart"></canvas>            
+            </div>
+            <div class="col-sm-4">
+                
             </div>
         </div>
         <!-- /.row -->
@@ -235,20 +238,20 @@ var myChart = new Chart(ctx, {
             label: 'Chart',
             data: [a, b, c, d, e, f],
             backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
+                'rgba(51, 51, 51, 0.2)',
+                'rgba(0, 230, 115, 0.2)',
+                'rgba(255, 128, 0, 0.2)',
+                'rgba(0, 0, 255, 0.2)',
+                'rgba(77, 25, 25, 0.2)',
+                'rgba(255, 0, 0, 0.2)'
             ],
             borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
+                'rgba(51, 51, 51, 1)',
+                'rgba(0, 230, 115, 1)',
+                'rgba(255, 128, 0, 1)',
+                'rgba(0, 0, 255, 1)',
+                'rgba(77, 25, 25, 1)',
+                'rgb(255, 0, 0, 1)'
             ],
             borderWidth: 1
         }]

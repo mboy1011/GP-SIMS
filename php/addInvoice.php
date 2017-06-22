@@ -389,7 +389,8 @@ $(document).ready(function() {
     });
     $(document).on('click', '#btn-delete', function(event) {
         var deleted = $(this).data('dids');
-        $.post('deljax.php', {deleted: deleted}, function(data, textStatus, xhr) {
+        var qty = $(this).data('qty');
+        $.post('deljax.php', {deleted: deleted, qty: qty}, function(data, textStatus, xhr) {
             viewData();
         });
     });
