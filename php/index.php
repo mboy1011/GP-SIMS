@@ -198,8 +198,17 @@ include 'session.php';
             </div>
         </div>
         <div class="row">
-        <!-- ChartJS -->
-            <canvas id="myChart" width="400" height="400"></canvas>
+            <div class="col-sm-4">
+                    
+            </div>
+            <div class="col-sm-4">
+                <!-- ChartJS -->
+                <canvas id="myChart" width="100" height="100"></canvas>            
+            </div>
+            <div class="col-sm-4">
+                    
+            </div>
+        
         </div>
         <!-- /.row -->
         <!-- /.container-fluid -->
@@ -209,9 +218,10 @@ include 'session.php';
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script type="text/javascript" src="../js/script.js"></script>
 <script type="text/javascript" src="../js/bootstrap.min.js"></script>
-<script type="text/javascript" src="../js/Chart.js">
+<script type="text/javascript" src="../js/Chart.js"></script>
+<script type="text/javascript">
 $(function() {
-var ctx = $("#myChart").getContext('2d');
+var ctx = $("#myChart");
 var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -249,6 +259,7 @@ var myChart = new Chart(ctx, {
     }
 });
 });
+
 </script>
 </body>
 </html>

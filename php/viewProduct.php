@@ -10,8 +10,19 @@ include 'session.php';
     <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
     <!-- DataTables Bootstrap -->
     <link rel="stylesheet" type="text/css" href="../css/dataTables.bootstrap.min.css">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
- </head>
+    <!-- DatePicker -->
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-datepicker3.min.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<style type="text/css" media="screen">
+.modal-header{
+  background-color: #4dffb8;
+  color: #fff;
+}
+.modal-footer{
+    background-color: #333333;
+}        
+</style>
+</head>
 <body>
 <div id="wrapper">
     <!-- Navigation -->
@@ -142,13 +153,13 @@ include 'session.php';
                             <td><?php echo $row['name']; ?></td>
                             <td><?php echo $row['description']; ?></td>            
                             <td><?php echo $row['lot_no']; ?></td>  
-                            <td>₱&nbsp;<?php echo $row['price']; ?></td>    
+                            <td>₱&nbsp;<?php echo number_format($row['price'],2); ?></td>    
                             <td><?php echo $row['expiry_date']; ?></td>    
                             <td><?php echo $row['packing']; ?></td>    
                             <td><?php echo $row['quantity']; ?></td>
                             <td><?php echo $row['timestamp']; ?></td>    
                             <td>
-                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
+                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs" data-id="<?php echo $row['prod_id'];?>" data-name="<?php echo $row['name'];?>" data-desc="<?php echo $row['description'];?>" data-lot="<?php echo $row['lot_no'];?>" data-price="<?php echo $row['price'];?>" data-expd="<?php echo $row['expiry_date'];?>" data-pack="<?php echo $row['packing'];?>" data-qty="<?php echo $row['quantity'];?>" data-title="Edit"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
                             </td>      
                             <td>
                                 <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['prod_id']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
@@ -160,6 +171,62 @@ include 'session.php';
                 </div>
           </div>
         </div>
+<!-- Update -->
+<div id="edit" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Edit Product Details</h4>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="">
+                <input type="hidden" name="id" id="prodid">
+                <input type="text" id="pname" name="proname" placeholder="Product Name" class="form-control" required="">
+                <input type="text" id="pdesc" name="desc" placeholder="Description" class="form-control">
+                <input type="text" id="plot" name="lot" placeholder="Lot No." class="form-control">
+                <input type="number" step="any" id="pprice" name="price" placeholder="Price" class="form-control">
+                <div class="input-group date form_date">
+                    <span class="input-group-addon">Expiration Date:</span>
+                    <input name="exp" id="pexpd" class="form-control" size="16" type="text" placeholder="">
+                </div>
+                <input type="text" id="ppack" name="pack" placeholder="Packing" class="form-control">
+                <input type="text" id="pqty" name="pack" placeholder="Quantity" class="form-control">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-warning" type="submit" name="update"><b class="fa fa-pencil-square-o fa-bg">&nbsp;</b>Update</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>  
+<!-- Delete -->
+<div id="delete" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Delete Product</h4>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="">
+                <input type="hidden" name="delid" id="pdel">
+                <b><strong>Are you sure do you want to delete this product?</strong></b>
+      </div>
+      <div class="modal-footer">
+            <button class="btn btn-danger" type="submit" name="delete"><b class="fa fa-trash fa-bg">&nbsp;</b>Delete</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
             <!-- /.row -->
         <!-- /.container-fluid -->
      </div>
@@ -171,9 +238,43 @@ include 'session.php';
 <!-- DataTables -->
 <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="../js/dataTables.bootstrap.min.js"></script>
+<!-- DatePicker -->
+<script type="text/javascript" src="../js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="../js/bootstrap-datepicker.en-AU.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
     $('#datatables').dataTable();
+      var date = new Date();
+      var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      $('.form_date').datepicker({
+        format: "yyyy/mm/dd",
+        language: 'en-AU',
+        todayHighlight: true,
+        setDate: today,
+        autoclose: true
+      });
+    $('.btn-edits').click(function(event) {
+        var prodid = $(this).data("id");
+        var name = $(this).data("name");
+        var desc = $(this).data("desc");
+        var lot = $(this).data("lot");
+        var expd = $(this).data("expd");
+        var price = $(this).data("price");
+        var pack = $(this).data("pack");
+        var qty = $(this).data("qty");
+        $("#prodid").val(prodid);
+        $("#pname").val(name);
+        $("#pdesc").val(desc);
+        $("#plot").val(lot);
+        $("#pexpd").val(expd);
+        $("#pprice").val(price);
+        $("#ppack").val(pack);
+        $("#pqty").val(qty);
+    });
+    $('.btn-deletes').click(function(event) {
+       var did = $(this).data("did");
+       $("#pdel").val(did);
+    });
 });
 </script>
 </body>
