@@ -1,7 +1,5 @@
 # GP-SIMS
-Sales and Inventory Management System
-
-
+<b>Sales and Inventory Management System</b>
 
 Requirements:
   * [PHP 5.6 - Later](http://php.net/downloads.php)
