@@ -120,6 +120,7 @@ include 'session.php';
                         echo $result1['total'];
                     ?>
                 </b>
+                    <input type="hidden" name="" id="si" value="<?php echo $result1['total'];?>">
                     <div class="caption" style="color: #fff;">
                         SALES INVOICES
                     </div>
@@ -134,6 +135,7 @@ include 'session.php';
                         echo $result2['total'];
                     ?>
                     </b>
+                    <input type="hidden" name="" id="pd" value="<?php echo $result2['total'];?>">
                     <div class="caption" style="color:#fff;">
                         PAID
                     </div>
@@ -148,6 +150,7 @@ include 'session.php';
                         echo $result3['total'];
                     ?>
                     </b>
+                    <input type="hidden" name="" id="up" value="<?php echo $result3['total'];?>">
                     <div class="caption" style="color:#fff;">
                         UNPAID
                     </div>
@@ -162,6 +165,7 @@ include 'session.php';
                         echo $result4['total'];
                     ?>
                     </b>
+                    <input type="hidden" name="" id="pp" value="<?php echo $result4['total'];?>">
                     <div class="caption" style="color:#fff;">
                         PARTIALLY PAID
                     </div>
@@ -176,6 +180,7 @@ include 'session.php';
                         echo $result6['total'];
                     ?>
                     </b>
+                    <input type="hidden" name="" id="cn" value="<?php echo $result6['total'];?>">
                     <div class="caption" style="color:#fff;">
                         CANCELLED
                     </div>
@@ -191,6 +196,7 @@ include 'session.php';
                         echo $result5['total'];
                     ?>
                     </b>
+                    <input type="hidden" name="" id="od" value="<?php echo $result5['total'];?>">
                     <div class="caption" style="color:#fff;">
                         OVERDUE
                     </div>
@@ -199,16 +205,9 @@ include 'session.php';
         </div>
         <div class="row">
             <div class="col-sm-4">
-                    
-            </div>
-            <div class="col-sm-4">
                 <!-- ChartJS -->
                 <canvas id="myChart" width="100" height="100"></canvas>            
             </div>
-            <div class="col-sm-4">
-                    
-            </div>
-        
         </div>
         <!-- /.row -->
         <!-- /.container-fluid -->
@@ -222,13 +221,19 @@ include 'session.php';
 <script type="text/javascript">
 $(function() {
 var ctx = $("#myChart");
+var a = $("#si").val();
+var b = $("#pd").val();
+var c = $("#up").val();
+var d = $("#pp").val();
+var e = $("#cn").val();
+var f = $("#od").val();
 var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+        labels: ["Sales Invoice", "Paid", "Unpaid", "Partially Paid", "Cancelled", "Overdue"],
         datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
+            label: 'Chart',
+            data: [a, b, c, d, e, f],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
