@@ -235,15 +235,15 @@ var myChart = new Chart(ctx, {
     data: {
         labels: ["Sales Invoice", "Paid", "Unpaid", "Partially Paid", "Cancelled", "Overdue"],
         datasets: [{
-            label: 'Chart',
+            label: ['Total: '+a],
             data: [a, b, c, d, e, f],
             backgroundColor: [
-                'rgba(51, 51, 51, 0.2)',
-                'rgba(0, 230, 115, 0.2)',
-                'rgba(255, 128, 0, 0.2)',
-                'rgba(0, 0, 255, 0.2)',
-                'rgba(77, 25, 25, 0.2)',
-                'rgba(255, 0, 0, 0.2)'
+                'rgba(51, 51, 51, 0.5)',
+                'rgba(0, 230, 115, 0.5)',
+                'rgba(255, 128, 0, 0.5)',
+                'rgba(0, 0, 255, 0.5)',
+                'rgba(77, 25, 25, 0.5)',
+                'rgba(255, 0, 0, 0.5)'
             ],
             borderColor: [
                 'rgba(51, 51, 51, 1)',

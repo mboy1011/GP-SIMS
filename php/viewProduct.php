@@ -124,6 +124,11 @@ include 'session.php';
               <hr>
             </div>
         </div>
+<?php
+    if (isset($_POST['update'])) {
+        
+    }
+?>        
         <div class="row">
           <div class="col-sm-12">
             <div class="table-responsive">
