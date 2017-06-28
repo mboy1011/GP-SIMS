@@ -115,5 +115,25 @@ class CRUD
 			return true;
 		}
 	}
+	public function upEmp($fn,$mn,$ln,$po,$id)
+	{
+		include 'config.php';
+		$sql = mysqli_query($db,"UPDATE tbl_employee SET fname='$fn', lname='$ln', mname='$mn', position='$po' WHERE emp_id='$id'");
+		if (!$sql) {
+			return false;
+		}else{
+			return true;
+		}
+	}
+	public function delEmp($id)
+	{
+		include 'config.php';
+		$sql = mysqli_query($db,"DELETE FROM tbl_employee WHERE emp_id='$id'");
+		if (!$sql) {
+			return false;
+		}else{
+			return true;
+		}
+	}
 }
 ?>

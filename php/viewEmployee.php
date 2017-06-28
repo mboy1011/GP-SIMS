@@ -1,5 +1,7 @@
 <?php
 include 'session.php';
+include 'crud.php';
+$oop = new CRUD();
 ?>
 <!DOCTYPE html>
 <html>
@@ -10,7 +12,16 @@ include 'session.php';
     <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
     <!-- DataTables Bootstrap -->
     <link rel="stylesheet" type="text/css" href="../css/dataTables.bootstrap.min.css">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<style type="text/css" media="screen">
+.modal-header{
+  background-color: #4dffb8;
+  color: #fff;
+}
+.modal-footer{
+    background-color: #333333;
+}    
+</style>
  </head>
 <body>
 <div id="wrapper">
@@ -115,6 +126,50 @@ include 'session.php';
         </div>
         <div class="row">
           <div class="col-sm-12">
+<?php
+    if (isset($_POST['update'])) {
+        $fn = mysqli_real_escape_string($db,$_POST['fname']);
+        $ln = mysqli_real_escape_string($db,$_POST['lname']);
+        $mn = mysqli_real_escape_string($db,$_POST['mname']);
+        $po = mysqli_real_escape_string($db,$_POST['post']);
+        $id = mysqli_real_escape_string($db,$_POST['id']);
+        $sql = $oop->upEmp($fn,$mn,$ln,$po,$id);
+        if(!$sql){
+           ?>
+              <div class="alert alert-warning alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Update!</strong> Try Again.
+              </div>
+          <?php
+        }else{
+            ?>
+              <div class="alert alert-success alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Updated!</strong>
+              </div>
+          <?php
+        }
+    }
+    if (isset($_POST['delete'])) {
+        $id = mysqli_real_escape_string($db,$_POST['did']);
+        $sql = $oop->delEmp($id);
+        if(!$sql){
+           ?>
+              <div class="alert alert-warning alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Delete Customer!</strong> Try Again.
+              </div>
+          <?php
+        }else{
+            ?>
+              <div class="alert alert-success alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Deleted!</strong>
+              </div>
+          <?php
+        }
+    }
+?>          
             <div class="table-responsive">
                 <table class="table" id="datatables">
                     <thead class="thead-inverse">
@@ -130,22 +185,23 @@ include 'session.php';
                         </tr>
                     </thead>
                     <?php
+                      $i=1;
                       $result = mysqli_query($db, "SELECT * FROM tbl_employee") or die(mysql_error());
                     ?>
                     <tbody>
                       <?php while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){?>
                           <tr>
-                            <td><?php echo $row['emp_id']; ?></td>
+                            <td><?php echo $i++; ?></td>
                             <td><?php echo $row['fname']; ?></td>
                             <td><?php echo $row['mname']; ?></td>            
                             <td><?php echo $row['lname']; ?></td>  
                             <td><?php echo $row['position']; ?></td>
                             <td><?php echo $row['timestamp']; ?></td>    
                             <td>
-                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit" data-id="<?php echo $row['emp_id']; ?>"  data-fn="<?php echo $row['fname']; ?>" data-mn="<?php echo $row['mname']; ?>" data-ln="<?php echo $row['lname']; ?>" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
+                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit" data-id="<?php echo $row['emp_id']; ?>"  data-fn="<?php echo $row['fname']; ?>" data-mn="<?php echo $row['mname']; ?>" data-pos="<?php echo $row['position'];?>" data-ln="<?php echo $row['lname']; ?>" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
                             </td>      
                             <td>
-                                <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['id']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
+                                <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['emp_id']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
                             </td> 
                           </tr>
                       <?php } ?>
@@ -153,6 +209,53 @@ include 'session.php';
                 </table>            
                 </div>
           </div>
+<div id="edit" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Edit Employee's Details</h4>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="">
+                <input type="hidden" name="id" id="empid">
+                <input type="text" id="fname" name="fname" placeholder="First Name" class="form-control" required="">                
+                <input type="text" id="mname" name="mname" placeholder="Middle Name" class="form-control" required=""> 
+                <input type="text" id="lname" name="lname" placeholder="Last Name" class="form-control" required=""> 
+                <input type="text" id="post" name="post" placeholder="Position" class="form-control" required=""> 
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-warning" type="submit" name="update"><b class="fa fa-pencil-square-o fa-bg">&nbsp;</b>Update</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>  
+<div id="delete" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Delete Employee</h4>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="">
+                <input type="hidden" name="did" id="delid">
+                <b><strong>Are you sure do you want to delete this customer?</strong></b>
+      </div>
+      <div class="modal-footer">
+            <button class="btn btn-danger" type="submit" name="delete"><b class="fa fa-trash fa-bg">&nbsp;</b>Delete</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>        
         </div>
             <!-- /.row -->
         <!-- /.container-fluid -->
@@ -167,7 +270,26 @@ include 'session.php';
 <script type="text/javascript" src="../js/dataTables.bootstrap.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-    $('#datatables').dataTable();
+    $('#datatables').dataTable({
+        "pageLength": -1,
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+    });
+    $('.btn-edits').click(function(event) {
+        var id = $(this).data("id");
+        var fn = $(this).data("fn");
+        var ln = $(this).data("ln");
+        var mn = $(this).data("mn");
+        var po = $(this).data("pos");
+        $("#fname").val(fn);
+        $("#lname").val(ln);
+        $("#mname").val(mn);
+        $("#post").val(po);
+        $("#empid").val(id);
+    });
+    $('.btn-deletes').click(function(event) {
+       var did = $(this).data("did");
+       $("#delid").val(did);
+    });
 });
 </script>
 </body>
