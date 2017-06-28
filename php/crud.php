@@ -95,5 +95,25 @@ class CRUD
 		mysqli_query($db,"UPDATE tbl_sales SET status='CANCELLED' WHERE sales_no='$si_no'");
 		return $result;
 	}
+	public function upPro($id,$proname,$desc,$lot,$price,$exp,$pack,$qty)
+	{
+		include 'config.php';
+		$sql = mysqli_query($db,"UPDATE tbl_products SET name='$proname', description='$desc', price='$price', expiry_date='$exp',quantity='$qty',packing='$pack',lot_no='$lot' WHERE prod_id='$id'");
+		if (!$sql) {
+			return false;
+		}else{
+			return true;
+		}
+	}
+	public function delPro($did)
+	{
+		include 'config.php';
+		$sql = mysqli_query($db,"DELETE FROM tbl_products WHERE prod_id='$did'");
+		if (!$sql) {
+			return false;
+		}else{
+			return true;
+		}
+	}
 }
 ?>

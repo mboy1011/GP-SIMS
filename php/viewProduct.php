@@ -1,5 +1,7 @@
 <?php
 include 'session.php';
+include 'crud.php';
+$oop = new CRUD();
 ?>
 <!DOCTYPE html>
 <html>
@@ -126,7 +128,49 @@ include 'session.php';
         </div>
 <?php
     if (isset($_POST['update'])) {
-        
+        $id = mysqli_real_escape_string($db,$_POST['id']);
+        $proname = mysqli_real_escape_string($db,$_POST['proname']);
+        $desc = mysqli_real_escape_string($db,$_POST['desc']);
+        $lot = mysqli_real_escape_string($db,$_POST['lot']);
+        $price = mysqli_real_escape_string($db,$_POST['price']);
+        $exp = mysqli_real_escape_string($db,$_POST['exp']);
+        $pack = mysqli_real_escape_string($db,$_POST['pack']);
+        $qty = mysqli_real_escape_string($db,$_POST['qty']);
+        $sql = $oop->upPro($id,$proname,$desc,$lot,$price,$exp,$pack,$qty);
+        if(!$sql){
+                   ?>
+                      <div class="alert alert-warning alert-dismissable">
+                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Update!</strong> Try Again.
+                      </div>
+                  <?php
+                }else{
+                    ?>
+                      <div class="alert alert-success alert-dismissable">
+                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Updated!</strong>
+                      </div>
+                  <?php
+                }
+    }
+    if (isset($_POST['delete'])) {
+        $did = mysqli_real_escape_string($db,$_POST['delid']);
+        $sql = $oop->delPro($did);
+        if(!$sql){
+           ?>
+              <div class="alert alert-warning alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Delete Customer!</strong> Try Again.
+              </div>
+          <?php
+        }else{
+            ?>
+              <div class="alert alert-success alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Deleted!</strong>
+              </div>
+          <?php
+        }
     }
 ?>        
         <div class="row">
@@ -198,7 +242,7 @@ include 'session.php';
                     <input name="exp" id="pexpd" class="form-control" size="16" type="text" placeholder="">
                 </div>
                 <input type="text" id="ppack" name="pack" placeholder="Packing" class="form-control">
-                <input type="text" id="pqty" name="pack" placeholder="Quantity" class="form-control">
+                <input type="text" id="pqty" name="qty" placeholder="Quantity" class="form-control">
       </div>
       <div class="modal-footer">
         <button class="btn btn-warning" type="submit" name="update"><b class="fa fa-pencil-square-o fa-bg">&nbsp;</b>Update</button>
@@ -248,7 +292,10 @@ include 'session.php';
 <script type="text/javascript" src="../js/bootstrap-datepicker.en-AU.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-    $('#datatables').dataTable();
+    $('#datatables').dataTable({
+       "pageLength": -1,
+       "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+    });
       var date = new Date();
       var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
       $('.form_date').datepicker({
