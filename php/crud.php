@@ -48,6 +48,7 @@ class CRUD
 	public function insertUser($user,$pass)
 	{
 		include 'config.php';
+		$pass = password_hash($pass, PASSWORD_DEFAULT);
 		$sql = mysqli_query($db,"SELECT * FROM tbl_useraccounts WHERE lname='$user'");
 		if($sql->num_rows>0){
 			return false;
