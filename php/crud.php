@@ -48,7 +48,7 @@ class CRUD
 	public function insertUser($user,$pass)
 	{
 		include 'config.php';
-		$pass = password_hash($pass, PASSWORD_DEFAULT);
+		$pass = password_hash($pass, PASSWORD_BCRYPT);
 		$sql = mysqli_query($db,"SELECT * FROM tbl_useraccounts WHERE lname='$user'");
 		if($sql->num_rows>0){
 			return false;
@@ -159,10 +159,10 @@ class CRUD
 	public function login($user,$pass)
 	{
 		include 'config.php';
-		$sql = mysqli_query($db, "SELECT * FROM tbl_useraccounts WHERE lname='$user' AND password='$pass'");
+		$sql = mysqli_query($db, "SELECT * FROM tbl_useraccounts WHERE lname='$user'");
         $row = mysqli_fetch_array($sql, MYSQLI_ASSOC);
         if ($row['lname']==$user) {
-          if ($row['password']==$pass) {
+          if (password_verify($pass,$row['password'])) {
             session_start();
             $_SESSION['login_user']=$user;
             header('location:php/index.php'); 
