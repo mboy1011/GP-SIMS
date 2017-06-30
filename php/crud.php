@@ -135,5 +135,25 @@ class CRUD
 			return true;
 		}
 	}
+	public function upUser($id,$ui,$pa)
+	{
+		include 'config.php';
+		$sql = mysqli_query($db,"UPDATE tbl_useraccounts SET lname='$ui', password='$pa' WHERE uid='$id'");
+		if (!$sql) {
+			return false;
+		}else{
+			return true;
+		}
+	}
+	public function delUser($delid)
+	{
+		include 'config.php';
+		$sql = mysqli_query($db,"DELETE FROM tbl_useraccounts WHERE uid='$delid'");
+		if (!$sql) {
+			return false;
+		}else{
+			return true;
+		}
+	}
 }
 ?>

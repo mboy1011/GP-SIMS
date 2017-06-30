@@ -1,5 +1,7 @@
 <?php
 include 'session.php';
+include 'crud.php';
+$oop = new CRUD();
 ?>
 <!DOCTYPE html>
 <html>
@@ -10,7 +12,16 @@ include 'session.php';
     <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
     <!-- DataTables Bootstrap -->
     <link rel="stylesheet" type="text/css" href="../css/dataTables.bootstrap.min.css">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<style type="text/css" media="screen">
+.modal-header{
+  background-color: #4dffb8;
+  color: #fff;
+}
+.modal-footer{
+    background-color: #333333;
+}    
+</style>
  </head>
 <body>
 <div id="wrapper">
@@ -113,6 +124,48 @@ include 'session.php';
         </div>
         <div class="row">
           <div class="col-sm-12">
+<?php
+    if (isset($_POST['update'])) {
+        $id = mysqli_real_escape_string($db,$_POST['id']);
+        $ui = mysqli_real_escape_string($db,$_POST['userid']);
+        $pa = mysqli_real_escape_string($db,$_POST['pass']);
+        $sql = $oop->upUser($id,$ui,$pa);
+        if (!$sql) {          
+?>
+              <div class="alert alert-warning alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Update!</strong> Try Again.
+              </div>
+<?php
+        }else{
+?>
+              <div class="alert alert-success alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Updated!</strong>
+              </div>
+<?php
+        }
+    }
+    if (isset($_POST['delete'])) {
+        $delid = mysqli_real_escape_string($db,$_POST['delid']);
+        $sql = $oop->delUser($delid);
+        if (!$sql) {          
+?>
+              <div class="alert alert-warning alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Delete!</strong> Try Again.
+              </div>
+<?php
+        }else{
+?>
+              <div class="alert alert-success alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Deleted!</strong>
+              </div>
+<?php
+        }        
+    }
+?>          
             <div class="table-responsive">
                 <table class="table" id="datatables">
                     <thead class="thead-inverse">
@@ -126,14 +179,15 @@ include 'session.php';
                         </tr>
                     </thead>
                     <?php
+                      $i = 1;
                       $result = mysqli_query($db, "SELECT * FROM tbl_useraccounts") or die(mysql_error());
                     ?>
                     <tbody>
                       <?php while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){?>
                           <tr>
-                            <td><?php echo $row['uid']; ?></td>
+                            <td><?php echo $i++;?></td>
                             <td><?php echo $row['lname']; ?></td>
-                            <td><?php echo $row['password']; ?></td>            
+                            <td type="password"><?php echo $row['password']; ?></td>            
                             <td><?php echo $row['timestamp']; ?></td>    
                             <td>
                                <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit" data-id="<?php echo $row['uid']; ?>"  data-us="<?php echo $row['lname']; ?>" data-pa="<?php echo $row['password']; ?>"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
@@ -147,6 +201,62 @@ include 'session.php';
                 </table>            
                 </div>
           </div>
+<div id="edit" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Edit User Account Details</h4>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="">
+                <input type="hidden" name="id" id="id" class="form-control">
+                <select name="userid" id="us" class="form-control">
+                  <?php
+                    $result =mysqli_query($db, "SELECT lname FROM tbl_employee");
+                    while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
+                      echo"<option value='$row[lname]'>";
+                      echo $row['lname'];
+                      echo"</option>";
+                    }
+                  ?>
+                </select>   
+                <input type="text" name="pass" id="pa" class="form-control">            
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-warning" type="submit" name="update"><b class="fa fa-pencil-square-o fa-bg">&nbsp;</b>Update</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+<div id="delete" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Delete User Account</h4>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="">
+                <input type="hidden" name="delid" id="delid">
+                <b><strong>Are you sure do you want to delete this user?</strong></b>
+      </div>
+      <div class="modal-footer">
+            <button class="btn btn-danger" type="submit" name="delete"><b class="fa fa-trash fa-bg">&nbsp;</b>Delete</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>          
         </div>
             <!-- /.row -->
         <!-- /.container-fluid -->
@@ -161,7 +271,22 @@ include 'session.php';
 <script type="text/javascript" src="../js/dataTables.bootstrap.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-    $('#datatables').dataTable();
+    $('#datatables').dataTable({
+       "pageLength": -1,
+       "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+    });
+    $('.btn-edits').click(function(event) {
+        var id = $(this).data("id");
+        var us = $(this).data("us");
+        var pa = $(this).data("pa");
+        $("#us").val(us);
+        $("#pa").val(pa);
+        $("#id").val(id);
+    });
+    $('.btn-deletes').click(function(event) {
+       var did = $(this).data("did");
+       $("#delid").val(did);
+    });
 });
 </script>
 </body>
