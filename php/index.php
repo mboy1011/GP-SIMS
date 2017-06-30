@@ -231,11 +231,11 @@ var d = $("#pp").val();
 var e = $("#cn").val();
 var f = $("#od").val();
 var myChart = new Chart(ctx, {
-    type: 'bar',
+    type: 'horizontalBar',
     data: {
         labels: ["Sales Invoice", "Paid", "Unpaid", "Partially Paid", "Cancelled", "Overdue"],
         datasets: [{
-            label: ['Total: '+a],
+            label: ['Total'],
             data: [a, b, c, d, e, f],
             backgroundColor: [
                 'rgba(51, 51, 51, 0.5)',
@@ -260,6 +260,11 @@ var myChart = new Chart(ctx, {
         scales: {
             yAxes: [{
                 ticks: {
+                    beginAtZero:true
+                }
+            }],
+            xAxes:[{
+                ticks:{
                     beginAtZero:true
                 }
             }]
