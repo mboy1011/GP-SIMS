@@ -155,5 +155,22 @@ class CRUD
 			return true;
 		}
 	}
+	public function login($user,$pass)
+	{
+		include 'config.php';
+		$sql = mysqli_query($db, "SELECT * FROM tbl_useraccounts WHERE lname='$user' AND password='$pass'");
+        $row = mysqli_fetch_array($sql, MYSQLI_ASSOC);
+        if ($row['lname']==$user) {
+          if ($row['password']==$pass) {
+            session_start();
+            $_SESSION['login_user']=$user;
+            header('location:php/index.php'); 
+          }else{
+         	return false;
+          }
+        }else{
+          return false;
+        } 
+	}
 }
 ?>
