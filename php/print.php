@@ -6,7 +6,7 @@ $si_no = mysqli_escape_string($db,$_POST['sales_no']);
 $cu_id = mysqli_escape_string($db,$_POST['cus_id']);
 $pdf = new FPDF('P','mm','Legal');
 $pdf->AddPage();
-$query1 = mysqli_query($db,"SELECT tbl_customers.full_name,tbl_customers.tin,tbl_customers.terms,tbl_customers.opidno,tbl_sales.total_amount,tbl_sales.total_sales,tbl_sales.amount_net,tbl_customers.bstyle,tbl_sales.VAT,tbl_customers.address,tbl_sales.dates FROM tbl_customers, tbl_sales WHERE tbl_sales.cus_id='$cu_id' AND tbl_customers.cus_id='$cu_id'");
+$query1 = mysqli_query($db,"SELECT tbl_customers.full_name,tbl_customers.tin,tbl_customers.terms,tbl_customers.opidno,tbl_sales.total_amount,tbl_sales.total_sales,tbl_sales.amount_net,tbl_customers.bstyle,tbl_sales.VAT,tbl_customers.address,tbl_sales.dates FROM tbl_customers, tbl_sales WHERE tbl_sales.cus_id='$cu_id' AND tbl_customers.cus_id='$cu_id' AND tbl_sales.sales_no='$si_no'");
 $rows=mysqli_fetch_assoc($query1);
 $pdf->SetTitle("Print Sales Invoice",true);
 $pdf->SetFont('Arial','B',11);
