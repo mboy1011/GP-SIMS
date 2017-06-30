@@ -220,7 +220,7 @@ include 'session.php';
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script type="text/javascript" src="../js/script.js"></script>
 <script type="text/javascript" src="../js/bootstrap.min.js"></script>
-<script type="text/javascript" src="../js/Chart.js"></script>
+<script type="text/javascript" src="../js/Chart.min.js"></script>
 <script type="text/javascript">
 $(function() {
 var ctx = $("#myChart");
@@ -268,6 +268,12 @@ var myChart = new Chart(ctx, {
                     beginAtZero:true
                 }
             }]
+        },
+        animationEasing : 'easeOutBounce',
+        responsive: true,
+        title: {
+            display: true,
+            text: 'Sales Invoice Chart'
         }
     }
 });
