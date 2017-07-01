@@ -1,7 +1,5 @@
 <?php
 include 'session.php';
-include 'crud.php';
-$oop = new CRUD();
 ?>
 <!DOCTYPE html>
 <html>
@@ -138,75 +136,8 @@ $oop = new CRUD();
           </div>  
         </div>
         <div class="row">
-<?php
-            if (isset($_POST['addpay'])) {
-                $cusid = mysqli_real_escape_string($db,$_POST['customerid']);
-                $sino = mysqli_real_escape_string($db,$_POST['sales']);
-                $ptype = mysqli_real_escape_string($db,$_POST['paytype']);
-                $am = mysqli_real_escape_string($db,$_POST['amount']);
-                $ta = mysqli_real_escape_string($db,$_POST['total']);
-                $sql = mysqli_query($db,"SELECT * FROM tbl_payments WHERE sales_no=$sino AND cus_id=$cusid");
-                $row = mysqli_fetch_assoc($sql);
-                $paymentid = $row['pay_id'];
-                $bal = $row['balance'];
-                if ($row>0) {
-                  $total = $bal - $am;
-                  $insert1 = mysqli_query($db,"UPDATE tbl_payments SET sales_no='$sino',cus_id='$cusid',amount='$am',balance='$total' WHERE sales_no='$sino' AND cus_id='$cusid'");                  
-                  if (!$insert1) {
-                     ?>
-                      <div class="alert alert-warning alert-dismissable">
-                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Add Payments to Customer!</strong> Try Again.
-                      </div>
-                    <?php
-                  }else{
-                      $insert2 = mysqli_query($db,"INSERT INTO tbl_paymentsdetails(pay_id,pay_type,amount) VALUES('".$paymentid."','".$ptype."','".$am."')");
-                      if (!$insert2) {
-                        ?>
-                          <div class="alert alert-warning alert-dismissable">
-                              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                            <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Add Payments to Customer!</strong> Try Again.
-                          </div>
-                        <?php
-                      }else{
-                        $oop->upStat($total,$sino);
-                         ?>
-                            <div class="alert alert-success alert-dismissable">
-                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                              <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Added!</strong>
-                            </div>
-                          <?php
-                      }
-                  }
-                }else{
-                  $total = $ta - $am;
-                  $insert1a = mysqli_query($db,"INSERT INTO tbl_payments(sales_no,cus_id,pay_type,amount,balance) VALUES ('".$sino."','".$cusid."','".$ptype."','".$am."','".$total."')");
-                  if (!$insert1a) {
-                    ?>
-                      <div class="alert alert-warning alert-dismissable">
-                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Add Payments to Customer!</strong> Try Again.
-                      </div>
-                    <?php
-                  }else{
-                      $select1 = mysqli_query($db,"SELECT pay_id FROM tbl_payments WHERE sales_no='$sino' AND cus_id='$cusid'");
-                      $rows = mysqli_fetch_assoc($select1);
-                      $payid = $rows['pay_id'];
-                      $sqli = mysqli_query($db,"INSERT INTO tbl_paymentsdetails(pay_id,pay_type,amount) VALUES('".$payid."','".$ptype."','".$am."')");
-                      if ($sqli) {
-                        $oop->upStat($total,$sino);
-                         ?>
-                            <div class="alert alert-success alert-dismissable">
-                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                              <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Added!</strong>
-                            </div>
-                          <?php
-                      }
-                  }
-                }
-            }
-        ?>        
           <div class="col-sm-12">
+          <div class="result"></div>
             <div class="table-responsive">
                 <table class="table table-hover" id="datatables">
                     <thead class="thead-inverse">
@@ -283,7 +214,6 @@ $oop = new CRUD();
           <div class="input-group">
               <span class="input-group-addon">Sales No</span>
               <input type="text" name="sales_no" id="si_no" class="form-control" disabled="">
-              <input type="text" name="sales" id="sino" hidden="">
               <input type="text" name="customerid" id="cust" hidden="">
               <input type="text" name="total" id="total" hidden="">
           </div>   
@@ -293,18 +223,18 @@ $oop = new CRUD();
           </div>   
           <div class="input-group">
               <span class="input-group-addon">Payment Type</span>
-              <select name="paytype" class="form-control">
+              <select name="paytype" id="paytype" class="form-control">
                 <option value="Cash">Cash</option>
                 <option value="Check">Check</option>
               </select>
           </div>   
           <div class="input-group">
               <span class="input-group-addon">Amount: <b>₱</b></span>
-              <input type="number" step="any" name="amount" class="form-control" >
+              <input type="number" id="amount" step="any" name="amount" class="form-control" >
           </div>   
       </div>
       <div class="modal-footer">
-      <button type="submit" name="addpay" class="btn btn-success">Submit</button>
+      <button type="button" id="addpayment" name="addpay"  data-dismiss="modal" class="btn btn-success">Submit</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
       </div>
       <!-- End Form -->
@@ -337,10 +267,25 @@ $(document).ready(function(){
         var cus = $(this).data("cus");
         var total = $(this).data("total");
         $("#si_no").val(si_no);
-        $("#sino").val(si_no);
         $("#payname").val(fn);
         $("#cust").val(cus);
         $("#total").val(total);
+    });
+    $("#addpayment").click(function(event) {
+      console.log('test');
+        var si = $("#si_no").val();
+        var cu = $("#cust").val();
+        var to = $("#total").val();
+        var am = $("#amount").val();
+        var pa = $("#paytype").val();
+        $.post('addpay.php', {addpay:'addpay',si:si,cu:cu,to:to,am:am,pa:pa }, function(data) {
+          // if(data.status_code == 1){
+          //   $('.result').html(data.status_msg);
+          // }else{
+          //   $('.result').html(data.status_msg);
+          // }
+          $('.result').html(data);
+        });
     });
 });
 </script>

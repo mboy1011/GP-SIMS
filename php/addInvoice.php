@@ -407,6 +407,8 @@ $(document).ready(function() {
        var terms = $("#terms1").val();
        $.post('save.php', {save: 'ok',terms: terms,sales_no: sales_no, cust_id: cust_id, date: date, prepare: prepare, check: check, vat: vat, tad: tad, net: net, tsales: tsales}, function(data, textStatus, xhr) {
            $(".result").html(data);
+           console.log(xhr);
+           console.log(textStatus);
        });
     });
   var date = new Date();
