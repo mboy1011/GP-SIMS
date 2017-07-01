@@ -122,9 +122,9 @@ include 'session.php';
             <hr>
                 <input type="text" name="name" placeholder="Customers Name" class="form-control" required="">
                 <input type="number" name="tin" placeholder="TIN/SC-TIN" class="form-control">
-                <input type="text" name="add" placeholder="Address" class="form-control">
+                <input type="text" name="add" placeholder="Address" class="form-control" required="">
                 <input type="text" name="bstyle" placeholder="Business Style" class="form-control">
-                <input type="text" name="terms" placeholder="Terms" class="form-control">
+                <input type="text" name="terms" placeholder="Terms" class="form-control" required="">
                 <input type="text" name="opidno" placeholder="OSCA/PWD ID No." class="form-control">
                 <input type="submit" name="Submit" class="btn btn-primary form-control">
             </form>
