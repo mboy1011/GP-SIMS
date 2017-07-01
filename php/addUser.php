@@ -130,7 +130,7 @@ include 'session.php';
                     }
                   ?>
                 </select> 
-                <input type="password" name="password" placeholder="Password" class="form-control">
+                <input type="password" name="password" placeholder="Password" class="form-control" required="" size="8">
                 <input type="submit" name="Submit" class="btn btn-primary form-control">
             </form>
             <?php
@@ -139,19 +139,31 @@ include 'session.php';
             if ($_SERVER['REQUEST_METHOD']=='POST') {
                 $user = mysqli_real_escape_string($db,$_POST['userid']);
                 $pass = mysqli_real_escape_string($db,$_POST['password']);
-                $sql=$oop->insertUser($user,$pass);
-                if(!$sql){
-                   ?>
-                      <div class="alert alert-warning">
-                        <strong>Already Registered!</strong> Try Again.
-                      </div>
-                  <?php
-                }else{
+                $length = strlen($pass) >= 8;
+                if(!$length){
                     ?>
-                      <div class="alert alert-success">
-                        <strong>Successfully Registered!</strong>
-                      </div>
-                  <?php
+                          <div class="alert alert-danger alert-dismissable">
+                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>At Least 8 size of password!</strong> Try Again.
+                          </div>
+                      <?php
+                }else{
+                    $sql=$oop->insertUser($user,$pass);
+                    if(!$sql){
+                       ?>
+                          <div class="alert alert-warning alert-dismissable">
+                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>Already Registered!</strong> Try Again.
+                          </div>
+                      <?php
+                    }else{
+                        ?>
+                          <div class="alert alert-success alert-dismissable">
+                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>Successfully Registered!</strong>
+                          </div>
+                      <?php
+                    }      
                 }
             }
             ?>

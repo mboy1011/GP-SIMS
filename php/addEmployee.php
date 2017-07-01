@@ -120,9 +120,9 @@ include 'session.php';
             <form method="POST" action="" class="form-horizontal">
             <center><p><li class="fa fa-id-card fa-2x">&nbsp;</li><b style="font-size: 18px;">Employee's Information:</b></p></center>
             <hr>
-                <input type="text" name="fname" placeholder="First Name" class="form-control">
+                <input type="text" name="fname" placeholder="First Name" class="form-control" required="">
                 <input type="text" name="lname" placeholder="Last Name" class="form-control" required="">
-                <input type="text" name="mname" placeholder="Middle Name" class="form-control">
+                <input type="text" name="mname" placeholder="Middle Name" class="form-control" required="">
                 <select name="position" class="form-control" placeholder="Position">
                   <option value="Staff">Staff</option>
                   <option value="Manager">Manager</option>
