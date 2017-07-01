@@ -125,6 +125,26 @@ $oop = new CRUD();
           </div>
         </div>
         <div class="row">
+            <div class="col-sm-2">
+                <button type="button" id="import" class="btn btn-default form-control"><b class="fa fa-upload">&nbsp;</b>Import CSV</button>
+            </div>
+            <div class="col-sm-2">
+                    <form class="form-group" method="POST" action="exportcsv.php">
+                        <button type="submit" name="exportcustomer" class="btn btn-primary form-control"><b class="fa fa-download">&nbsp;</b>Export as CSV</button>
+                    </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div id="showimport" style="display: none;">
+                   <form action="" method="post" enctype="multipart/form-data" id="importFrm">
+                       <input type="file" name="file" class="form-control" required="">
+                       <input type="submit" class="btn btn-primary form-control" name="importSubmit" value="IMPORT">
+                   </form>
+                </div>
+            </div>
+        </div>
+        <div class="row">
           <div class="col-sm-12">
            <?php
             if (isset($_POST['update'])){
@@ -306,6 +326,9 @@ $(document).ready(function(){
     $(".btn-delete").click(function(){
         var did = $(this).data("did");
         $("#delid").val(did);
+    });
+    $("#import").click(function(event) {
+        $("#showimport").toggle();
     });
 });
 </script>

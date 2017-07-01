@@ -116,7 +116,7 @@ $oop = new CRUD();
                 <div class="panel-body">
                     <label><b class="fa fa-file-excel-o fa-bg"></b> Import CSV File for Customers</label>
                   <form action="" method="post" enctype="multipart/form-data" id="importFrm">
-                        <input type="file" name="file" class="form-control">
+                        <input type="file" name="file" class="form-control" required="">
                         <input type="submit" class="btn btn-primary form-control" name="importSubmit" value="IMPORT">
                     </form>
                 </div>
@@ -174,11 +174,15 @@ $oop = new CRUD();
 <?php                            
                         }
                     }
-
 ?>
            </div>
            <div class="col-sm-4">
-           
+                <div class="panel-body">
+                    <form class="form-group" method="POST" action="exportcsv.php">
+                    <label><b class="fa fa-file-excel-o">&nbsp;</b>Export as CSV File</label>
+                        <button type="submit" name="exportcustomer" class="btn btn-default form-control">Export</button>
+                    </form>
+                </div>
            </div>
            <div class="col-sm-4">
 
@@ -191,7 +195,7 @@ $oop = new CRUD();
     <!-- /#page-wrapper -->
 </div><!-- /#wrapper -->
 <script type="text/javascript" src="../js/jquery.min.js"></script>
-<script type="text/javascript" src="../js/script.js"></script>
 <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../js/script.js"></script>
 </body>
 </html>
