@@ -154,7 +154,7 @@ include 'session.php';
                     </thead>
                     <?php
                     $i=1;
-                     $result = mysqli_query($db,"SELECT tbl_customers.full_name,tbl_payments.amount,tbl_sales.sales_no,tbl_payments.balance,tbl_sales.total_amount,tbl_sales.status,tbl_customers.cus_id FROM tbl_customers INNER JOIN tbl_sales ON tbl_sales.cus_id=tbl_customers.cus_id AND tbl_sales.status!='PAID' LEFT JOIN tbl_payments ON tbl_sales.sales_no=tbl_payments.sales_no AND tbl_sales.cus_id=tbl_payments.cus_id AND tbl_payments.balance!=0") or die(mysqli_error());
+                     $result = mysqli_query($db,"SELECT tbl_customers.full_name,tbl_payments.amount,tbl_sales.sales_no,tbl_payments.balance,tbl_sales.total_amount,tbl_sales.status,tbl_customers.cus_id FROM tbl_customers INNER JOIN tbl_sales ON tbl_sales.cus_id=tbl_customers.cus_id AND tbl_sales.status!='PAID' LEFT JOIN tbl_payments ON tbl_sales.sales_no=tbl_payments.sales_no AND tbl_sales.cus_id=tbl_payments.cus_id AND tbl_payments.balance!=0 WHERE tbl_sales.status!='CANCELLED'") or die(mysqli_error());
                       // $result = mysqli_query($db, "SELECT * FROM tbl_sales") or die(mysql_error());
 
                     ?>

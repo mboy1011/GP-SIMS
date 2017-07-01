@@ -23,7 +23,7 @@ $oop = new CRUD();
 ?>
                       <div class="alert alert-warning alert-dismissable">
                           <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                          <strong>Failed to Add!</strong>Try Again.
+                          <strong>Failed to Add Payments!</strong>Try Again.
                       </div>
 <?php
                   }else{
@@ -36,7 +36,7 @@ $oop = new CRUD();
 ?>
                       <div class="alert alert-warning alert-dismissable">
                           <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                          <strong>Failed to Add!</strong>Try Again.
+                          <strong>Failed to Add Payments!</strong>Try Again.
                       </div>
 <?php                        
                       }else{
@@ -48,7 +48,7 @@ $oop = new CRUD();
 ?>
                       <div class="alert alert-success alert-dismissable">
                           <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                          <strong>Successfully Added!</strong>
+                          <strong>Successfully Added Payments!</strong>
                       </div>
 <?php                        
                       }
@@ -64,7 +64,7 @@ $oop = new CRUD();
 ?>
                       <div class="alert alert-warning alert-dismissable">
                           <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                          <strong>Failed to Add!</strong>Try Again.
+                          <strong>Failed to Add Payments!</strong>Try Again.
                       </div>
 <?php
                   }else{
@@ -81,7 +81,7 @@ $oop = new CRUD();
 ?>
                       <div class="alert alert-success alert-dismissable">
                           <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                          <strong>Successfully Added!</strong>
+                          <strong>Successfully Added Payments!</strong>
                       </div>
 <?php                                                
                       }
