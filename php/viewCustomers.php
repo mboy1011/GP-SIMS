@@ -12,6 +12,7 @@ $oop = new CRUD();
     <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
     <!-- DataTables Bootstrap -->
     <link rel="stylesheet" type="text/css" href="../css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/fixedColumns.bootstrap.min.css">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <style type="text/css" media="screen">
 .modal-header{
@@ -258,10 +259,10 @@ if(isset($_POST['importSubmit'])){
             }
             ?>
             <div class="table-responsive">
-                <table class="table table-hover" id="datatables">
-                    <thead class="thead-inverse">
+                <table class="table table-striped table-bordered nowrap" width="100%" id="datatables">
+                    <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>IDs</th>
                             <th>Customer's Name</th>
                             <th>Address</th>
                             <th>TIN/SC-TIN</th>
@@ -274,12 +275,13 @@ if(isset($_POST['importSubmit'])){
                         </tr>
                     </thead>
                     <?php
+                        $i = 1;
                       $result = mysqli_query($db, "SELECT * FROM tbl_customers") or die(mysql_error());
                     ?>
                     <tbody>
                       <?php while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){?>
                           <tr>
-                            <td><?php echo $row['cus_id']; ?></td>
+                            <td><?php echo $i++; ?></td>
                             <td><?php echo $row['full_name']; ?></td>
                             <td><?php echo $row['address']; ?></td>            
                             <td><?php echo $row['tin']; ?></td> 
@@ -364,15 +366,20 @@ if(isset($_POST['importSubmit'])){
 <!-- DataTables -->
 <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="../js/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript" src="../js/dataTables.fixedColumns.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
     $('#datatables').dataTable({
         "pageLength": -1,
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        scrollY:        true,
+        scrollX:        true,
+        scrollCollapse: true,
+        fixedColumns:   true,
         "oLanguage": {
           "sSearch": "<b class='fa fa-search fa-lg'>&nbsp;</b>",
           "sLengthMenu": "<b id='data-menu'><b class='fa fa-list fa-lg'></b> _MENU_ records</b>"
-          }
+        }
     });
     $(".btn-edit").click(function(){
         var id = $(this).data("id");
