@@ -140,7 +140,7 @@ include 'session.php';
           <div class="col-sm-12">
             <ol class="breadcrumb">
             <li><a href="index.php">Dashboard</a></li>
-            <li class="active">View Sales Report</li>
+            <li class="active">View Collections</li>
             </ol>
             <hr>
           </div>  

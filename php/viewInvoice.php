@@ -169,6 +169,13 @@ $oop = new CRUD();
         }
       }
 ?>
+        <div class="row">
+            <div class="col-sm-2">
+                    <form class="form-group" method="POST" action="exportcsv.php">
+                        <button type="submit" name="exportsi_no" class="btn btn-primary form-control"><b class="fa fa-download">&nbsp;</b>Export as CSV</button>
+                    </form>
+            </div>
+        </div>
           <div class="col-sm-12">
             <div class="table-responsive">
                 <table class="table table-striped table-bordered nowrap" width="100%" id="datatables">
