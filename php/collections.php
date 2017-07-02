@@ -259,7 +259,8 @@ include 'session.php';
 $(document).ready(function(){
     $('#datatables').dataTable({
         "pageLength": -1,
-        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        "deferLoading": 10
     });
     $(".bt-pay").click(function(event) {
         var si_no = $(this).data("sino");
@@ -272,12 +273,12 @@ $(document).ready(function(){
         $("#total").val(total);
     });
     $("#addpayment").click(function(event) {
-      console.log('test');
         var si = $("#si_no").val();
         var cu = $("#cust").val();
         var to = $("#total").val();
         var am = $("#amount").val();
         var pa = $("#paytype").val();
+        var table = $("#datatables").DataTable();
         $.post('addpay.php', {addpay:'addpay',si:si,cu:cu,to:to,am:am,pa:pa }, function(data) {
           // if(data.status_code == 1){
           //   $('.result').html(data.status_msg);
@@ -285,6 +286,7 @@ $(document).ready(function(){
           //   $('.result').html(data.status_msg);
           // }
           $('.result').html(data);
+          table.draw();
         });
     });
 });
