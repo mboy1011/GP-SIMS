@@ -147,6 +147,13 @@ $oop = new CRUD();
           </div>
         </div>
         <div class="row">
+            <div class="col-sm-2">
+                    <form class="form-group" method="POST" action="exportcsv.php">
+                        <button type="submit" name="exportpay_repo" class="btn btn-primary form-control"><b class="fa fa-download">&nbsp;</b>Export as CSV</button>
+                    </form>
+            </div>
+        </div>
+        <div class="row">
           <div class="col-sm-12">
             <div class="table-responsive">
                 <table class="table table-striped table-bordered nowrap" width="100%" id="datatables">
@@ -157,12 +164,13 @@ $oop = new CRUD();
                             <th>Customer Name</th>
                             <th>Sales No</th>
                             <th>Amount Paid</th>
+                            <th>Payment Type</th>
                             <th>Date Paid</th>
                         </tr>
                     </thead>
                     <?php
                     $i=1;
-                     $result = mysqli_query($db,"SELECT tbl_payments.pay_id, tbl_payments.sales_no, tbl_payments.cus_id, tbl_customers.full_name, tbl_paymentsdetails.amount, tbl_paymentsdetails.timestamp FROM tbl_payments INNER JOIN tbl_paymentsdetails ON tbl_payments.pay_id = tbl_paymentsdetails.pay_id LEFT JOIN tbl_customers ON tbl_payments.cus_id = tbl_customers.cus_id") or die(mysqli_error());
+                     $result = mysqli_query($db,"SELECT tbl_payments.pay_id, tbl_payments.sales_no, tbl_payments.cus_id, tbl_customers.full_name, tbl_paymentsdetails.amount, tbl_paymentsdetails.timestamp, tbl_paymentsdetails.pay_type FROM tbl_payments INNER JOIN tbl_paymentsdetails ON tbl_payments.pay_id = tbl_paymentsdetails.pay_id LEFT JOIN tbl_customers ON tbl_payments.cus_id = tbl_customers.cus_id") or die(mysqli_error());
                       // $result = mysqli_query($db, "SELECT * FROM tbl_sales") or die(mysql_error());
 
                     ?>
@@ -173,6 +181,7 @@ $oop = new CRUD();
                             <td><?php echo $row['pay_id']; ?></td>
                             <td><?php echo $row['full_name']; ?></td>            
                             <td><?php echo $row['sales_no']; ?></td>
+                            <td><?php echo $row['pay_type']?></td>
                             <td>₱<?php echo number_format($row['amount'],2); ?></td> 
                             <td><?php echo $row['timestamp'];?></td>
                           </tr>
