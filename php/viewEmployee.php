@@ -12,6 +12,7 @@ $oop = new CRUD();
     <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
     <!-- DataTables Bootstrap -->
     <link rel="stylesheet" type="text/css" href="../css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/fixedColumns.bootstrap.min.css">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <style type="text/css" media="screen">
 .modal-header{
@@ -21,6 +22,14 @@ $oop = new CRUD();
 .modal-footer{
     background-color: #333333;
 }    
+#datatables_filter
+{
+  color: #c68c53;
+}
+#data-menu
+{
+  color: #c68c53;
+}
 </style>
  </head>
 <body>
@@ -171,7 +180,7 @@ $oop = new CRUD();
     }
 ?>          
             <div class="table-responsive">
-                <table class="table" id="datatables">
+                <table class="table table-striped table-bordered nowrap" width="100%" id="datatables">
                     <thead class="thead-inverse">
                         <tr>
                             <th>ID</th>
@@ -268,11 +277,22 @@ $oop = new CRUD();
 <!-- DataTables -->
 <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="../js/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript" src="../js/dataTables.fixedColumns.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
     $('#datatables').dataTable({
         "pageLength": -1,
-        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        scrollY:        "500px",
+        scrollX:        true,
+        scrollCollapse: true,
+        fixedColumns:{
+            leftColumns: 2
+        },
+        "oLanguage": {
+          "sSearch": "<b class='fa fa-search fa-lg'>&nbsp;</b>",
+          "sLengthMenu": "<b id='data-menu'><b class='fa fa-list fa-lg'></b> _MENU_ records</b>"
+        }
     });
     $('.btn-edits').click(function(event) {
         var id = $(this).data("id");

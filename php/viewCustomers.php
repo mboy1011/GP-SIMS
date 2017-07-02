@@ -372,10 +372,12 @@ $(document).ready(function(){
     $('#datatables').dataTable({
         "pageLength": -1,
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-        scrollY:        true,
+        scrollY:        "500px",
         scrollX:        true,
         scrollCollapse: true,
-        fixedColumns:   true,
+        fixedColumns:{
+            leftColumns: 2
+        },
         "oLanguage": {
           "sSearch": "<b class='fa fa-search fa-lg'>&nbsp;</b>",
           "sLengthMenu": "<b id='data-menu'><b class='fa fa-list fa-lg'></b> _MENU_ records</b>"

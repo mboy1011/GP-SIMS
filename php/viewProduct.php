@@ -13,7 +13,8 @@ $oop = new CRUD();
     <!-- DataTables Bootstrap -->
     <link rel="stylesheet" type="text/css" href="../css/dataTables.bootstrap.min.css">
     <!-- DatePicker -->
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap-datepicker3.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/fixedColumns.bootstrap.min.css">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <style type="text/css" media="screen">
 .modal-header{
@@ -23,6 +24,14 @@ $oop = new CRUD();
 .modal-footer{
     background-color: #333333;
 }        
+#datatables_filter
+{
+  color: #c68c53;
+}
+#data-menu
+{
+  color: #c68c53;
+}
 </style>
 </head>
 <body>
@@ -176,7 +185,7 @@ $oop = new CRUD();
         <div class="row">
           <div class="col-sm-12">
             <div class="table-responsive">
-                <table class="table table-hover" id="datatables">
+                <table class="table table-striped table-bordered nowrap" width="100%" id="datatables">
                     <thead class="thead-inverse">
                         <tr>
                             <th>ID</th>
@@ -287,6 +296,7 @@ $oop = new CRUD();
 <!-- DataTables -->
 <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="../js/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript" src="../js/dataTables.fixedColumns.min.js"></script>
 <!-- DatePicker -->
 <script type="text/javascript" src="../js/bootstrap-datepicker.min.js"></script>
 <script type="text/javascript" src="../js/bootstrap-datepicker.en-AU.min.js"></script>
@@ -294,7 +304,17 @@ $oop = new CRUD();
 $(document).ready(function(){
     $('#datatables').dataTable({
        "pageLength": -1,
-       "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+       "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        scrollY:        "500px",
+        scrollX:        true,
+        scrollCollapse: true,
+        fixedColumns:{
+            leftColumns: 2
+        },
+        "oLanguage": {
+          "sSearch": "<b class='fa fa-search fa-lg'>&nbsp;</b>",
+          "sLengthMenu": "<b id='data-menu'><b class='fa fa-list fa-lg'></b> _MENU_ records</b>"
+        }
     });
       var date = new Date();
       var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
