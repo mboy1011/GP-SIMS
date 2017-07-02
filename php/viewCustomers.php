@@ -21,6 +21,15 @@ $oop = new CRUD();
 .modal-footer{
     background-color: #333333;
 }    
+/*Data Tables Search Bar*/
+#datatables_filter
+{
+  color: #c68c53;
+}
+#data-menu
+{
+  color: #c68c53;
+}
 </style>
  </head>
 <body>
@@ -359,7 +368,11 @@ if(isset($_POST['importSubmit'])){
 $(document).ready(function(){
     $('#datatables').dataTable({
         "pageLength": -1,
-        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        "oLanguage": {
+          "sSearch": "<b class='fa fa-search fa-lg'>&nbsp;</b>",
+          "sLengthMenu": "<b id='data-menu'><b class='fa fa-list fa-lg'></b> _MENU_ records</b>"
+          }
     });
     $(".btn-edit").click(function(){
         var id = $(this).data("id");
@@ -382,7 +395,7 @@ $(document).ready(function(){
         $("#delid").val(did);
     });
     $("#import").click(function(event) {
-        $("#showimport").slideToggle('slow');
+        $("#showimport").slideToggle('100');
     });
 });
 </script>

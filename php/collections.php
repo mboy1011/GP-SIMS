@@ -32,6 +32,18 @@ include 'session.php';
       color:white;
       overflow:auto;
 }*/
+/*Data Tables Search Bar*/
+#datatables_filter
+{
+  color: #c68c53;
+}
+#data-menu
+{
+  color: #c68c53;
+}
+#datatables_ordering{
+  font-size: 50px;
+}
 </style>
  </head>
 <body>
@@ -152,6 +164,18 @@ include 'session.php';
                             <th>Actions</th> 
                         </tr>
                     </thead>
+                    <!-- <tfoot>
+                      <tr>
+                            <th>ID</th>
+                            <th>Sales No.</th>
+                            <th>Customer Name</th>
+                            <th>Total Amount Due</th>
+                            <th>Amount Paid</th>
+                            <th>Balance</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>   
+                    </tfoot> -->
                     <?php
                     $i=1;
                      $result = mysqli_query($db,"SELECT tbl_customers.full_name,tbl_payments.amount,tbl_sales.sales_no,tbl_payments.balance,tbl_sales.total_amount,tbl_sales.status,tbl_customers.cus_id FROM tbl_customers INNER JOIN tbl_sales ON tbl_sales.cus_id=tbl_customers.cus_id AND tbl_sales.status!='PAID' LEFT JOIN tbl_payments ON tbl_sales.sales_no=tbl_payments.sales_no AND tbl_sales.cus_id=tbl_payments.cus_id AND tbl_payments.balance!=0 WHERE tbl_sales.status!='CANCELLED'") or die(mysqli_error());
@@ -260,7 +284,10 @@ $(document).ready(function(){
     $('#datatables').dataTable({
         "pageLength": -1,
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-        "deferLoading": 10
+        "oLanguage": {
+          "sSearch": "<b class='fa fa-search fa-lg'>&nbsp;</b>",
+          "sLengthMenu": "<b id='data-menu'><b class='fa fa-list fa-lg'></b> _MENU_ records</b>&nbsp;"
+          }
     });
     $(".bt-pay").click(function(event) {
         var si_no = $(this).data("sino");
@@ -278,7 +305,6 @@ $(document).ready(function(){
         var to = $("#total").val();
         var am = $("#amount").val();
         var pa = $("#paytype").val();
-        var table = $("#datatables").DataTable();
         $.post('addpay.php', {addpay:'addpay',si:si,cu:cu,to:to,am:am,pa:pa }, function(data) {
           // if(data.status_code == 1){
           //   $('.result').html(data.status_msg);
@@ -286,9 +312,32 @@ $(document).ready(function(){
           //   $('.result').html(data.status_msg);
           // }
           $('.result').html(data);
-          table.draw();
         });
     });
+    /* Search input in each column on datatables*/
+    /*
+    // Setup - add a text input to each footer cell
+    $('#datatables tfoot th').each( function () {
+        var title = $(this).text();
+        $(this).html( '<input type="text" placeholder="'+title+'" />' );
+    } );
+ 
+    // DataTable
+    var table = $('#datatables').DataTable();
+ 
+    // Apply the search
+    table.columns().every( function () {
+        var that = this;
+ 
+        $( 'input', this.footer() ).on( 'keyup change', function () {
+            if ( that.search() !== this.value ) {
+                that
+                    .search( this.value )
+                    .draw();
+            }
+        } );
+    } );  
+    */  
 });
 </script>
 </body>
