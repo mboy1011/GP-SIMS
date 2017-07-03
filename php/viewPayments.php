@@ -13,6 +13,7 @@ $oop = new CRUD();
     <!-- DataTables Bootstrap -->
     <link rel="stylesheet" type="text/css" href="../css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/fixedColumns.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/buttons.dataTables.min.css">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <style type="text/css" media="screen">
 .modal-header{
@@ -147,13 +148,6 @@ $oop = new CRUD();
           </div>
         </div>
         <div class="row">
-            <div class="col-sm-2">
-                    <form class="form-group" method="POST" action="exportcsv.php">
-                        <button type="submit" name="exportpay_repo" class="btn btn-primary form-control"><b class="fa fa-download">&nbsp;</b>Export as CSV</button>
-                    </form>
-            </div>
-        </div>
-        <div class="row">
           <div class="col-sm-12">
             <div class="table-responsive">
                 <table class="table table-striped table-bordered nowrap" width="100%" id="datatables">
@@ -163,9 +157,10 @@ $oop = new CRUD();
                             <th>Payment ID</th>
                             <th>Customer Name</th>
                             <th>Sales No</th>
-                            <th>Amount Paid</th>
                             <th>Payment Type</th>
+                            <th>Amount Paid</th>
                             <th>Date Paid</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <?php
@@ -184,6 +179,7 @@ $oop = new CRUD();
                             <td><?php echo $row['pay_type']?></td>
                             <td>₱<?php echo number_format($row['amount'],2); ?></td> 
                             <td><?php echo $row['timestamp'];?></td>
+                            <td><button type="button" class="btn btn-danger btn-sm"><b class="fa fa-trash"></b></button></td>
                           </tr>
                       <?php } ?>
                     </tbody>
@@ -203,6 +199,14 @@ $oop = new CRUD();
 <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="../js/dataTables.bootstrap.min.js"></script>
 <script type="text/javascript" src="../js/dataTables.fixedColumns.min.js"></script>
+<script type="text/javascript" src="../js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="../js/buttons.bootstrap.min.js"></script>
+<script type="text/javascript" src="../js/buttons.flash.min.js"></script>
+<script type="text/javascript" src="../js/jszip.min.js"></script>
+<script type="text/javascript" src="../js/pdfmake.min.js"></script>
+<script type="text/javascript" src="../js/vfs_fonts.js"></script>
+<script type="text/javascript" src="../js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="../js/buttons.print.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
     $('#datatables').dataTable({
@@ -216,8 +220,21 @@ $(document).ready(function(){
         },
         "oLanguage": {
           "sSearch": "<b class='fa fa-search fa-lg'>&nbsp;</b>",
-          "sLengthMenu": "<b id='data-menu'><b class='fa fa-list fa-lg'></b> _MENU_ records</b>"
-        }
+          "sLengthMenu": "<b id='data-menu'><b class='fa fa-eye fa-lg'>&nbsp;</b>Show _MENU_ records</b>&nbsp;"
+        },
+        "pagingType": "full_numbers",
+        dom: 'lBfrtip',
+        buttons: [
+            {
+              "extend":'copy', "text":'<span class="fa fa-copy fa-lg">&nbsp;</span>Copy',"className": 'btn btn-primary btn-xs' 
+            },{
+              "extend":'excel', "text":'<span class="fa fa-file-excel-o fa-lg">&nbsp;</span>Excel',"className": 'btn btn-primary btn-xs' 
+            },{
+              "extend":'pdf', "text":'<span class="fa fa-file-pdf-o fa-lg">&nbsp;</span>PDF',"className": 'btn btn-primary btn-xs' 
+            },{
+              "extend":'print', "text":'<span class="fa fa-print fa-lg">&nbsp;</span>Print',"className": 'btn btn-primary btn-xs' 
+            }
+        ]
     });
 });
 </script>
