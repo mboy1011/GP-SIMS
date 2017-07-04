@@ -203,7 +203,7 @@ include 'session.php';
             </div>
             <div class="col-sm-4">
                   <div class="input-group">
-                 <span class="input-group-addon">Year</span>
+                 <span class="input-group-addon">Total Sales Year</span>
                     <select name="" class="form-control" id='yr'>
                             <?php
                             $result =mysqli_query($db, "SELECT Year FROM tbl_monthly_sales_report GROUP BY Year");
@@ -226,7 +226,7 @@ include 'session.php';
             </div>
             <div class="col-sm-4">
                   <div class="input-group">
-                 <span class="input-group-addon">Year</span>
+                 <span class="input-group-addon">Total Products Out Year</span>
                     <select name="" class="form-control" id='yr2'>
                             <?php
                             $result =mysqli_query($db, "SELECT Year FROM tbl_monthly_products_out GROUP BY Year");
