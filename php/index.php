@@ -124,7 +124,6 @@ include 'session.php';
                         SALES INVOICES
                     </div>
                 </div>
-                <input type="hidden" name="" id="si" value="<?php echo $result1['total'];?>">
             </div>
             <div class="col-sm-4 col-md-2">
                 <div class="thumbnail" style="background-color: #00e673;color: #fff; text-align: center;">
@@ -139,7 +138,6 @@ include 'session.php';
                         PAID
                     </div>
                 </div>
-                <input type="hidden" name="" id="pd" value="<?php echo $result2['total'];?>">
             </div>
             <div class="col-sm-4 col-md-2">
                 <div class="thumbnail" style="background-color: #ff8000;color: #fff; text-align: center;">
@@ -154,7 +152,6 @@ include 'session.php';
                         UNPAID
                     </div>
                 </div>
-                <input type="hidden" name="" id="up" value="<?php echo $result3['total'];?>">
             </div>
             <div class="col-sm-4 col-md-2">
                 <div class="thumbnail" style="background-color: #0000ff;color: #fff; text-align: center;">
@@ -169,7 +166,6 @@ include 'session.php';
                         PARTIALLY PAID
                     </div>
                 </div>
-                <input type="hidden" name="" id="pp" value="<?php echo $result4['total'];?>">
             </div>
             <div class="col-sm-4 col-md-2">
                 <div class="thumbnail" style="background-color: #4d1919;color: #fff; text-align: center;">
@@ -184,7 +180,6 @@ include 'session.php';
                         CANCELLED
                     </div>
                 </div>
-                <input type="hidden" name="" id="cn" value="<?php echo $result6['total'];?>">
             </div>
             <div class="col-sm-4 col-md-2">
                 <div class="thumbnail" style="background-color: #ff0000;color: #fff; text-align: center;">
@@ -200,11 +195,25 @@ include 'session.php';
                         OVERDUE
                     </div>
                 </div>
-                <input type="hidden" name="" id="od" value="<?php echo $result5['total'];?>">
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-8">
+            <div class="col-sm-1">
+                
+            </div>
+            <div class="col-sm-4">
+                  <div class="input-group">
+                    <input type="number" id="yr" class="form-control" placeholder="Year" required="">
+                    <div class="input-group-btn">
+                      <button class="btn btn-primary form-control" id="year" type="submit">
+                        <b class="fa fa-paper-plane fa-lg"></b>
+                      </button>
+                    </div>
+                  </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
                 <!-- ChartJS -->
                 <canvas id="myChart"></canvas>            
             </div>
@@ -230,30 +239,26 @@ var c = $("#up").val();
 var d = $("#pp").val();
 var e = $("#cn").val();
 var f = $("#od").val();
-var myChart = new Chart(ctx, {
-    type: 'horizontalBar',
+
+$("#year").click(function(event) {
+   var yr = $("#yr").val();
+$.post('data.php', {chart: 'chart',year:yr}, function(data, textStatus, xhr) {
+    var obj = JSON.parse(data);
+    var label = [];
+    var total = [];
+    for (var i = 0; i < obj.length; i++) {
+        label.push(obj[i].Month);
+        total.push(obj[i].Total);
+    }
+   var myChart = new Chart(ctx, {
+    type: 'line',
     data: {
-        labels: ["Sales Invoice", "Paid", "Unpaid", "Partially Paid", "Cancelled", "Overdue"],
+        labels: label,
         datasets: [{
             label: ['Total'],
-            data: [a, b, c, d, e, f],
-            backgroundColor: [
-                'rgba(51, 51, 51, 0.5)',
-                'rgba(0, 230, 115, 0.5)',
-                'rgba(255, 128, 0, 0.5)',
-                'rgba(0, 0, 255, 0.5)',
-                'rgba(77, 25, 25, 0.5)',
-                'rgba(255, 0, 0, 0.5)'
-            ],
-            borderColor: [
-                'rgba(51, 51, 51, 1)',
-                'rgba(0, 230, 115, 1)',
-                'rgba(255, 128, 0, 1)',
-                'rgba(0, 0, 255, 1)',
-                'rgba(77, 25, 25, 1)',
-                'rgb(255, 0, 0, 1)'
-            ],
-            borderWidth: 1
+            data: total,
+            backgroundColor: 'rgba(102, 102, 255, 0.2)',
+            borderColor:    'rgba(102, 102, 255, 1)'
         }]
     },
     options: {
@@ -269,13 +274,14 @@ var myChart = new Chart(ctx, {
                 }
             }]
         },
-        animationEasing : 'easeOutBounce',
         responsive: true,
         title: {
             display: true,
-            text: 'Sales Invoice Chart'
+            text: 'Total Sales Chart'
         }
     }
+    });
+});
 });
 });
 
