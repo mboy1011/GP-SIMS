@@ -227,9 +227,9 @@ include 'session.php';
             <div class="col-sm-4">
                   <div class="input-group">
                  <span class="input-group-addon">Year</span>
-                    <select name="" class="form-control" id='yr'>
+                    <select name="" class="form-control" id='yr2'>
                             <?php
-                            $result =mysqli_query($db, "SELECT Year FROM tbl_monthly_sales_report GROUP BY Year");
+                            $result =mysqli_query($db, "SELECT Year FROM tbl_monthly_products_out GROUP BY Year");
                             while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
                               echo"<option> ";
                               echo $row['Year'];
@@ -238,7 +238,7 @@ include 'session.php';
                             ?>
                     </select>
                     <div class="input-group-btn">
-                      <button class="btn btn-primary form-control" id="year1" type="submit">
+                      <button class="btn btn-primary form-control" id="year2" type="submit">
                         <b class="fa fa-paper-plane fa-lg"></b>
                       </button>
                     </div>
@@ -247,11 +247,10 @@ include 'session.php';
         </div>
         <div class="row">
             <div class="col-sm-6">
-                <!-- ChartJS -->
-                <canvas id="myChart"></canvas>            
+                <canvas id="sales"></canvas>            
             </div>
-            <div class="col-sm-4">
-                
+            <div class="col-sm-6">
+                <canvas id="products"></canvas>
             </div>
         </div>
         <!-- /.row -->
@@ -265,14 +264,57 @@ include 'session.php';
 <script type="text/javascript" src="../js/Chart.min.js"></script>
 <script type="text/javascript">
 $(function() {
-var ctx = $("#myChart");
+var ctx1 = $("#sales");
+var ctx2 = $("#products");
 var a = $("#si").val();
 var b = $("#pd").val();
 var c = $("#up").val();
 var d = $("#pp").val();
 var e = $("#cn").val();
 var f = $("#od").val();
-
+$("#year2").click(function(event) {
+    var yr2 = $("#yr2 option:selected").text();
+    $.post('data2.php', {chart2: 'chart2',year2:yr2}, function(data, textStatus, xhr) {
+        var obj2 = JSON.parse(data);
+        var label2 = [];
+        var total2 = [];
+        for (var i = 0; i < obj2.length; i++) {
+            label2.push(obj2[i].Month);
+            total2.push(obj2[i].Total);
+        }
+        var products = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: label2,
+            datasets: [{
+                label: [yr2],
+                data: total2,
+                backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                borderColor:    'rgba(1, 1, 1, 0.5)'
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }],
+                xAxes:[{
+                    ticks:{
+                        beginAtZero:true
+                    }
+                }]
+            },
+            responsive: true,
+            title: {
+                display: true,
+                text: 'Total Products Out'
+            }
+        }
+        });
+    });
+});
 $("#year1").click(function(event) {
    var yr = $("#yr option:selected").text();
 $.post('data.php', {chart: 'chart',year:yr}, function(data, textStatus, xhr) {
@@ -283,7 +325,7 @@ $.post('data.php', {chart: 'chart',year:yr}, function(data, textStatus, xhr) {
         label.push(obj[i].Month);
         total.push(obj[i].Total);
     }
-   var myChart = new Chart(ctx, {
+   var sales = new Chart(ctx1, {
     type: 'line',
     data: {
         labels: label,
