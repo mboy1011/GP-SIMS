@@ -203,9 +203,42 @@ include 'session.php';
             </div>
             <div class="col-sm-4">
                   <div class="input-group">
-                    <input type="number" id="yr" class="form-control" placeholder="Year" required="">
+                 <span class="input-group-addon">Year</span>
+                    <select name="" class="form-control" id='yr'>
+                            <?php
+                            $result =mysqli_query($db, "SELECT Year FROM tbl_monthly_sales_report GROUP BY Year");
+                            while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
+                              echo"<option> ";
+                              echo $row['Year'];
+                              echo"</option>";
+                            }
+                            ?>
+                    </select>
                     <div class="input-group-btn">
-                      <button class="btn btn-primary form-control" id="year" type="submit">
+                      <button class="btn btn-primary form-control" id="year1" type="submit">
+                        <b class="fa fa-paper-plane fa-lg"></b>
+                      </button>
+                    </div>
+                  </div>
+            </div>
+            <div class="col-sm-1">
+                
+            </div>
+            <div class="col-sm-4">
+                  <div class="input-group">
+                 <span class="input-group-addon">Year</span>
+                    <select name="" class="form-control" id='yr'>
+                            <?php
+                            $result =mysqli_query($db, "SELECT Year FROM tbl_monthly_sales_report GROUP BY Year");
+                            while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
+                              echo"<option> ";
+                              echo $row['Year'];
+                              echo"</option>";
+                            }
+                            ?>
+                    </select>
+                    <div class="input-group-btn">
+                      <button class="btn btn-primary form-control" id="year1" type="submit">
                         <b class="fa fa-paper-plane fa-lg"></b>
                       </button>
                     </div>
@@ -240,8 +273,8 @@ var d = $("#pp").val();
 var e = $("#cn").val();
 var f = $("#od").val();
 
-$("#year").click(function(event) {
-   var yr = $("#yr").val();
+$("#year1").click(function(event) {
+   var yr = $("#yr option:selected").text();
 $.post('data.php', {chart: 'chart',year:yr}, function(data, textStatus, xhr) {
     var obj = JSON.parse(data);
     var label = [];
@@ -255,7 +288,7 @@ $.post('data.php', {chart: 'chart',year:yr}, function(data, textStatus, xhr) {
     data: {
         labels: label,
         datasets: [{
-            label: ['Total'],
+            label: [yr],
             data: total,
             backgroundColor: 'rgba(102, 102, 255, 0.2)',
             borderColor:    'rgba(102, 102, 255, 1)'
