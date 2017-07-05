@@ -10,7 +10,7 @@ $oop = new CRUD();
 	<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="../css/style.css">
   <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="viewport" dbtent="width=device-width,initial-scale=1.0">
  </head>
 <body>
 <div id="wrapper">
@@ -23,9 +23,9 @@ $oop = new CRUD();
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                 <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
+                <span class="idb-bar"></span>
+                <span class="idb-bar"></span>
+                <span class="idb-bar"></span>
             </button>
         </div>
         <!-- Top Menu Items -->
@@ -92,7 +92,7 @@ $oop = new CRUD();
                 <li>
                     <hr>
                     <center>
-                        <div class="container-fluid" style="color: #fff;">
+                        <div class="dbtainer-fluid" style="color: #fff;">
                             <p><b style="font-size:16px;">Golden Pharmaceutical</b><br>
                             <i style="font-size: 10px;">Bolonsiri Road, Camaman-an,</i><br><i style="font-size: 9px"> Cagayan De Oro City</i><br><i style="font-size: 8px;">Telefax (088) 857-3088</i></p> 
                              <p>All Rights Reserved 2017.</p>   
@@ -103,7 +103,7 @@ $oop = new CRUD();
         </div>
         <!-- /.navbar-collapse -->
     </nav>
-    <div class="container-fluid">
+    <div class="dbtainer-fluid">
         <div class="row">
           <ol class="breadcrumb">
           <li><a href="index.php">Overview</a></li>
@@ -112,84 +112,80 @@ $oop = new CRUD();
           <hr>
         </div>
         <div class="row">
-           <div class="col-sm-4">
-                <div class="panel-body">
-                    <label><b class="fa fa-file-excel-o fa-bg"></b> Import CSV File for Customers</label>
-                  <form action="" method="post" enctype="multipart/form-data" id="importFrm">
-                        <input type="file" name="file" class="form-control" required="">
-                        <input type="submit" class="btn btn-primary form-control" name="importSubmit" value="IMPORT">
-                    </form>
-                </div>
-                <?php
-                    if(isset($_POST['importSubmit'])){
-                        
-                        //validate whether uploaded file is a csv file
-                        $csvMimes = array('text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel', 'text/plain');
-                        if(!empty($_FILES['file']['name']) && in_array($_FILES['file']['type'],$csvMimes)){
-                            if(is_uploaded_file($_FILES['file']['tmp_name'])){
-                                //open uploaded csv file with read only mode
-                                $csvFile = fopen($_FILES['file']['tmp_name'], 'r');          
-                                //skip first line
-                                fgetcsv($csvFile);
-                                //parse data from csv file line by line
-                                while(($line = fgetcsv($csvFile)) !== FALSE){
-                                    //check whether member already exists in database with same email
-                                    $sql = mysqli_query($db,"SELECT * FROM tbl_customers WHERE tin = '".$line[1]."'");
-                                    $result = mysqli_fetch_assoc($sql);
-                                    if($result > 0){
-                                        //update member data
-                                        $query1 = mysqli_query($db,"UPDATE tbl_customers SET full_name = '".$line[0]."',  terms = '".$line[2]."', opidno = '".$line[3]."', bstyle = '".$line[4]."', address = '".$line[5]."' WHERE tin = '".$line[1]."'");
-                                    }else{
-                                        //insert member data into database
-                                        $query2 = mysqli_query($db,"INSERT INTO tbl_customers (full_name, tin, terms, opidno, bstyle, address) VALUES ('".$line[0]."','".$line[1]."','".$line[2]."','".$line[3]."','".$line[4]."','".$line[5]."')");
-                                    }
-                                }
-                                
-                                //close opened csv file
-                                fclose($csvFile);
-
-                                $qstring = '?status=succ';
-?>
-                                      <div class="alert alert-success alert-dismissable">
-                                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                                        <strong>Successfully Added!</strong>
-                                      </div>
-<?php                                
-                            }else{
-                                $qstring = '?status=err';
-?>
-                                      <div class="alert alert-warning alert-dismissable">
-                                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                                        <strong>Failed to Add!</strong> Try Again.
-                                      </div>
+            <div class="col-sm-12">
 <?php
-                            }
-                        }else{
-                            $qstring = '?status=invalid_file';
-?>
-                                      <div class="alert alert-danger alert-dismissable">
-                                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                                        <strong>Invalid CSV File!</strong> Try Again.
-                                      </div>
-<?php                            
+if(isset($_POST['backup'])){                
+        $tables = array();
+        $query = mysqli_query($db, 'SHOW TABLES');
+        while($row = mysqli_fetch_row($query)){
+             $tables[] = $row[0];
+        }
+        $result = "";
+        foreach($tables as $table){
+            $query = mysqli_query($db, 'SELECT * FROM '.$table);
+            $num_fields = mysqli_num_fields($query);
+            $result .= 'DROP TABLE IF EXISTS '.$table.';';
+            $row2 = mysqli_fetch_row(mysqli_query($db, 'SHOW CREATE TABLE '.$table));
+            $result .= "\n\n".$row2[1].";\n\n";
+            for ($i = 0; $i < $num_fields; $i++) {
+                while($row = mysqli_fetch_row($query)){
+                   $result .= 'INSERT INTO '.$table.' VALUES(';
+                     for($j=0; $j<$num_fields; $j++){
+                       $row[$j] = addslashes($row[$j]);
+                       $row[$j] = str_replace("\n","\\n",$row[$j]);
+                       if(isset($row[$j])){
+                           $result .= '"'.$row[$j].'"' ; 
+                        }else{ 
+                            $result .= '""';
+                        }
+                        if($j<($num_fields-1)){ 
+                            $result .= ',';
                         }
                     }
+                    $result .= ");\n";
+                }
+            }
+            $result .="\n\n";
+        }
+        //Create Folder
+        $folder = 'Backup_Database/';
+        if (!is_dir($folder))
+        mkdir($folder, 0777, true);
+        chmod($folder, 0777);
+        $date = date('m-d-Y'); 
+        $filename = $folder."db_backup_".$date; 
+        $handle = fopen($filename.'.sql','w+');
+        fwrite($handle,$result);
+        fclose($handle);
+        ?>
+        <div class="alert alert-success alert-dismissable">
+             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+             <strong><b class="fa fa-check">&nbsp;</b>Database Backup Successfully!</strong>
+        </div>
+        <?php
+}
 ?>
+            </div>
+        </div>
+        
+        <div class="row">
+           <div class="col-sm-2">
+
            </div>
-           <div class="col-sm-4">
-                <div class="panel-body">
-                    <form class="form-group" method="POST" action="exportcsv.php">
-                    <label><b class="fa fa-file-excel-o">&nbsp;</b>Export as CSV File</label>
-                        <button type="submit" name="exportcustomer" class="btn btn-default form-control">Export</button>
-                    </form>
+            <div class="col-sm-6">
+            <form method="POST" action="">
+                <div class="input-group">
+                    <span class="input-group-addon"><b class="fa fa-database">&nbsp;</b>Backup Database</span>
+                    <span class="input-group-btn"><button type="submit" name="backup" class="btn btn-primary">Backup</button></span>
                 </div>
-           </div>
+            </form>
+            </div>
            <div class="col-sm-4">
 
            </div>
         </div>
         <!-- /.row -->
-        <!-- /.container-fluid -->
+        <!-- /.dbtainer-fluid -->
      </div>
 
     <!-- /#page-wrapper -->
