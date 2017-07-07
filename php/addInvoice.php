@@ -236,7 +236,7 @@ include 'session.php';
                         <span class="input-group-addon">Choose Products:</span>
                          <select name="userid" class="form-control" id="cprod">
                                   <?php
-                                    $result =mysqli_query($db, "SELECT prod_id,name FROM tbl_products");
+                                    $result =mysqli_query($db, "SELECT prod_id,name FROM tbl_products WHERE status!='OUT OF STOCKS'");
                                     while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
                                       echo"<option value='$row[prod_id]'>";
                                       echo $row['name'];

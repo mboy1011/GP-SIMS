@@ -10,7 +10,7 @@ $oop = new CRUD();
 	<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="../css/style.css">
   <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
-  <meta name="viewport" dbtent="width=device-width,initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
  </head>
 <body>
 <div id="wrapper">
@@ -23,9 +23,9 @@ $oop = new CRUD();
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                 <span class="sr-only">Toggle navigation</span>
-                <span class="idb-bar"></span>
-                <span class="idb-bar"></span>
-                <span class="idb-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
             </button>
         </div>
         <!-- Top Menu Items -->
@@ -92,7 +92,7 @@ $oop = new CRUD();
                 <li>
                     <hr>
                     <center>
-                        <div class="dbtainer-fluid" style="color: #fff;">
+                        <div class="container-fluid" style="color: #fff;">
                             <p><b style="font-size:16px;">Golden Pharmaceutical</b><br>
                             <i style="font-size: 10px;">Bolonsiri Road, Camaman-an,</i><br><i style="font-size: 9px"> Cagayan De Oro City</i><br><i style="font-size: 8px;">Telefax (088) 857-3088</i></p> 
                              <p>All Rights Reserved 2017.</p>   
@@ -103,13 +103,15 @@ $oop = new CRUD();
         </div>
         <!-- /.navbar-collapse -->
     </nav>
-    <div class="dbtainer-fluid">
+    <div class="container-fluid">
         <div class="row">
-          <ol class="breadcrumb">
-          <li><a href="index.php">Overview</a></li>
-          <li class="active">Settings</li>
-          </ol>
-          <hr>
+            <div class="col-sm-12">
+              <ol class="breadcrumb">
+              <li><a href="index.php">Overview</a></li>
+              <li class="active">Settings</li>
+              </ol>
+              <hr>
+            </div>
         </div>
         <div class="row">
             <div class="col-sm-12">
@@ -167,12 +169,9 @@ if(isset($_POST['backup'])){
 ?>
             </div>
         </div>
-        
-        <div class="row">
-           <div class="col-sm-2">
 
-           </div>
-            <div class="col-sm-6">
+        <div class="row">
+            <div class="col-sm-4">
             <form method="POST" action="">
                 <div class="input-group">
                     <span class="input-group-addon"><b class="fa fa-database">&nbsp;</b>Backup Database</span>
@@ -185,7 +184,7 @@ if(isset($_POST['backup'])){
            </div>
         </div>
         <!-- /.row -->
-        <!-- /.dbtainer-fluid -->
+        <!-- /.container-fluid -->
      </div>
 
     <!-- /#page-wrapper -->

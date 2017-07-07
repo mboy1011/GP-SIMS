@@ -12,10 +12,10 @@ $oop = new CRUD();
     <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
     <!-- DataTables Bootstrap -->
     <link rel="stylesheet" type="text/css" href="../css/dataTables.bootstrap.min.css">
-    <!-- DatePicker -->
-    <link rel="stylesheet" type="text/css" href="../css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/fixedColumns.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/buttons.dataTables.min.css">
+    <!-- DatePicker -->
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-datepicker3.min.css">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <style type="text/css" media="screen">
 .modal-header{
@@ -197,6 +197,7 @@ $oop = new CRUD();
                             <th>Expiration Date</th>
                             <th>Packing</th>
                             <th>Quantity/BOX</th>
+                            <th>Status</th>
                             <th>Date Added</th>                       
                             <th>Edit</th> 
                             <th>Delete</th> 
@@ -216,6 +217,22 @@ $oop = new CRUD();
                             <td><?php echo $row['expiry_date']; ?></td>    
                             <td><?php echo $row['packing']; ?></td>    
                             <td><?php echo $row['quantity']; ?></td>
+                            <td><?php
+                             if ($row['status']=='ACTIVE') {
+                              ?>
+                               <span class="label label-success"><?php echo $row['status'];?></span>
+                              <?php
+                             }else if($row['status']=='OUT OF STOCKS'){
+                              ?>
+                               <span class="label label-warning"><?php echo $row['status'];?></span>
+                              <?php
+                             }else{
+                              ?>
+                               <span class="label label-danger"><?php echo $row['status'];?></span>
+                              <?php
+                             }
+                             ?>
+                             </td>
                             <td><?php echo $row['timestamp']; ?></td>    
                             <td>
                                <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs" data-id="<?php echo $row['prod_id'];?>" data-name="<?php echo $row['name'];?>" data-desc="<?php echo $row['description'];?>" data-lot="<?php echo $row['lot_no'];?>" data-price="<?php echo $row['price'];?>" data-expd="<?php echo $row['expiry_date'];?>" data-pack="<?php echo $row['packing'];?>" data-qty="<?php echo $row['quantity'];?>" data-title="Edit"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
@@ -298,10 +315,6 @@ $oop = new CRUD();
 <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="../js/dataTables.bootstrap.min.js"></script>
 <script type="text/javascript" src="../js/dataTables.fixedColumns.min.js"></script>
-<!-- DatePicker -->
-<script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="../js/dataTables.bootstrap.min.js"></script>
-<script type="text/javascript" src="../js/dataTables.fixedColumns.min.js"></script>
 <script type="text/javascript" src="../js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="../js/buttons.bootstrap.min.js"></script>
 <script type="text/javascript" src="../js/buttons.flash.min.js"></script>
@@ -310,6 +323,10 @@ $oop = new CRUD();
 <script type="text/javascript" src="../js/vfs_fonts.js"></script>
 <script type="text/javascript" src="../js/buttons.html5.min.js"></script>
 <script type="text/javascript" src="../js/buttons.print.min.js"></script>
+
+<!-- DatePicker -->
+<script type="text/javascript" src="../js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="../js/bootstrap-datepicker.en-AU.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
     $('#datatables').dataTable({

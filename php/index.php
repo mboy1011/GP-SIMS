@@ -10,6 +10,12 @@ include 'session.php';
   <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
  </head>
+ <style type="text/css" media="screen">
+     #notify{
+         background-color: #ff3333;
+         color: #fff;
+     }
+ </style>
 <body>
 <div id="wrapper">
     <!-- Navigation -->
@@ -27,7 +33,39 @@ include 'session.php';
             </button>
         </div>
         <!-- Top Menu Items -->
-        <ul class="nav navbar-right top-nav">            
+        <ul class="nav navbar-right top-nav">  
+            <li class="dropdown">
+               <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="not"><i class="fa fa-bell fa-lg"></i><span class="label label-warning badge" id="notify">
+                    <?php
+                        $count = 0;
+                        $count1 = 0;
+                        $sql = mysqli_query($db,"SELECT * FROM tbl_expired_products");
+                        $sql2 = mysqli_query($db,"SELECT * FROM tbl_outofstocks");
+                        mysqli_query($db,"UPDATE tbl_products SET status='EXPIRING' WHERE expiry_date<=DATE_ADD(CURDATE(),INTERVAL 6 MONTH)");
+                        mysqli_query($db,"UPDATE tbl_products SET status='OUT OF STOCKS' WHERE quantity=0");
+                        $count = mysqli_num_rows($sql);
+                        $count1 = mysqli_num_rows($sql2);
+                        $count+=$count1;
+                        echo $count;
+                    ?>
+                    </span>
+                </a> 
+               <ul class="dropdown-menu">
+                   <li>
+                   <?php 
+                        while ($row = mysqli_fetch_array($sql,MYSQLI_ASSOC)) {
+                            echo "<li class='dropdown-header'>Expiring Product</li>";
+                            echo "<li><a href='viewProduct.php'>".$row['name'].' '.$row['packing']."</a></li>";
+                        }
+                        while ($rows = mysqli_fetch_array($sql2,MYSQLI_ASSOC)) {
+                            echo "<li class='dropdown-header'>Out of Stocks</li>";
+                            echo "<li><a href='viewProduct.php'>".$rows['name'].' '.$rows['packing']."</a></li>";
+                        }
+                   ?>
+                   </li>
+                   <li class='divider'></li>
+               </ul>
+            </li>          
             <li  class="active">
                     <a href="index.php"><i class="fa fa-fw fa-tachometer">&nbsp;</i>Dashboard</a>
             </li>
@@ -358,6 +396,16 @@ $.post('data.php', {chart: 'chart',year:yr}, function(data, textStatus, xhr) {
     });
 });
 });
+    $("#not").click(function(event) {
+        $("#notify").hide();
+    });
+    function check() {
+        var val = $("#notify").text();
+        if (val==0) {
+            $("#notify").hide();
+        }
+    }
+    check();
 });
 
 </script>
