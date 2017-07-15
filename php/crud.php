@@ -173,5 +173,15 @@ class CRUD
           return false;
         } 
 	}
+	public function upYear($yr)
+	{
+		include 'config.php';
+		$sql = mysqli_query($db,"UPDATE tbl_year SET year='$yr'");
+		if (!$sql) {
+			return false;
+		}else{
+			return true;
+		}
+	}
 }
 ?>

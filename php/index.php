@@ -239,48 +239,9 @@ include 'session.php';
             <div class="col-sm-1">
                 
             </div>
-            <div class="col-sm-4">
-                  <div class="input-group">
-                 <span class="input-group-addon">Total Sales Year</span>
-                    <select name="" class="form-control" id='yr'>
-                            <?php
-                            $result =mysqli_query($db, "SELECT Year FROM tbl_monthly_sales_report GROUP BY Year");
-                            while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
-                              echo"<option> ";
-                              echo $row['Year'];
-                              echo"</option>";
-                            }
-                            ?>
-                    </select>
-                    <div class="input-group-btn">
-                      <button class="btn btn-primary form-control" id="year1" type="submit">
-                        <b class="fa fa-paper-plane fa-lg"></b>
-                      </button>
-                    </div>
-                  </div>
-            </div>
+            
             <div class="col-sm-1">
                 
-            </div>
-            <div class="col-sm-4">
-                  <div class="input-group">
-                 <span class="input-group-addon">Total Products Out Year</span>
-                    <select name="" class="form-control" id='yr2'>
-                            <?php
-                            $result =mysqli_query($db, "SELECT Year FROM tbl_monthly_products_out GROUP BY Year");
-                            while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
-                              echo"<option> ";
-                              echo $row['Year'];
-                              echo"</option>";
-                            }
-                            ?>
-                    </select>
-                    <div class="input-group-btn">
-                      <button class="btn btn-primary form-control" id="year2" type="submit">
-                        <b class="fa fa-paper-plane fa-lg"></b>
-                      </button>
-                    </div>
-                  </div>
             </div>
         </div>
         <div class="row">
@@ -310,9 +271,9 @@ var c = $("#up").val();
 var d = $("#pp").val();
 var e = $("#cn").val();
 var f = $("#od").val();
-$("#year2").click(function(event) {
-    var yr2 = $("#yr2 option:selected").text();
-    $.post('data2.php', {chart2: 'chart2',year2:yr2}, function(data, textStatus, xhr) {
+// $("#year2").click(function(event) {
+//     var yr2 = $("#yr2 option:selected").text();
+    $.post('data2.php', {}, function(data, textStatus, xhr) {
         var obj2 = JSON.parse(data);
         var label2 = [];
         var total2 = [];
@@ -325,7 +286,7 @@ $("#year2").click(function(event) {
         data: {
             labels: label2,
             datasets: [{
-                label: [yr2],
+                label: [],
                 data: total2,
                 backgroundColor: 'rgba(0, 0, 0, 0.7)',
                 borderColor:    'rgba(1, 1, 1, 0.5)'
@@ -352,10 +313,10 @@ $("#year2").click(function(event) {
         }
         });
     });
-});
-$("#year1").click(function(event) {
-   var yr = $("#yr option:selected").text();
-$.post('data.php', {chart: 'chart',year:yr}, function(data, textStatus, xhr) {
+// });
+// $("#year1").click(function(event) {
+//    var yr = $("#yr option:selected").text();
+$.post('data.php', {}, function(data, textStatus, xhr) {
     var obj = JSON.parse(data);
     var label = [];
     var total = [];
@@ -368,7 +329,7 @@ $.post('data.php', {chart: 'chart',year:yr}, function(data, textStatus, xhr) {
     data: {
         labels: label,
         datasets: [{
-            label: [yr],
+            label: [],
             data: total,
             backgroundColor: 'rgba(102, 102, 255, 0.2)',
             borderColor:    'rgba(102, 102, 255, 1)'
@@ -395,7 +356,7 @@ $.post('data.php', {chart: 'chart',year:yr}, function(data, textStatus, xhr) {
     }
     });
 });
-});
+// });
     $("#not").click(function(event) {
         $("#notify").hide();
     });

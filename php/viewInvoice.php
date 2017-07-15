@@ -179,10 +179,10 @@ $oop = new CRUD();
                             <th>Sales No.</th>
                             <th>Customer Name</th>
                             <th>Date</th>
+                            <th>Less: VAT</th>
+                            <th>Gross</th>
+                            <th>Net Sales</th>
                             <th>VAT</th>
-                            <th>Total Amount Due</th>
-                            <th>Total Amount Sales</th>
-                            <th>Total Amount Net</th>
                             <th>Due Date</th>
                             <th>Status</th>
                             <th>Print</th> 

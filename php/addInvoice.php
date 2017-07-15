@@ -222,9 +222,6 @@ include 'session.php';
                 </div>
             </div>                
         </div>
-        <?php
-        }
-        ?>
         <hr>
         <div class="row">      
             <div class="col-sm-12">
@@ -278,8 +275,15 @@ include 'session.php';
             </div><!--  panel end -->
             </div>
         </div>
+        <?php
+        }
+        ?>
         <div class="row">
             <div class="col-sm-4">
+                <div class="input-group">
+                    <span class="input-group-addon">Gross Sales:</span>
+                    <input type="text"  readonly="" id="totalamountDUE"  name="tad" class="element form-control">
+                </div>
                 <div class="input-group">
                     <span class="input-group-addon">Less: VAT </span>
                     <input type="number" id="vat" step="any" name="vat" value="12" class="form-control">
@@ -288,7 +292,7 @@ include 'session.php';
             </div>
             <div class="col-sm-4">      
                 <div class="input-group">
-                    <span class="input-group-addon">Amount Net of VAT</span>
+                    <span class="input-group-addon">VAT</span>
                     <input type="text" readonly="" id="net" step="any" name="net" class="element form-control">
                 </div>
                 <div class="input-group">
@@ -297,12 +301,9 @@ include 'session.php';
                 </div>
             </div>
             <div class="col-sm-4">
+                
                 <div class="input-group">
-                    <span class="input-group-addon">TOTAL AMOUNT DUE:</span>
-                    <input type="text"  readonly="" id="totalamountDUE"  name="tad" class="element form-control">
-                </div>
-                <div class="input-group">
-                    <span class="input-group-addon">Total Sales</span>
+                    <span class="input-group-addon">Net Sales</span>
                     <input type="text" id="tsales" readonly="" name="tsales" class="element form-control">
                 </div>
             </div>
@@ -361,10 +362,10 @@ $(document).ready(function() {
         var a = parseFloat($("#totalamounts").val()) || 0;
         var b = parseFloat($("#vat").val())/100 || 0;
         $("#totalamountDUE").val(a);
-        $("#net").val( Math.round((a*b)*100)/100 );
+        $("#net").val( Math.round((a/1.12*b)*100)/100 );
         var c = parseFloat($("#net").val());
         $("#tsales").val(Math.round((a-c)*100)/100);
-       
+        
     }
     $("#vat").click(function(event) {
        calc();
@@ -407,8 +408,6 @@ $(document).ready(function() {
        var terms = $("#terms1").val();
        $.post('save.php', {save: 'ok',terms: terms,sales_no: sales_no, cust_id: cust_id, date: date, prepare: prepare, check: check, vat: vat, tad: tad, net: net, tsales: tsales}, function(data, textStatus, xhr) {
            $(".result").html(data);
-           console.log(xhr);
-           console.log(textStatus);
        });
     });
   var date = new Date();
@@ -419,8 +418,7 @@ $(document).ready(function() {
     todayHighlight: true,
     setDate: today,
     autoclose: true
-  });
-
+  }).datepicker('setDate', new Date());
 });
 
     /**/

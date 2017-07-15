@@ -166,22 +166,99 @@ if(isset($_POST['backup'])){
         </div>
         <?php
 }
+if(isset($_POST['year1'])) {
+    $yr = mysqli_real_escape_string($db,$_POST['yr1']);
+    $sql = $oop->upYear($yr);
+    if (!$sql) {
+        ?>
+        <div class="alert alert-warning alert-dismissable">
+             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+             <strong><b class="fa fa-check">&nbsp;</b>Failed to Update Total Sales Year!</strong>
+        </div>
+        <?php
+    }else{
+        ?>
+        <div class="alert alert-success alert-dismissable">
+             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+             <strong><b class="fa fa-check">&nbsp;</b>Successfully Total Sales Year Updated!</strong>
+        </div>
+        <?php
+    }
+}else if(isset($_POST['year2'])) {
+    $yr = mysqli_real_escape_string($db,$_POST['yr2']);
+    $sql = $oop->upYear($yr);
+    if (!$sql) {
+        ?>
+        <div class="alert alert-warning alert-dismissable">
+             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+             <strong><b class="fa fa-check">&nbsp;</b>Failed to Update Products Out Year!</strong>
+        </div>
+        <?php
+    }else{
+        ?>
+        <div class="alert alert-success alert-dismissable">
+             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+             <strong><b class="fa fa-check">&nbsp;</b>Successfully Products Out Year Updated!</strong>
+        </div>
+        <?php
+    }
+}
 ?>
             </div>
-        </div>
-
+        </div>        
         <div class="row">
             <div class="col-sm-4">
-            <form method="POST" action="">
-                <div class="input-group">
-                    <span class="input-group-addon"><b class="fa fa-database">&nbsp;</b>Backup Database</span>
-                    <span class="input-group-btn"><button type="submit" name="backup" class="btn btn-primary">Backup</button></span>
+                <form method="POST" action="">
+              <div class="input-group">
+                <span class="input-group-addon">Total Sales Year</span>
+                <select name="yr1" class="form-control" id='yr'>
+                        <?php
+                        $result =mysqli_query($db, "SELECT Year FROM tbl_monthly_sales_report GROUP BY Year");
+                        while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
+                          echo"<option> ";
+                          echo $row['Year'];
+                          echo"</option>";
+                        }
+                        ?>
+                </select>
+                <div class="input-group-btn">
+                  <button class="btn btn-primary form-control" name="year1" type="submit">
+                    <b class="fa fa-paper-plane fa-lg"></b>
+                  </button>
                 </div>
-            </form>
+              </div>
+                </form>
             </div>
-           <div class="col-sm-4">
-
-           </div>
+            <div class="col-sm-4">
+                <form method="POST" action="">
+             <div class="input-group">
+             <span class="input-group-addon">Total Products Out Year</span>
+                <select name="yr2" class="form-control" id='yr2'>
+                        <?php
+                        $result =mysqli_query($db, "SELECT Year FROM tbl_monthly_products_out GROUP BY Year");
+                        while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
+                          echo"<option> ";
+                          echo $row['Year'];
+                          echo"</option>";
+                        }
+                        ?>
+                </select>
+                <div class="input-group-btn">
+                  <button class="btn btn-primary form-control" name="year2" type="submit">
+                    <b class="fa fa-paper-plane fa-lg"></b>
+                  </button>
+                </div>
+                </form>
+              </div>
+            </div>
+            <div class="col-sm-4">
+                <form method="POST" action="">
+                    <div class="input-group">
+                        <span class="input-group-addon"><b class="fa fa-database">&nbsp;</b>Backup Database</span>
+                        <span class="input-group-btn"><button type="submit" name="backup" class="btn btn-primary">Backup</button></span>
+                    </div>
+                </form>
+            </div>
         </div>
         <!-- /.row -->
         <!-- /.container-fluid -->
