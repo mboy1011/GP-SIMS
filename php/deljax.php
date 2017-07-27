@@ -22,5 +22,16 @@
 					return true;
 				}
 			}
-		}	
+	}else if($_REQUEST['updated'])	{
+		$price = mysqli_real_escape_string($db,$_POST['updated']);
+		$id = mysqli_real_escape_string($db,$_POST['id']);	
+		$qty = mysqli_real_escape_string($db,$_POST['qty']);		
+		$total = intval($qty)*floatval($price);
+		$sql = mysqli_query($db,"UPDATE tbl_salesdetails SET price='$price', amount='$total' WHERE id='$id'");
+		if (!$sql) {
+			return false;
+		}else{
+			return true;
+		}
+	}
 ?>

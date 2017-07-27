@@ -118,28 +118,6 @@ include 'session.php';
             
           </div>
           <div class="col-sm-4">
-          
-            <form method="POST" action="" class="form-horizontal">
-            <center><p><li class="fa fa-cart-plus fa-2x">&nbsp;</li><b style="font-size: 18px;">Product Details:</b></p></center>
-            <hr>
-                <input type="text" name="pname" placeholder="Product Name" class="form-control" required="">
-                <div class="input-group">
-                  <label for="comment"></label>
-                  <textarea class="form-control" rows="8" cols="60" name="pdesc" id="comment" placeholder="Product Description"></textarea>
-                </div>
-                <div class="input-group date form_date">
-                    <span class="input-group-addon" ><span class="glyphicon glyphicon-calendar"></span></span>
-                    <input name="expdate" id="date" class="form-control" size="16" type="text" placeholder="Expiration Date">
-                </div>
-                <input type="text" name="lotno" placeholder="Lot No." class="form-control" required="">
-                <input type="number" name="quantity" placeholder="Quantity / BOX" class="form-control" required="">
-                <input type="text" name="pack" placeholder="Packing" class="form-control" required="">
-                <div class="input-group">
-                    <span class="input-group-addon">₱</span>
-                    <input type="number" step="any" name="price" placeholder="Unit Price" class="form-control">
-                </div>
-                <input type="submit" name="Submit" class="btn btn-primary form-control">
-            </form>
             <?php
             include 'crud.php';
             $oop = new CRUD();
@@ -168,7 +146,28 @@ include 'session.php';
                   <?php
                 }
             }
-            ?>
+            ?>          
+            <form method="POST" action="" class="form-horizontal">
+            <center><p><li class="fa fa-cart-plus fa-2x">&nbsp;</li><b style="font-size: 18px;">Product Details:</b></p></center>
+            <hr>
+                <input type="text" name="pname" placeholder="Product Name" class="form-control" required="">
+                <div class="input-group">
+                  <label for="comment"></label>
+                  <textarea class="form-control" rows="8" cols="60" name="pdesc" id="comment" placeholder="Product Description"></textarea>
+                </div>
+                <div class="input-group date form_date">
+                    <span class="input-group-addon" ><span class="glyphicon glyphicon-calendar"></span></span>
+                    <input name="expdate" id="date" class="form-control" size="16" type="text" placeholder="Expiration Date">
+                </div>
+                <input type="text" name="lotno" placeholder="Lot No." class="form-control" required="">
+                <input type="number" name="quantity" placeholder="Quantity / BOX" class="form-control" required="">
+                <input type="text" name="pack" placeholder="Packing" class="form-control" required="">
+                <div class="input-group">
+                    <span class="input-group-addon">₱</span>
+                    <input type="number" step="any" name="price" placeholder="Unit Price" class="form-control">
+                </div>
+                <input type="submit" name="Submit" class="btn btn-primary form-control">
+            </form>
           </div>
           <div class="col-sm-4">
             

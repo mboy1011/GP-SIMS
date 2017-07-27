@@ -218,6 +218,9 @@ if(isset($_POST['year1'])) {
                           echo"<option> ";
                           echo $row['Year'];
                           echo"</option>";
+                          // echo "<option>";
+                          // echo 2018;
+                          // echo "</option>";
                         }
                         ?>
                 </select>

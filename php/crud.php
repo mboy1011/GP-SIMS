@@ -9,19 +9,27 @@ class CRUD
 			return false;
 		}else{
 			$result = mysqli_query($db,"INSERT INTO tbl_employee(fname,lname,mname,position)VALUES('".$fn."','".$ln."','".$mn."','".$po."')");
-				return $result;
+			if (!$result) {
+				return false;
+			}else{
+				return true;
+			}
 		}
 	
 	}
 	public function insertCust($fn,$add,$tin,$bstyle,$terms,$opidno)
 	{
 		include 'config.php';
-		$sql = mysqli_query($db,"SELECT * FROM tbl_customers WHERE full_name='$fn' AND tin='$tin'");
+		$sql = mysqli_query($db,"SELECT full_name,address,tin FROM tbl_customers WHERE full_name='$fn' AND address='$add'");
 		if($sql->num_rows>0){
 			return false;
 		}else{
 			$result = mysqli_query($db,"INSERT INTO tbl_customers(full_name,address,tin,bstyle,terms,opidno)VALUES('".$fn."','".$add."','".$tin."','".$bstyle."','".$terms."','".$opidno."')");
-				return $result;
+			if (!$result) {
+				return false;
+			}else{
+				return true;
+			}
 		}
 	
 	}
@@ -54,7 +62,11 @@ class CRUD
 			return false;
 		}else{
 			$result = mysqli_query($db,"INSERT INTO tbl_useraccounts(lname,password)VALUES('".$user."','".$pass."')");
-				return $result;
+			if (!$result) {
+				return false;
+			}else{
+				return true;
+			}
 		}
 	}
 	public function insertPro($pn,$pd,$ex,$lo,$pr,$pk,$qt)
@@ -65,7 +77,11 @@ class CRUD
 			return false;
 		}else{
 			$result = mysqli_query($db,"INSERT INTO tbl_products(name,description,price,expiry_date,lot_no,packing,quantity)VALUES('".$pn."','".$pd."','".$pr."','".$ex."','".$lo."','".$pk."','".$qt."')");
-			return $result;
+			if (!$result) {
+				return false;
+			}else{
+				return true;
+			}
 		}
 
 	}
@@ -99,7 +115,13 @@ class CRUD
 	public function upPro($id,$proname,$desc,$lot,$price,$exp,$pack,$qty)
 	{
 		include 'config.php';
-		$sql = mysqli_query($db,"UPDATE tbl_products SET name='$proname', description='$desc', price='$price', expiry_date='$exp',quantity='$qty',packing='$pack',lot_no='$lot' WHERE prod_id='$id'");
+		$stat = '';
+		if ((int)$qty==0) {
+			$stat = 'OUT OF STOCKS'	;
+		}else{
+			$stat = 'ACTIVE';
+		}
+		$sql = mysqli_query($db,"UPDATE tbl_products SET name='$proname', description='$desc', price='$price', expiry_date='$exp',quantity='$qty',packing='$pack',lot_no='$lot', status='$stat' WHERE prod_id='$id'");
 		if (!$sql) {
 			return false;
 		}else{

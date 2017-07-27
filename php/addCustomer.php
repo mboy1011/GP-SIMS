@@ -112,23 +112,10 @@ include 'session.php';
             </div>
         </div>
         <div class="row">
-          <div class="col-sm-4">
-            
-          </div>
-          <div class="col-sm-4">
-          
-            <form method="POST" action="" class="form-horizontal">
-            <center><p><li class="fa fa-user-o fa-2x">&nbsp;</li><b style="font-size: 18px;">Customer's Information:</b></p></center>
-            <hr>
-                <input type="text" name="name" placeholder="Customers Name" class="form-control" required="">
-                <input type="number" name="tin" placeholder="TIN/SC-TIN" class="form-control">
-                <input type="text" name="add" placeholder="Address" class="form-control" required="">
-                <input type="text" name="bstyle" placeholder="Business Style" class="form-control">
-                <input type="text" name="terms" placeholder="Terms" class="form-control" required="">
-                <input type="text" name="opidno" placeholder="OSCA/PWD ID No." class="form-control">
-                <input type="submit" name="Submit" class="btn btn-primary form-control">
-            </form>
-            <?php
+            <div class="col-sm-4">
+            </div>
+            <div class="col-sm-4">
+                <?php
             include 'crud.php';
             $oop = new CRUD();
             if ($_SERVER['REQUEST_METHOD']=='POST') {
@@ -138,6 +125,8 @@ include 'session.php';
                 $bstyle = mysqli_real_escape_string($db,$_POST['bstyle']);
                 $terms = mysqli_real_escape_string($db,$_POST['terms']);
                 $opidno = mysqli_real_escape_string($db,$_POST['opidno']);
+                $d1 = mysqli_real_escape_string($db,$_POST['dis1']);
+                $d2 = mysqli_real_escape_string($db,$_POST['dis2']);
                 $sql=$oop->insertCust($fn,$add,$tin,$bstyle,$terms,$opidno);
                 if(!$sql){
                    ?>
@@ -156,6 +145,26 @@ include 'session.php';
                 }
             }
             ?>
+            </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
+            
+          </div>
+          <div class="col-sm-4">
+            <form method="POST" action="" class="form-horizontal">
+            <center><p><li class="fa fa-user-o fa-2x">&nbsp;</li><b style="font-size: 18px;">Customer's Information:</b></p></center>
+            <hr>
+                <input type="text" name="name" placeholder="Customers Name" class="form-control" required="">
+                <input type="number" name="tin" placeholder="TIN/SC-TIN" class="form-control">
+                <input type="text" name="add" placeholder="Address" class="form-control" required="">
+                <input type="text" name="bstyle" placeholder="Business Style" class="form-control">
+                <input type="text" name="terms" placeholder="Terms" class="form-control" required="">
+                <input type="text" name="opidno" placeholder="OSCA/PWD ID No." class="form-control">
+                <input type="number" step="any" name="dis1" placeholder="Discount 1 (%)" class="form-control" value="0">
+                <input type="number" step="any" name="dis2" placeholder="Discount 2 (%)" class="form-control" value="0">
+                <input type="submit" name="Submit" class="btn btn-primary form-control">
+            </form>
           </div>
           <div class="col-sm-4">
             

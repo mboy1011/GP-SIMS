@@ -11,7 +11,7 @@
 // INNER JOIN tbl_products
 // ON tbl_salesdetails.prod_id=tbl_products.prod_id");
 
-	$query = mysqli_query($db,"SELECT tbl_products.name,tbl_products.packing,tbl_salesdetails.id,tbl_salesdetails.sales_no,tbl_products.lot_no,tbl_products.expiry_date,tbl_salesdetails.quantity, tbl_products.price, tbl_salesdetails.amount
+	$query = mysqli_query($db,"SELECT tbl_products.name,tbl_products.packing,tbl_salesdetails.id,tbl_salesdetails.sales_no,tbl_products.lot_no,tbl_products.expiry_date,tbl_salesdetails.price,tbl_salesdetails.quantity, tbl_salesdetails.amount
 FROM tbl_salesdetails, tbl_products WHERE
 tbl_salesdetails.prod_id=tbl_products.prod_id AND tbl_salesdetails.sales_no='$si_no'");
 	$i = 1;
@@ -26,8 +26,11 @@ tbl_salesdetails.prod_id=tbl_products.prod_id AND tbl_salesdetails.sales_no='$si
 		<td>₱&nbsp;<?php echo number_format($row['price'],2);?></td>
 		<td>₱&nbsp;<?php echo number_format($row['amount'],2);?></td>
 		<td>
-		<input type="number" id="totalamounts" value="<?php echo $tad;?>" hidden>
-		<button class="btn btn btn-danger btn-xs" id="btn-delete" name="btn-delete" data-dids=<?php echo $row['id'];?> data-qty=<?php echo $row['quantity'];?>><b class="fa fa-times">&nbsp;</b></button></b>   
+			<button class="btn btn-warning btn-xs" id="btn-update" name="btn-update" data-up=<?php echo $row['id'];?> data-eprices=<?php echo number_format($row['price'],2);?> data-qty=<?php echo $row['quantity'];?> ><b class="fa fa-pencil"></b></button>
+		</td>
+		<td>
+			<input type="number" id="totalamounts" value="<?php echo $tad;?>" hidden>
+			<button class="btn btn btn-danger btn-xs" id="btn-delete" name="btn-delete" data-dids=<?php echo $row['id'];?> data-qty=<?php echo $row['quantity'];?>><b class="fa fa-times">&nbsp;</b></button></b>   
 		</td>
 	</tr>
 <?php

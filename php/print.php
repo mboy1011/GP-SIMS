@@ -48,7 +48,7 @@ $pdf->Cell(18,10,'Expiry',0,0,'C');
 $pdf->Cell(18,10,'Quantity',0,0,'C');
 $pdf->Cell(19,10,'Unit Price',0,0,'C');
 $pdf->Cell(22,10,'AMOUNT',0,1,'C');
-$query = mysqli_query($db,"SELECT tbl_products.name,tbl_products.packing,tbl_salesdetails.id,tbl_salesdetails.sales_no,tbl_products.lot_no,tbl_products.expiry_date,tbl_salesdetails.quantity, tbl_products.price, tbl_salesdetails.amount
+$query = mysqli_query($db,"SELECT tbl_products.name,tbl_products.packing,tbl_salesdetails.id,tbl_salesdetails.sales_no,tbl_products.lot_no,tbl_products.expiry_date,tbl_salesdetails.quantity, tbl_salesdetails.price, tbl_salesdetails.amount
 FROM tbl_salesdetails, tbl_products WHERE
 tbl_salesdetails.prod_id=tbl_products.prod_id AND tbl_salesdetails.sales_no='$si_no'");
 	$o = 1;

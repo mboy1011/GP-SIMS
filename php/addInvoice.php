@@ -228,20 +228,23 @@ include 'session.php';
             <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="row">
-                    <div class="col-sm-8">
+                    <div class="col-sm-6">
                         <div class="input-group">
                         <span class="input-group-addon">Choose Products:</span>
                          <select name="userid" class="form-control" id="cprod">
                                   <?php
-                                    $result =mysqli_query($db, "SELECT prod_id,name FROM tbl_products WHERE status!='OUT OF STOCKS'");
+                                    $result =mysqli_query($db, "SELECT * FROM tbl_products WHERE status!='OUT OF STOCKS'");
                                     while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
                                       echo"<option value='$row[prod_id]'>";
-                                      echo $row['name'];
+                                      echo $row['name']."    ".$row['packing']."    (".$row['lot_no'].")"."  ".$row['quantity']."box/es";
                                       echo"</option>";
                                     }
                                   ?>
                          </select>
                          </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="number" readonly="" class="form-control" placeholder="Boxes" value=<?php echo $row['quantity'];?>>
                     </div>
                     <div class="col-sm-2">
                         <input type="number" class="form-control" id="qty" name="qty" placeholder="Quantity">
@@ -263,6 +266,7 @@ include 'session.php';
                                 <th>Quantity</th>
                                 <th>Unit Price</th>
                                 <th>Amount</th>
+                                <th>Edit</th>
                                 <th>Remove</th>
                             </tr>
                         </thead>
@@ -296,15 +300,18 @@ include 'session.php';
                     <input type="text" readonly="" id="net" step="any" name="net" class="element form-control">
                 </div>
                 <div class="input-group">
-                    <span class="input-group-addon">Discount:</span>
-                    <input type="text" readonly="" id="discount" step="any" name="discount" class="element form-control">
+                    <span class="input-group-addon">Discount 1:</span>
+                    <input type="number" id="discount1" step="any" name="discount" class="element form-control">
                 </div>
             </div>
             <div class="col-sm-4">
-                
                 <div class="input-group">
                     <span class="input-group-addon">Net Sales</span>
                     <input type="text" id="tsales" readonly="" name="tsales" class="element form-control">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">Discount 2:</span>
+                    <input type="number" id="discount2" step="any" name="discount" class="element form-control">
                 </div>
             </div>
         </div><!-- /.row -->
@@ -337,6 +344,32 @@ include 'session.php';
                 <button type="submit" id="print" name="print" class="btn btn-default form-control"><b class="fa fa-print fa-bg">&nbsp;</b>Print</button>
             </div>
             </form> -->
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Edit Price</h4>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" name="id" id="idPrice" class="element form-control">
+        <div class="input-group">
+            <span class="input-group-addon">Price:</span>
+            <input type="number" step="any" name="id" id="editPrice" class="element form-control">
+        </div>
+        <input type="hidden" step="any" name="" id="editQty">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" id="updatePrice" data-dismiss="modal"><b class="fa fa-pencil">&nbsp;</b>Update</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+
+  </div>
+</div>            
         </div><!-- /.row -->
         <!-- /.container-fluid -->
      </div>
@@ -365,7 +398,6 @@ $(document).ready(function() {
         $("#net").val( Math.round((a/1.12*b)*100)/100 );
         var c = parseFloat($("#net").val());
         $("#tsales").val(Math.round((a-c)*100)/100);
-        
     }
     $("#vat").click(function(event) {
        calc();
@@ -392,6 +424,24 @@ $(document).ready(function() {
         var deleted = $(this).data('dids');
         var qty = $(this).data('qty');
         $.post('deljax.php', {deleted: deleted, qty: qty}, function(data, textStatus, xhr) {
+            viewData();
+        });
+    });
+    $(document).on('click', '#btn-update', function(event) {
+        var id = $(this).data('up');
+        var pr = $(this).data('eprices');
+        var qt = $(this).data('qty');
+        $("#idPrice").val(id);
+        $("#editPrice").val(pr);
+        $("#editQty").val(qt);
+        $("#myModal").modal();
+    });
+    $("#updatePrice").click(function(event) {
+        var id = $("#idPrice").val();
+        var updated = $("#editPrice").val();
+        var qty = $("#editQty").val();
+        $.post('deljax.php', {updated: updated, id: id, qty: qty}, function(data, textStatus, xhr) {
+            calc();
             viewData();
         });
     });

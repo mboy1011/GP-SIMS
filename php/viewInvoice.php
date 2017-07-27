@@ -191,7 +191,7 @@ $oop = new CRUD();
                         </tr>
                     </thead>
                     <?php
-                     $result = mysqli_query($db,"SELECT tbl_customers.full_name,tbl_sales.sales_id,tbl_sales.sales_no,tbl_sales.dates,tbl_sales.VAT,tbl_sales.total_amount,tbl_sales.total_sales,tbl_sales.due_date,tbl_sales.amount_net,tbl_sales.status,tbl_customers.cus_id FROM tbl_customers INNER JOIN tbl_sales ON tbl_sales.cus_id=tbl_customers.cus_id") or die(mysqli_error());
+                     $result = mysqli_query($db,"SELECT tbl_customers.full_name,tbl_sales.sales_id,tbl_sales.sales_no,tbl_sales.dates,tbl_sales.VAT,tbl_sales.total_amount,tbl_sales.total_sales,tbl_sales.due_date,tbl_sales.amount_net,tbl_sales.status,tbl_customers.cus_id FROM tbl_customers INNER JOIN tbl_sales ON tbl_sales.cus_id=tbl_customers.cus_id ORDER BY sales_no") or die(mysqli_error());
                       // $result = mysqli_query($db, "SELECT * FROM tbl_sales") or die(mysql_error());
 
                     ?>
@@ -231,11 +231,21 @@ $oop = new CRUD();
                              ?>
                              </td>  
                              <td>
-                             <form method="POST" action="print.php">
-                               <input type="hidden" name="sales_no" value="<?php echo $row['sales_no']?>">
-                               <input type="hidden" name="cus_id" value="<?php echo $row['cus_id']?>">
-                               <button class="btn btn-info btn-sm" name="print"><b class="fa fa-print fa-bg">&nbsp;</b></button>
-                             </form>
+                             <?php
+                              if ($row['status']!='CANCELLED') {
+                             ?>
+                               <form method="POST" action="print.php">
+                                 <input type="hidden" name="sales_no" value="<?php echo $row['sales_no']?>">
+                                 <input type="hidden" name="cus_id" value="<?php echo $row['cus_id']?>">
+                                 <button class="btn btn-info btn-sm" name="print"><b class="fa fa-print fa-bg">&nbsp;</b></button>
+                               </form>
+                             <?php 
+                              }else{
+                             ?>
+                                 <b class="fa fa-check fa-bg"></b>
+                             <?php
+                              }
+                             ?>
                              </td>
                              <td><button class="btn btn-danger btn-sm" name="delete"><b class="fa fa-trash fa-bg">&nbsp;
                              </b></button></td>
@@ -310,9 +320,9 @@ $(document).ready(function(){
         scrollY:        "500px",
         scrollX:        true,
         scrollCollapse: true,
-        fixedColumns:{
-            leftColumns: 3
-        },
+        // fixedColumns:{
+        //     leftColumns: 3
+        // },
         "oLanguage": {
           "sSearch": "<b class='fa fa-search fa-lg'>&nbsp;</b>",
           "sLengthMenu": "<b id='data-menu'><b class='fa fa-eye fa-lg'>&nbsp;</b>Show _MENU_ records</b>&nbsp;"
