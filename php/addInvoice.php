@@ -328,9 +328,10 @@ include 'session.php';
             <div class="col-sm-3">
                 <div class="input-group">
                     <span class="input-group-addon">Less: VAT </span>
-                    <input type="number" id="vat" step="any" name="vat" value="12" class="form-control">
+                    <input type="number" id="vat" step="any" name="vat" value="12" class="form-control" disabled="">
                     <span class="input-group-addon">%</span>
                 </div>
+                <button type="button" id="editVAT" class="btn btn-warning btn-xs"><b class="fa fa-pencil"></b></button>
             </div>
         </div><!-- /.row -->
         <hr>
@@ -405,9 +406,8 @@ include 'session.php';
         /*DatePicker*/
 
 $(document).ready(function() {
-    $("#print").click(function(event) {
-        var val = $("#salesno").val();
-        $("#printed").val(val);
+    $("#editVAT").click(function(event) {
+        $("#vat").removeAttr('disabled')
     });
     function calc(){
         var a = parseFloat($("#totalamounts").val()) || 0;
