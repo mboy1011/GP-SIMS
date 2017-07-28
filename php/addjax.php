@@ -3,7 +3,7 @@
 	if ($_REQUEST['product']) {	
 		$prod = mysqli_real_escape_string($db,$_POST['product']);
 		$qty = mysqli_real_escape_string($db,$_POST['quantity']);
-		if (empty($prod)&&empty($qty)) {
+		if ($prod=='--Select Products Here--'||empty($qty)) {
 			return false;
 		}else{
 			$si_no = mysqli_real_escape_string($db,$_POST['salesno']);

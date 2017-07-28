@@ -126,6 +126,13 @@ include 'session.php';
                 
             </div>
         </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="result">
+                        
+                </div>
+            </div>
+        </div>
         <hr>
         <div class="row">
             <div class="col-sm-5">
@@ -154,6 +161,7 @@ include 'session.php';
             <div class="col-sm-5"></div>
         </div>
         <hr>
+        <div id="hideme">
         <?php 
         if (isset($_POST['go'])) {
             $cust_id=mysqli_real_escape_string($db,$_POST['userid']);
@@ -189,7 +197,7 @@ include 'session.php';
             $rowss = mysqli_fetch_assoc($max); 
             $max_id=$rowss['max_id']+1;      
             ?>
-                    <span class="input-group-addon">No.</span>
+                    <span class="input-group-addon">Sales Invoice No.</span>
                     <input type="text"  name="sold" value='<?php echo $max_id;?>' id="salesno" class="form-control">
                 </div>
             </div>
@@ -305,6 +313,7 @@ include 'session.php';
         <?php
         }
         ?>
+        </div>
         <div class="row">
             <div class="col-sm-3">
                 <div class="input-group">
@@ -327,21 +336,13 @@ include 'session.php';
             </div>
             <div class="col-sm-3">
                 <div class="input-group">
-                    <span class="input-group-addon">Less: VAT </span>
-                    <input type="number" id="vat" step="any" name="vat" value="12" class="form-control" disabled="">
-                    <span class="input-group-addon">%</span>
+                    <span class="input-group-addon">Less: VAT %</span>
+                    <input type="number" id="vat" step="any" name="vat" value="12" min="0" max="100" class="form-control" disabled="">
+                    <span class="input-group-addon"><b id="editVAT" class="label label-success"><i id="chVat" class="fa fa-check"></i></b></span> 
                 </div>
-                <button type="button" id="editVAT" class="btn btn-warning btn-xs"><b class="fa fa-pencil"></b></button>
             </div>
         </div><!-- /.row -->
         <hr>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="result">
-                        
-                </div>
-            </div>
-        </div>
         <div class="row">
             <div class="col-sm-3">
                 <label>Prepared By:</label>
@@ -407,7 +408,15 @@ include 'session.php';
 
 $(document).ready(function() {
     $("#editVAT").click(function(event) {
-        $("#vat").removeAttr('disabled')
+        if($("#vat").attr('disabled')){
+            $("#vat").removeAttr('disabled')
+            $("#editVAT").attr('class', 'label label-warning');
+            $("#chVat").attr('class', 'fa fa-pencil');
+        }else{
+            $("#vat").attr('disabled', true);
+            $("#editVAT").attr('class', 'label label-success');
+            $("#chVat").attr('class','fa fa-check');
+        }
     });
     function calc(){
         var a = parseFloat($("#totalamounts").val()) || 0;
@@ -481,8 +490,14 @@ $(document).ready(function() {
        var net = $("#net").val();
        var tsales = $("#tsales").val();
        var terms = $("#terms1").val();
-       $.post('save.php', {save: 'ok',terms: terms,sales_no: sales_no, cust_id: cust_id, date: date, prepare: prepare, check: check, vat: vat, tad: tad, net: net, tsales: tsales}, function(data, textStatus, xhr) {
-           $(".result").html(data);
+       var product = $("#cprod").val();
+       var quantity = $("#qty").val();
+       var dis1 = parseFloat($("#discount1").val())/100 || 0;
+       var dis2 = parseFloat($("#discount2").val())/100 || 0;
+       $.post('save.php', {save: 'ok',terms: terms,sales_no: sales_no, cust_id: cust_id, date: date, prepare: prepare, check: check, vat: vat, tad: tad, net: net, tsales: tsales, product: product, quantity: quantity,dis1: dis1,dis2: dis2}, function(data, textStatus, xhr) {
+           $("#hideme").slideUp('slow/400/fast', function() {
+                $(".result").html(data);    
+           });
        });
     });
     $("#cprod").change(function(event) {
