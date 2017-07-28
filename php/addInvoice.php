@@ -222,6 +222,28 @@ include 'session.php';
                 </div>
             </div>                
         </div>
+        <div class="row">
+            <div class="col-sm-8">
+                
+            </div>
+            <div class="col-sm-4">
+                 <div class="input-group">
+                    <span class="input-group-addon">Discount 1:</span>
+                    <input type="number" id="discount1" step="any" name="discount" value="<?php echo $row['discount1']?>" class="element form-control">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8">
+                
+            </div>
+            <div class="col-sm-4">
+                <div class="input-group">
+                    <span class="input-group-addon">Discount 2:</span>
+                    <input type="number" id="discount2" step="any" name="discount" value="<?php echo $row['discount2']?>" class="element form-control">
+                </div>
+            </div>
+        </div>
         <hr>
         <div class="row">      
             <div class="col-sm-12">
@@ -232,11 +254,12 @@ include 'session.php';
                         <div class="input-group">
                         <span class="input-group-addon">Choose Products:</span>
                          <select name="userid" class="form-control" id="cprod">
+				            <option>--Select Products Here--</option>
                                   <?php
-                                    $result =mysqli_query($db, "SELECT * FROM tbl_products WHERE status!='OUT OF STOCKS'");
+                                    $result =mysqli_query($db, "SELECT * FROM tbl_products WHERE status!='OUT OF STOCKS' ORDER BY name");
                                     while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
                                       echo"<option value='$row[prod_id]'>";
-                                      echo $row['name']."    ".$row['packing']."    (".$row['lot_no'].")"."  ".$row['quantity']."box/es";
+                                      echo $row['name']."    ".$row['packing']."    (".$row['lot_no'].")";
                                       echo"</option>";
                                     }
                                   ?>
@@ -244,10 +267,10 @@ include 'session.php';
                          </div>
                     </div>
                     <div class="col-sm-2">
-                        <input type="number" readonly="" class="form-control" placeholder="Boxes" value=<?php echo $row['quantity'];?>>
+                        <input type="text" readonly="" class="form-control" placeholder="Boxes" id="boxes">
                     </div>
                     <div class="col-sm-2">
-                        <input type="number" class="form-control" id="qty" name="qty" placeholder="Quantity">
+                        <input type="number" class="form-control" id="qty" name="qty" placeholder="Quantity" required="">
                     </div>
                     <div class="col-sm-2">
                          <button class="btn btn-default form-control" type="submit" name="addprod" id="addprod"><b class="fa fa-plus fa-bg">&nbsp;</b>Add</button>
@@ -283,35 +306,30 @@ include 'session.php';
         }
         ?>
         <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <div class="input-group">
                     <span class="input-group-addon">Gross Sales:</span>
                     <input type="text"  readonly="" id="totalamountDUE"  name="tad" class="element form-control">
                 </div>
-                <div class="input-group">
-                    <span class="input-group-addon">Less: VAT </span>
-                    <input type="number" id="vat" step="any" name="vat" value="12" class="form-control">
-                    <span class="input-group-addon">%</span>
-                </div>
             </div>
-            <div class="col-sm-4">      
+            <div class="col-sm-3">      
                 <div class="input-group">
                     <span class="input-group-addon">VAT</span>
                     <input type="text" readonly="" id="net" step="any" name="net" class="element form-control">
                 </div>
-                <div class="input-group">
-                    <span class="input-group-addon">Discount 1:</span>
-                    <input type="number" id="discount1" step="any" name="discount" class="element form-control">
-                </div>
+               
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <div class="input-group">
                     <span class="input-group-addon">Net Sales</span>
                     <input type="text" id="tsales" readonly="" name="tsales" class="element form-control">
                 </div>
+            </div>
+            <div class="col-sm-3">
                 <div class="input-group">
-                    <span class="input-group-addon">Discount 2:</span>
-                    <input type="number" id="discount2" step="any" name="discount" class="element form-control">
+                    <span class="input-group-addon">Less: VAT </span>
+                    <input type="number" id="vat" step="any" name="vat" value="12" class="form-control">
+                    <span class="input-group-addon">%</span>
                 </div>
             </div>
         </div><!-- /.row -->
@@ -394,12 +412,19 @@ $(document).ready(function() {
     function calc(){
         var a = parseFloat($("#totalamounts").val()) || 0;
         var b = parseFloat($("#vat").val())/100 || 0;
-        $("#totalamountDUE").val(a);
-        $("#net").val( Math.round((a/1.12*b)*100)/100 );
+        var dis1 = parseFloat($("#discount1").val())/100 || 0;
+        var dis2 = parseFloat($("#discount2").val())/100 || 0;
+        var total = (dis1+dis2)*a;
+        var d = a-total;
+        $("#totalamountDUE").val(d);
+        $("#net").val( Math.round((d/1.12*b)*100)/100 );
         var c = parseFloat($("#net").val());
-        $("#tsales").val(Math.round((a-c)*100)/100);
+        $("#tsales").val(Math.round((d-c)*100)/100);
     }
-    $("#vat").click(function(event) {
+    $("#vat").bind('keyup click',function(event) {
+       calc();
+    });
+    $("#discount1, #discount2").bind('keyup click',function(event) {
        calc();
     });
     function viewData() {
@@ -459,6 +484,14 @@ $(document).ready(function() {
        $.post('save.php', {save: 'ok',terms: terms,sales_no: sales_no, cust_id: cust_id, date: date, prepare: prepare, check: check, vat: vat, tad: tad, net: net, tsales: tsales}, function(data, textStatus, xhr) {
            $(".result").html(data);
        });
+    });
+    $("#cprod").change(function(event) {
+       if ($("#cprod").val()!='--Select Products Here--') {
+        var prodin = $("#cprod").val();
+        $.post('addjax.php', {prodin: prodin}, function(data, textStatus, xhr) {
+            $("#boxes").val(data);
+        });
+       }
     });
   var date = new Date();
   var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
