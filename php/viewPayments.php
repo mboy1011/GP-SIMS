@@ -23,6 +23,11 @@ $oop = new CRUD();
 .modal-footer{
     background-color: #333333;
 } 
+#notify{
+ background-color: #ff3333;
+ color: #fff;
+}
+
 /*Full View for Modals*/
 /*.modal-dialog {
       width: 100%;
@@ -236,6 +241,16 @@ $(document).ready(function(){
             }
         ]
     });
+    $("#not").click(function(event) {
+        $("#notify").hide();
+    });
+    function check() {
+        var val = $("#notify").text();
+        if (val==0) {
+            $("#notify").hide();
+        }
+    }
+    check();    
 });
 </script>
 </body>

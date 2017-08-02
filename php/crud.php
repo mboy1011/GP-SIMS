@@ -17,14 +17,14 @@ class CRUD
 		}
 	
 	}
-	public function insertCust($fn,$add,$tin,$bstyle,$terms,$opidno)
+	public function insertCust($fn,$add,$tin,$bstyle,$terms,$opidno,$d1,$d2)
 	{
 		include 'config.php';
 		$sql = mysqli_query($db,"SELECT full_name,address,tin FROM tbl_customers WHERE full_name='$fn' AND address='$add'");
 		if($sql->num_rows>0){
 			return false;
 		}else{
-			$result = mysqli_query($db,"INSERT INTO tbl_customers(full_name,address,tin,bstyle,terms,opidno)VALUES('".$fn."','".$add."','".$tin."','".$bstyle."','".$terms."','".$opidno."')");
+			$result = mysqli_query($db,"INSERT INTO tbl_customers(full_name,address,tin,bstyle,terms,opidno,discount1,discount2)VALUES('".$fn."','".$add."','".$tin."','".$bstyle."','".$terms."','".$opidno."','".$d1."','".$d2."')");
 			if (!$result) {
 				return false;
 			}else{

@@ -14,6 +14,11 @@ include 'session.php';
     <link rel="stylesheet" type="text/css" href="../css/buttons.dataTables.min.css">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <style type="text/css" media="screen">
+#notify{
+   background-color: #ff3333;
+   color: #fff;
+}
+
 .modal-header{
   background-color: #4dffb8;
   color: #fff;
@@ -62,7 +67,30 @@ include 'session.php';
             </button>
         </div>
         <!-- Top Menu Items -->
-        <ul class="nav navbar-right top-nav">            
+        <ul class="nav navbar-right top-nav">       
+            <li class="dropdown">
+               <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="not"><i class="fa fa-bell fa-lg"></i><span class="label label-warning badge" id="notify">
+                    <?php
+                        echo $counting0;
+                    ?>
+                    </span>
+                </a> 
+               <ul class="dropdown-menu">
+                   <li>
+                   <?php 
+                        while ($row = mysqli_fetch_array($mysql,MYSQLI_ASSOC)) {
+                            echo "<li class='dropdown-header'>Expiring Product</li>";
+                            echo "<li><a href='viewProduct.php'>".$row['name'].' '.$row['packing']."</a></li>";
+                        }
+                        while ($rows = mysqli_fetch_array($mysql2,MYSQLI_ASSOC)) {
+                            echo "<li class='dropdown-header'>Out of Stocks</li>";
+                            echo "<li><a href='viewProduct.php'>".$rows['name'].' '.$rows['packing']."</a></li>";
+                        }
+                   ?>
+                   </li>
+                   <li class='divider'></li>
+               </ul>
+            </li>        
             <li>
                     <a href="index.php"><i class="fa fa-fw fa-tachometer">&nbsp;</i>Dashboard</a>
             </li>
@@ -79,10 +107,25 @@ include 'session.php';
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav side-nav">
                 <li>
-                    <a href="collections.php"><i class="fa fa-fw fa-inbox">&nbsp;</i> Collections</a>
+                    <a href="#" data-toggle="collapse" data-target="#submenu-6"><i class="fa fa-fw fa-inbox"></i> Collections Receipt <i class="fa fa-fw fa-angle-down pull-right"></i></a>
+                    <ul id="submenu-6" class="collapse">
+                        <li><a href="addCR.php"><i class="fa fa-plus">&nbsp;</i>Add CR</a></li>
+                        <li><a href="viewCR.php"><i class="fa fa-list">&nbsp;</i>CR List</a></li>
+                    </ul>
                 </li>
                 <li>
-                    <a href="viewPayments.php"><i class="fa fa-fw fa-credit-card fa-bg">&nbsp;</i>Payment Reports</a>
+                    <a href="#" data-toggle="collapse" data-target="#submenu-7"><i class="fa fa-fw  fa-credit-card"></i> Credit/Debit Memo <i class="fa fa-fw fa-angle-down pull-right"></i></a>
+                    <ul id="submenu-7" class="collapse">
+                        <li><a href="addCM.php"><i class="fa fa-plus">&nbsp;</i>Add C/D Memo</a></li>
+                        <li><a href="viewCM.php"><i class="fa fa-list">&nbsp;</i>C/D Memo List</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" data-toggle="collapse" data-target="#submenu-8"><i class="fa fa-fw  fa-shopping-cart"></i> Purchase Orders<i class="fa fa-fw fa-angle-down pull-right"></i></a>
+                    <ul id="submenu-8" class="collapse">
+                        <li><a href="addPO.php"><i class="fa fa-plus">&nbsp;</i>Add PO</a></li>
+                        <li><a href="viewPO.php"><i class="fa fa-list">&nbsp;</i>PO List</a></li>
+                    </ul>
                 </li>
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-1"><i class="fa fa-fw fa-tags"></i> Sales <i class="fa fa-fw fa-angle-down pull-right"></i></a>
@@ -94,15 +137,17 @@ include 'session.php';
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-2"><i class="fa fa-fw fa-archive">&nbsp;</i>Inventory<i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-2" class="collapse">
-                        <li><a href="addProduct.php"><i class="fa fa-plus">&nbsp;</i>Add Products</a></li>
+                        <li><a href="addProduct.php"><i class="fa fa-plus">&nbsp;</i>Inventory In</a></li>
                         <li><a href="viewProduct.php"><i class="fa fa-list">&nbsp;</i>List Products</a></li>
+                        <li><a href="viewInvOut.php"><i class="fa fa-minus">&nbsp;</i>Inventory Out</a></li>
                     </ul>
                 </li>
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-3"><i class="fa fa-fw fa-user-o"></i> Customers <i class="fa fa-fw fa-angle-down pull-right"></i></a>
+                    <a href="#" data-toggle="collapse" data-target="#submenu-3"><i class="fa fa-fw fa-user-o"></i> Customers Profile <i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-3" class="collapse">
-                        <li><a href="addCustomer.php"><i class="fa fa-user-plus">&nbsp;</i>Add Customer</a></li>
-                        <li><a href="viewCustomers.php"><i class="fa fa-users">&nbsp;</i>View Customers</a></li>
+                        <li><a href="addCustomer.php"><i class="fa fa-user-plus">&nbsp;</i>Add Customers</a></li>
+                        <li><a href="viewCustomers.php"><i class="fa fa-users">&nbsp;</i>Customers List</a></li>
+                        <li><a href="viewCustPro.php"><i class="fa fa-user-circle">&nbsp;</i>View Profile</a></li>
                     </ul>
                 </li>
                 <li>
@@ -110,6 +155,13 @@ include 'session.php';
                     <ul id="submenu-4" class="collapse">
                         <li><a href="addEmployee.php"><i class="fa fa-user-plus">&nbsp;</i>Add Employees</a></li>
                         <li><a href="viewEmployee.php"><i class="fa fa-users">&nbsp;</i>View Employees</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" data-toggle="collapse" data-target="#submenu-9"><i class="fa fa-fw fa-truck"></i> Suppliers <i class="fa fa-fw fa-angle-down pull-right"></i></a>
+                    <ul id="submenu-9" class="collapse">
+                        <li><a href="addSup.php"><i class="fa fa-user-plus">&nbsp;</i>Add Suppliers</a></li>
+                        <li><a href="viewSup.php"><i class="fa fa-users">&nbsp;</i>View Suppliers</a></li>
                     </ul>
                 </li>
                 <li>
@@ -154,30 +206,17 @@ include 'session.php';
                     <thead class="thead-inverse">
                         <tr>
                             <th>ID</th>
-                            <th>Sales No.</th>
+                            <th>Collection Receipt No.</th>
+                            <th>Date</th>
                             <th>Customer Name</th>
-                            <th>Total Amount Due</th>
-                            <th>Amount Paid</th>
-                            <th>Balance</th>
-                            <th>Status</th>
+                            <th>Sales No.</th>
+                            <th>Total Amount</th>
                             <th>Actions</th> 
                         </tr>
                     </thead>
-                    <!-- <tfoot>
-                      <tr>
-                            <th>ID</th>
-                            <th>Sales No.</th>
-                            <th>Customer Name</th>
-                            <th>Total Amount Due</th>
-                            <th>Amount Paid</th>
-                            <th>Balance</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>   
-                    </tfoot> -->
                     <?php
                     $i=1;
-                     $result = mysqli_query($db,"SELECT tbl_customers.full_name,tbl_payments.amount,tbl_sales.sales_no,tbl_payments.balance,tbl_sales.total_amount,tbl_sales.status,tbl_customers.cus_id FROM tbl_customers INNER JOIN tbl_sales ON tbl_sales.cus_id=tbl_customers.cus_id AND tbl_sales.status!='PAID' LEFT JOIN tbl_payments ON tbl_sales.sales_no=tbl_payments.sales_no AND tbl_sales.cus_id=tbl_payments.cus_id AND tbl_payments.balance!=0 WHERE tbl_sales.status!='CANCELLED'") or die(mysqli_error());
+                     $result = mysqli_query($db,"SELECT * FROM tbl_CR INNER JOIN tbl_customers ON tbl_customers.cus_id=tbl_CR.cus_id LEFT JOIN tbl_CRdetails ON tbl_CR.cr_no=tbl_CRdetails.cr_no ORDER BY tbl_CR.cr_no") or die(mysqli_error());
                       // $result = mysqli_query($db, "SELECT * FROM tbl_sales") or die(mysql_error());
 
                     ?>
@@ -185,32 +224,11 @@ include 'session.php';
                       <?php while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){?>
                           <tr>
                             <td><?php echo $i++; ?></td>
-                            <td><?php echo $row['sales_no']; ?></td>
-                            <td><?php echo $row['full_name']; ?></td>            
-                            <td>₱<?php echo number_format($row['total_amount'],2); ?></td> 
-                            <td>₱<?php echo number_format($row['amount'],2); ?></td> 
-                            <td>₱<?php echo number_format($row['balance'],2); ?></td> 
-                            <td>
-                            <?php
-                              if ($row['status']=='UNPAID') {
-                                ?>
-                                <span class="label label-warning"><?php echo $row['status'];?></span>
-                                <?php
-                              }else if ($row['status']=='PARTIALLY PAID') {
-                                ?>
-                                <span class="label label-info"><?php echo $row['status'];?></span>
-                                <?php
-                              }else if($row['status']=='PAID'){
-                                ?>
-                                <span class="label label-success"><?php echo $row['status'];?></span>
-                                <?php
-                              }else{
-                                ?>
-                                <span class="label label-danger"><?php echo $row['status'];?></span>
-                                <?php
-                              }
-                             ?>
-                             </td>  
+                            <td><?php echo $row['cr_no']; ?></td>
+                            <td><?php echo $row['cr_date']; ?></td>            
+                            <td><?php echo $row['full_name'];?></td> 
+                            <td><?php echo $row['sales_no'];?></td>
+                            <td>₱<?php echo number_format($row['cm_totalSales'],2); ?></td> 
                              <td>
                              <button type="button" data-toggle="modal" data-target="#addpay" data-toggle="tooltip" data-cus="<?php echo $row['cus_id'];?>" data-total="<?php echo $row['total_amount'];?>" data-sino="<?php echo $row['sales_no'];?>" data-fn="<?php echo $row['full_name'];?>" title="Add Payment" class="bt-pay btn btn-primary btn-sm"><b class="fa fa-money fa-bg"></b></button>
                                <button type="button" data-toggle="tooltip" title="Print" class="btn btn-info btn-sm"><b class="fa fa-print fa-bg"></b></button>
@@ -295,9 +313,9 @@ $(document).ready(function(){
         scrollY:        "500px",
         scrollX:        true,
         scrollCollapse: true,
-        fixedColumns:{
-            leftColumns: 2
-        },
+        // fixedColumns:{
+        //     leftColumns: 2
+        // },
         "oLanguage": {
           "sSearch": "<b class='fa fa-search fa-lg'>&nbsp;</b>",
           "sLengthMenu": "<b id='data-menu'><b class='fa fa-eye fa-lg'>&nbsp;</b>Show _MENU_ records</b>&nbsp;"
@@ -368,6 +386,17 @@ $(document).ready(function(){
         } );
     } );  
     */  
+    // Notification
+    $("#not").click(function(event) {
+        $("#notify").hide();
+    });
+    function check() {
+        var val = $("#notify").text();
+        if (val==0) {
+            $("#notify").hide();
+        }
+    }
+    check();
 });
 </script>
 </body>
