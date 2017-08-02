@@ -187,7 +187,7 @@ class CRUD
           if (password_verify($pass,$row['password'])) {
             session_start();
             $_SESSION['login_user']=$user;
-            header('location:php/index.php'); 
+            header('location:php/index'); 
           }else{
          	return false;
           }

@@ -23,6 +23,6 @@
 	$year = $rower['year'];
    $name = $rowing['lname'].", ".$rowing['fname']." ".$rowing['mname'].". ";   
    if(!isset($_SESSION['login_user'])){
-      header("location:../index.php");
+      header("location:../index");
    }
 ?>
