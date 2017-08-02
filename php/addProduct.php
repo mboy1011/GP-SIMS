@@ -161,7 +161,7 @@ include 'session.php';
             <div class="col-sm-12">
               <ol class="breadcrumb">
               <li><a href="index.php">Dashboard</a></li>
-              <li class="active">Add Products</li>
+              <li class="active">Inventory In</li>
               </ol>
               <hr>
             </div>

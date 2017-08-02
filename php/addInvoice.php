@@ -251,7 +251,7 @@ include 'session.php';
             $max_id=$rowss['max_id']+1;      
             ?>
                     <span class="input-group-addon">Sales Invoice No.</span>
-                    <input type="text"  name="sold" value='<?php echo $max_id;?>' id="salesno" class="form-control">
+                    <input type="number" step="any"  name="sold" value='<?php echo sprintf("%04d",$max_id);?>' id="salesno" class="form-control">
                 </div>
             </div>
         </div>
