@@ -3,7 +3,7 @@ class CRUD
 {
 	public function insertEmp($fn,$ln,$mn,$po)
 	{
-		include 'config.php';
+		require 'config.php';
 		$sql = mysqli_query($db,"SELECT * FROM tbl_employee WHERE fname='$fn' AND lname='$ln' AND mname='$mn'");
 		if($sql->num_rows>0){
 			return false;
@@ -19,7 +19,7 @@ class CRUD
 	}
 	public function insertCust($fn,$add,$tin,$bstyle,$terms,$opidno,$d1,$d2)
 	{
-		include 'config.php';
+		require 'config.php';
 		$sql = mysqli_query($db,"SELECT full_name,address,tin FROM tbl_customers WHERE full_name='$fn' AND address='$add'");
 		if($sql->num_rows>0){
 			return false;
@@ -35,7 +35,7 @@ class CRUD
 	}
 	public function updateCust($id,$fn,$add,$tin,$bstyle,$terms,$opidno)
 	{
-		include 'config.php';
+		require 'config.php';
 		$sql = mysqli_query($db,"UPDATE tbl_customers SET full_name='$fn', address='$add', tin = $tin, bstyle='$bstyle', terms='$terms', opidno='$opidno' WHERE cus_id='$id'");
 		if (!$sql) {
 			return false;
@@ -45,7 +45,7 @@ class CRUD
 	}
 	public function deleteCust($id)
 	{
-		include 'config.php';
+		require 'config.php';
 		$sql = mysqli_query($db,"DELETE FROM tbl_customers WHERE cus_id='$id'");
 		if (!$sql) {
 			return false;
@@ -55,7 +55,7 @@ class CRUD
 	}
 	public function insertUser($user,$pass)
 	{
-		include 'config.php';
+		require 'config.php';
 		$pass = password_hash($pass, PASSWORD_BCRYPT);
 		$sql = mysqli_query($db,"SELECT * FROM tbl_useraccounts WHERE lname='$user'");
 		if($sql->num_rows>0){
@@ -71,7 +71,7 @@ class CRUD
 	}
 	public function insertPro($pn,$pd,$ex,$lo,$pr,$pk,$qt)
 	{
-		include 'config.php';
+		require 'config.php';
 		$sql = mysqli_query($db,"SELECT * FROM tbl_products WHERE name='$pn' AND lot_no='$lo'");
 		if ($sql->num_rows>0) {
 			return false;
@@ -87,7 +87,7 @@ class CRUD
 	}
 	public function upStat($val,$sino)
 	{
-		include 'config.php';
+		require 'config.php';
 	    if ($val!=0) {
 	      $inserts = mysqli_query($db,"UPDATE tbl_sales SET status='PARTIALLY PAID' WHERE sales_no='$sino'");
 	    }else{
@@ -96,7 +96,7 @@ class CRUD
 	}
 	public function upProd($si_no)
 	{
-		include 'config.php';
+		require 'config.php';
 		$querys = mysqli_query($db,"SELECT * FROM tbl_salesdetails WHERE sales_no=$si_no");
 		$arr = array();
 		while($mysql = mysqli_fetch_array($querys,MYSQLI_ASSOC)){
@@ -114,7 +114,7 @@ class CRUD
 	}
 	public function upPro($id,$proname,$desc,$lot,$price,$exp,$pack,$qty)
 	{
-		include 'config.php';
+		require 'config.php';
 		$stat = '';
 		if ((int)$qty==0) {
 			$stat = 'OUT OF STOCKS'	;
@@ -130,7 +130,7 @@ class CRUD
 	}
 	public function delPro($did)
 	{
-		include 'config.php';
+		require 'config.php';
 		$sql = mysqli_query($db,"DELETE FROM tbl_products WHERE prod_id='$did'");
 		if (!$sql) {
 			return false;
@@ -140,7 +140,7 @@ class CRUD
 	}
 	public function upEmp($fn,$mn,$ln,$po,$id)
 	{
-		include 'config.php';
+		require 'config.php';
 		$sql = mysqli_query($db,"UPDATE tbl_employee SET fname='$fn', lname='$ln', mname='$mn', position='$po' WHERE emp_id='$id'");
 		if (!$sql) {
 			return false;
@@ -150,7 +150,7 @@ class CRUD
 	}
 	public function delEmp($id)
 	{
-		include 'config.php';
+		require 'config.php';
 		$sql = mysqli_query($db,"DELETE FROM tbl_employee WHERE emp_id='$id'");
 		if (!$sql) {
 			return false;
@@ -160,7 +160,7 @@ class CRUD
 	}
 	public function upUser($id,$ui,$pa)
 	{
-		include 'config.php';
+		require 'config.php';
 		$sql = mysqli_query($db,"UPDATE tbl_useraccounts SET lname='$ui', password='$pa' WHERE uid='$id'");
 		if (!$sql) {
 			return false;
@@ -170,7 +170,7 @@ class CRUD
 	}
 	public function delUser($delid)
 	{
-		include 'config.php';
+		require 'config.php';
 		$sql = mysqli_query($db,"DELETE FROM tbl_useraccounts WHERE uid='$delid'");
 		if (!$sql) {
 			return false;
@@ -180,7 +180,7 @@ class CRUD
 	}
 	public function login($user,$pass)
 	{
-		include 'config.php';
+		require 'config.php';
 		$sql = mysqli_query($db, "SELECT * FROM tbl_useraccounts WHERE lname='$user'");
         $row = mysqli_fetch_array($sql, MYSQLI_ASSOC);
         if ($row['lname']==$user) {
@@ -197,13 +197,38 @@ class CRUD
 	}
 	public function upYear($yr)
 	{
-		include 'config.php';
+		require 'config.php';
 		$sql = mysqli_query($db,"UPDATE tbl_year SET year='$yr'");
 		if (!$sql) {
 			return false;
 		}else{
 			return true;
 		}
+	}
+	public function insertExp($cn,$dt,$ca,$am)
+	{
+		require 'config.php';
+		$query = mysqli_query($db,"SELECT * FROM tbl_expenses WHERE cat_id='$ca' AND ex_date='$dt' AND ex_custName='$cn'");
+		if ($query->num_rows>0) {
+			return false;
+		}else{
+			mysqli_query($db,"INSERT INTO tbl_expenses (cat_id,ex_date,ex_custName,ex_amount) VALUES ('".$ca."','".$dt."','".$cn."','".$am."')");
+			return true;
+		}
+	}
+	public function updateExp($cn,$dt,$ca,$am,$id)
+	{
+		require 'config.php';
+		$sql = mysqli_query($db,"UPDATE tbl_expenses SET cat_id='$ca',ex_date='$dt',ex_custName='$cn',ex_amount='$am' WHERE ex_id='$id'");
+		if (!$sql) {
+			return false;
+		}else{
+			return true;
+		}
+	}
+	public function deleteExp($id)
+	{
+		
 	}
 }
 ?>

@@ -1,6 +1,6 @@
 <?php
-include 'session.php';
-include 'crud.php';
+require 'session.php';
+require 'crud.php';
 $oop = new CRUD();
 ?>
 <!DOCTYPE html>
@@ -15,6 +15,8 @@ $oop = new CRUD();
     <link rel="stylesheet" type="text/css" href="../css/fixedColumns.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/buttons.dataTables.min.css">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!-- DatePicker -->
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-datepicker3.min.css">
 <style type="text/css" media="screen">
 .modal-header{
   background-color: #4dffb8;
@@ -22,8 +24,7 @@ $oop = new CRUD();
 }
 .modal-footer{
     background-color: #333333;
-}    
-/*Data Tables Search Bar*/
+}        
 #datatables_filter
 {
   color: #c68c53;
@@ -38,7 +39,7 @@ $oop = new CRUD();
 }
 
 </style>
- </head>
+</head>
 <body>
 <div id="wrapper">
     <!-- Navigation -->
@@ -186,169 +187,171 @@ $oop = new CRUD();
     </nav>
     <div class="container-fluid">
         <div class="row">
-          <div class="col-sm-12">
+            <div class="col-sm-12">
               <ol class="breadcrumb">
               <li><a href="index.php">Dashboard</a></li>
-              <li class="active">View Customers</li>
+              <li class="active">Expenses Lists</li>
               </ol>
               <hr>
-          </div>
+            </div>
         </div>
 <?php
-if(isset($_POST['importSubmit'])){
-    
-    //validate whether uploaded file is a csv file
-    $csvMimes = array('text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream', 'application/vnd.ms-excel', 'application/x-csv', 'text/x-csv', 'text/csv', 'application/csv', 'application/excel', 'application/vnd.msexcel', 'text/plain');
-    if(!empty($_FILES['file']['name']) && in_array($_FILES['file']['type'],$csvMimes)){
-        if(is_uploaded_file($_FILES['file']['tmp_name'])){
-            //open uploaded csv file with read only mode
-            $csvFile = fopen($_FILES['file']['tmp_name'], 'r');          
-            //skip first line
-            fgetcsv($csvFile);
-            //parse data from csv file line by line
-            while(($line = fgetcsv($csvFile)) !== FALSE){
-                //check whether member already exists in database with same email
-                $sql = mysqli_query($db,"SELECT * FROM tbl_customers WHERE tin = '".$line[1]."'");
-                $result = mysqli_fetch_assoc($sql);
-                if($result > 0){
-                    //update member data
-                    $query1 = mysqli_query($db,"UPDATE tbl_customers SET full_name = '".$line[0]."',  terms = '".$line[2]."', opidno = '".$line[3]."', bstyle = '".$line[4]."', address = '".$line[5]."' WHERE tin = '".$line[1]."'");
-                }else{
-                    //insert member data into database
-                    $query2 = mysqli_query($db,"INSERT INTO tbl_customers (full_name, tin, terms, opidno, bstyle, address) VALUES ('".$line[0]."','".$line[1]."','".$line[2]."','".$line[3]."','".$line[4]."','".$line[5]."')");
-                }
-            }
-            
-            //close opened csv file
-            fclose($csvFile);
-            $qstring = '?status=succ';                                
-            ?>
-                      <div class="alert alert-success alert-dismissable">
-                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Imported!</strong>
-                      </div>
-            <?php
+    if (isset($_POST['delete'])) {
+        $did = mysqli_real_escape_string($db,$_POST['delid']);
+        $sql = $oop->deleteExp($did);
+        if(!$sql){
+           ?>
+              <div class="alert alert-warning alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Delete Expenses!</strong> Try Again.
+              </div>
+          <?php
         }else{
-            $qstring = '?status=err';
             ?>
-                      <div class="alert alert-warning alert-dismissable">
-                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong><b class="fa fa-check fa-bg">&nbsp;</b>Failed to Import CSV File!</strong>Try Again.
-                      </div>
-            <?php            
+              <div class="alert alert-success alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Deleted!</strong>
+              </div>
+          <?php
         }
-    }else{
-        $qstring = '?status=invalid_file';              
+    }else if (isset($_POST['addEXP'])) {
+        $cn = mysqli_real_escape_string($db,$_POST['custname']);
+        $dt = mysqli_real_escape_string($db,$_POST['date']);
+        $ca = mysqli_real_escape_string($db,$_POST['category']);
+        $am = mysqli_real_escape_string($db,$_POST['amount']);
+        $sql = $oop->insertExp($cn,$dt,$ca,$am);
+        if(!$sql){
             ?>
-                      <div class="alert alert-danger alert-dismissable">
-                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong><b class="fa fa-check fa-bg">&nbsp;</b>Invalid CSV File!</strong>
-                      </div>
-            <?php        
+              <div class="alert alert-warning alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-check fa-bg">&nbsp;</b>Already Added!</strong>
+              </div>
+          <?php
+        }else{
+           ?>
+              <div class="alert alert-success alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Added!</strong>
+              </div>
+          <?php
+        }
+    }else if (isset($_POST['updateExp'])) {
+        $cn = mysqli_real_escape_string($db,$_POST['upcustname']);
+        $dt = mysqli_real_escape_string($db,$_POST['update']);
+        $ca = mysqli_real_escape_string($db,$_POST['upcategory']);
+        $am = mysqli_real_escape_string($db,$_POST['upamount']);
+        $id = mysqli_real_escape_string($db,$_POST['upid']);
+        $sql = $oop->updateExp($cn,$dt,$ca,$am,$id);
+        if(!$sql){
+            ?>
+              <div class="alert alert-danger alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-check fa-bg">&nbsp;</b>Failed to Update! Try Again.</strong>
+              </div>
+          <?php
+        }else{
+           ?>
+              <div class="alert alert-success alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Updated!</strong>
+              </div>
+          <?php
+        }
     }
-}
+
 ?>        
         <div class="row">
-            <div class="col-sm-2">
-                <button type="button" id="import" class="btn btn-default form-control"><b class="fa fa-upload">&nbsp;</b>Import CSV</button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-4">
-                <div id="showimport" style="display: none;">
-                   <form action="" method="post" enctype="multipart/form-data" id="importFrm">
-                       <input type="file" name="file" class="form-control" required="">
-                       <input type="submit" class="btn btn-primary form-control" name="importSubmit" value="IMPORT">
-                   </form>
+          <div class="col-sm-5">
+
+          </div>
+          <div class="col-sm-5">
+            <button type="button" class="btn btn-info btn-sm" id="refresh"><b class="fa fa-refresh"></b></button>
+          </div>
+          <div class="col-sm-2">
+            <button type="button" data-toggle="modal" data-target="#addexp" class="btn btn-info btn-sm form-control"><b class="fa fa-plus">&nbsp;</b>Add Expenses</button>
+          </div>
+
+          <!-- Modal -->
+          <div id="addexp" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Add Expenses</h4>
                 </div>
+                <form method="POST" action="">
+                <div class="modal-body">
+                  <div class="input-group">
+                    <span class="input-group-addon">Customer Name: </span>
+                    <input type="text" name="custname" class="form-control" required="">
+                  </div>
+                  <div class="input-group date form_date">
+                    <span class="input-group-addon" ><b class="fa fa-calendar"></b></span>
+                    <input name="date" id="dateToday" class="form-control" size="16" type="text" placeholder="">
+                  </div>
+                  <div class="input-group">
+                  <span class="input-group-addon">Category:</span>
+                    <select name="category" class="form-control" >
+                            <?php
+                              $result =mysqli_query($db, "SELECT * FROM tbl_category");
+                              while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
+                                echo"<option value='$row[cat_id]'>";
+                                echo $row['cat_name'];
+                                echo"</option>";
+                              }
+                            ?>
+                   </select>
+                 </div>
+                 <div class="input-group">
+                  <span class="input-group-addon">Amount: ₱</span>
+                  <input type="number" step="any" name="amount" class="form-control" required="">
+                 </div> 
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary" name="addEXP">Submit</button>  
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+                </form>
+              </div>
             </div>
+          </div>
         </div>
         <div class="row">
           <div class="col-sm-12">
-           <?php
-            if (isset($_POST['update'])){
-                $id = mysqli_real_escape_string($db,$_POST['id']);
-                $fn = mysqli_real_escape_string($db,$_POST['name']);
-                $tin = mysqli_real_escape_string($db,$_POST['tin']);
-                $add = mysqli_real_escape_string($db,$_POST['add']);
-                $bstyle = mysqli_real_escape_string($db,$_POST['bstyle']);
-                $terms = mysqli_real_escape_string($db,$_POST['terms']);
-                $opidno = mysqli_real_escape_string($db,$_POST['opidno']);
-                $sql=$oop->updateCust($id,$fn,$add,$tin,$bstyle,$terms,$opidno);
-                if(!$sql){
-                   ?>
-                      <div class="alert alert-warning alert-dismissable">
-                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Update!</strong> Try Again.
-                      </div>
-                  <?php
-                }else{
-                    ?>
-                      <div class="alert alert-success alert-dismissable">
-                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Updated!</strong>
-                      </div>
-                  <?php
-                }
-            }
-            ?>
-            <?php
-            if (isset($_POST['delete'])) {
-                $id = mysqli_real_escape_string($db,$_POST['delid']);
-                $sql = $oop->deleteCust($id);
-                if(!$sql){
-                   ?>
-                      <div class="alert alert-warning alert-dismissable">
-                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Delete Customer!</strong> Try Again.
-                      </div>
-                  <?php
-                }else{
-                    ?>
-                      <div class="alert alert-success alert-dismissable">
-                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Deleted!</strong>
-                      </div>
-                  <?php
-                }
-            }
-            ?>
             <div class="table-responsive">
                 <table class="table table-striped table-bordered nowrap" width="100%" id="datatables">
-                    <thead>
+                    <thead class="thead-inverse">
                         <tr>
-                            <th>IDs</th>
-                            <th>Customer's Name</th>
-                            <th>Address</th>
-                            <th>TIN/SC-TIN</th>
-                            <th>Business Style</th>
-                            <th>OSCA/PWD ID No.</th>
-                            <th>Terms</th>
-                            <th>Date Added</th>                       
+                            <th>ID</th>
+                            <th>Category Name</th>
+                            <th>Customer Name</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Date Added</th>
                             <th>Edit</th> 
                             <th>Delete</th> 
                         </tr>
                     </thead>
                     <?php
-                        $i = 1;
-                      $result = mysqli_query($db, "SELECT * FROM tbl_customers") or die(mysql_error());
+                      $result = mysqli_query($db, "SELECT tbl_expenses.timestamp,tbl_expenses.ex_id,tbl_expenses.cat_id,tbl_expenses.ex_custName,tbl_expenses.ex_amount,tbl_category.cat_name,tbl_expenses.ex_date FROM tbl_expenses INNER JOIN tbl_category ON tbl_category.cat_id=tbl_expenses.cat_id ORDER BY tbl_expenses.ex_id ASC") or die(mysql_error());
+                      $i=1;
                     ?>
                     <tbody>
                       <?php while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){?>
                           <tr>
-                            <td><?php echo $i++; ?></td>
-                            <td><?php echo $row['full_name']; ?></td>
-                            <td><?php echo $row['address']; ?></td>            
-                            <td><?php echo $row['tin']; ?></td> 
-                            <td><?php echo $row['bstyle']; ?></td> 
-                            <td><?php echo $row['opidno']; ?></td> 
-                            <td><?php echo $row['terms']; ?></td> 
-                            <td><?php echo $row['timestamp']; ?></td>    
+                            <td><?php echo $i++;?></td>
+                            <td><?php echo $row['cat_name']?></td>
+                            <td><?php echo $row['ex_custName']; ?></td>
+                            <td><?php echo $row['ex_date']; ?></td>
+                            <td>₱ <?php echo number_format($row['ex_amount'],2); ?></td>
+                            <td><?php echo $row['timestamp']; ?></td>
                             <td>
-                               <b data-placement="top"  title="Edit"><button class="btn-edit btn btn-warning btn-xs"  data-title="Edit" data-id="<?php echo $row['cus_id']; ?>"  data-fn="<?php echo $row['full_name']; ?>" data-ad="<?php echo $row['address']; ?>" data-tin="<?php echo $row['tin']; ?>" data-bstyle="<?php echo $row['bstyle']; ?>" data-opidno="<?php echo $row['opidno']; ?>" data-terms="<?php echo $row['terms']; ?>" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
+                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit" data-cus="<?php echo $row['ex_custName'];?>" data-cat="<?php echo $row['cat_id'];?>" data-am="<?php echo $row['ex_amount'];?>" data-date="<?php echo $row['ex_date']?>" data-id="<?php echo $row['ex_id']; ?>" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
                             </td>      
                             <td>
-                                <b data-placement="top" title="Delete"><button class="btn-delete btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['cus_id']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
+                                <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['ex_id']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
                             </td> 
                           </tr>
                       <?php } ?>
@@ -357,6 +360,7 @@ if(isset($_POST['importSubmit'])){
                 </div>
           </div>
         </div>
+<!-- Update -->
 <div id="edit" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
@@ -364,48 +368,64 @@ if(isset($_POST['importSubmit'])){
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Edit Customer Details</h4>
+        <h4 class="modal-title">Edit Expenses Details</h4>
       </div>
+      <form method="POST" action="">
       <div class="modal-body">
-        <form method="POST" action="">
-                <input type="hidden" name="id" id="cust_id">
-                <input type="text" id="cust" name="name" placeholder="Customers Name" class="form-control" required="">
-                <input type="number" id="tin" name="tin" placeholder="TIN/SC-TIN" class="form-control">
-                <input type="text" id="add" name="add" placeholder="Address" class="form-control">
-                <input type="text" id="bstyle" name="bstyle" placeholder="Business Style" class="form-control">
-                <input type="text" id="terms" name="terms" placeholder="Terms" class="form-control">
-                <input type="text" id="opidno" name="opidno" placeholder="OSCA/PWD ID No." class="form-control">
-                
+          <input type="hidden" name="upid" id="exid">
+          <div class="input-group">
+            <span class="input-group-addon">Customer Name: </span>
+            <input type="text" id="cust" name="upcustname" class="form-control" required="">
+          </div>
+          <div class="input-group date form_date">
+            <span class="input-group-addon" ><b class="fa fa-calendar"></b></span>
+            <input name="update" id="tod" class="form-control" size="16" type="text" placeholder="">
+          </div>
+          <div class="input-group">
+          <span class="input-group-addon">Category:</span>
+            <select name="upcategory" id="cat" class="form-control" >
+                    <?php
+                      $result =mysqli_query($db, "SELECT * FROM tbl_category");
+                      while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
+                        echo"<option value='$row[cat_id]'>";
+                        echo $row['cat_name'];
+                        echo"</option>";
+                      }
+                    ?>
+           </select>
+         </div>
+         <div class="input-group">
+          <span class="input-group-addon">Amount: ₱</span>
+          <input type="number" step="any" id="am" name="upamount" class="form-control" required="">
+         </div> 
       </div>
       <div class="modal-footer">
-        <button class="btn btn-warning" type="submit" name="update"><b class="fa fa-pencil-square-o fa-bg">&nbsp;</b>Update</button>
+        <button type="submit" name="updateExp" class="btn btn-warning">Update</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        </form>
       </div>
+      </form>
     </div>
 
   </div>
-</div>
+</div>  
+<!-- Delete -->
 <div id="delete" class="modal fade" role="dialog">
   <div class="modal-dialog">
-
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Delete Customer</h4>
+        <h4 class="modal-title">Delete Expenses</h4>
       </div>
+      <form>
       <div class="modal-body">
-        <form method="POST" action="">
-                <input type="hidden" name="delid" id="delid">
-                <b><strong>Are you sure do you want to delete this customer?</strong></b>
-            
+        <input type="hidden" name="delid" id="delid">
+        <strong>Are you sure you want to delete?</strong>
       </div>
       <div class="modal-footer">
-            <button class="btn btn-danger" type="submit" name="delete"><b class="fa fa-trash fa-bg">&nbsp;</b>Delete</button>
-            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        </form>
+         
       </div>
+      </form>
     </div>
 
   </div>
@@ -418,6 +438,9 @@ if(isset($_POST['importSubmit'])){
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script type="text/javascript" src="../js/script.js"></script>
 <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<!-- DatePicker -->
+<script type="text/javascript" src="../js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="../js/bootstrap-datepicker.en-AU.min.js"></script>
 <!-- DataTables -->
 <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="../js/dataTables.bootstrap.min.js"></script>
@@ -433,14 +456,14 @@ if(isset($_POST['importSubmit'])){
 <script type="text/javascript">
 $(document).ready(function(){
     $('#datatables').dataTable({
-        "pageLength": -1,
+       "pageLength": -1,
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
         scrollY:        "500px",
         scrollX:        true,
         scrollCollapse: true,
-        fixedColumns:{
-            leftColumns: 2
-        },
+        // fixedColumns:{
+        //     leftColumns: 2
+        // },
         "oLanguage": {
           "sSearch": "<b class='fa fa-search fa-lg'>&nbsp;</b>",
           "sLengthMenu": "<b id='data-menu'><b class='fa fa-eye fa-lg'>&nbsp;</b>Show _MENU_ records</b>&nbsp;"
@@ -459,30 +482,31 @@ $(document).ready(function(){
             }
         ]
     });
-    $(".btn-edit").click(function(){
-        var id = $(this).data("id");
-        var fn = $(this).data("fn");
-        var terms = $(this).data("terms");
-        var bstyle = $(this).data("bstyle");
-        var opidno = $(this).data("opidno");
-        var tin = $(this).data("tin");
-        var ad = $(this).data("ad");
-        $("#cust_id").val(id);    
-        $("#cust").val(fn);    
-        $("#tin").val(tin);
-        $("#terms").val(terms);
-        $("#opidno").val(opidno);
-        $("#bstyle").val(bstyle);
-        $("#add").val(ad);
+    var date = new Date();
+    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    $('.form_date').datepicker({
+      format: "yyyy/mm/dd",
+      language: 'en-AU',
+      todayHighlight: true,
+      setDate: today,
+      autoclose: true
+    }).datepicker('setDate', new Date());
+    $('.btn-edits').click(function(event) {
+        var cus = $(this).data('cus');
+        var cat = $(this).data('cat');
+        var date = $(this).data('date');
+        var am = $(this).data('am');
+        var id = $(this).data('id');
+        $("#cust").val(cus);
+        $("#tod").val(date);
+        $("#cat").val(cat);
+        $("#am").val(am);
+        $("#exid").val(id);
     });
-    $(".btn-delete").click(function(){
-        var did = $(this).data("did");
-        $("#delid").val(did);
+    $('.btn-deletes').click(function(event) {
+       
     });
-    $("#import").click(function(event) {
-        $("#showimport").slideToggle('100');
-    });
-        $("#not").click(function(event) {
+    $("#not").click(function(event) {
         $("#notify").hide();
     });
     function check() {
@@ -491,7 +515,10 @@ $(document).ready(function(){
             $("#notify").hide();
         }
     }
-    check();
+    check();    
+    $("#refresh").click(function(event) {
+        window.location.reload(true);
+    });
 });
 </script>
 </body>

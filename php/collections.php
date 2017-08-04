@@ -1,5 +1,5 @@
 <?php
-include 'session.php';
+require 'session.php';
 ?>
 <!DOCTYPE html>
 <html>
@@ -125,6 +125,13 @@ include 'session.php';
                     <ul id="submenu-8" class="collapse">
                         <li><a href="addPO.php"><i class="fa fa-plus">&nbsp;</i>Add PO</a></li>
                         <li><a href="viewPO.php"><i class="fa fa-list">&nbsp;</i>PO List</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" data-toggle="collapse" data-target="#submenu-9"><i class="fa fa-fw  fa-ruble"></i> Expenses<i class="fa fa-fw fa-angle-down pull-right"></i></a>
+                    <ul id="submenu-9" class="collapse">
+                        <li><a href="viewExCat"><i class="fa fa-align-left">&nbsp;</i>Expenses Category</a></li>
+                        <li><a href="viewExList"><i class="fa fa-align-right">&nbsp;</i>Expeses List</a></li>
                     </ul>
                 </li>
                 <li>

@@ -1,5 +1,5 @@
 <?php
-include 'session.php';
+require 'session.php';
 ?>
 <!DOCTYPE html>
 <html>
@@ -94,6 +94,13 @@ include 'session.php';
                     </ul>
                 </li>
                 <li>
+                    <a href="#" data-toggle="collapse" data-target="#submenu-9"><i class="fa fa-fw  fa-ruble"></i> Expenses<i class="fa fa-fw fa-angle-down pull-right"></i></a>
+                    <ul id="submenu-9" class="collapse">
+                        <li><a href="viewExCat"><i class="fa fa-align-left">&nbsp;</i>Expenses Category</a></li>
+                        <li><a href="viewExList"><i class="fa fa-align-right">&nbsp;</i>Expeses List</a></li>
+                    </ul>
+                </li>
+                <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-1"><i class="fa fa-fw fa-tags"></i> Sales <i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-1" class="collapse">
                         <li><a href="addInvoice.php"><i class="fa fa-plus">&nbsp;</i>Add Invoice</a></li>
@@ -169,7 +176,7 @@ include 'session.php';
             </div>
             <div class="col-sm-4">
                 <?php
-            include 'crud.php';
+            require 'crud.php';
             $oop = new CRUD();
             if ($_SERVER['REQUEST_METHOD']=='POST') {
                 $fn = mysqli_real_escape_string($db,$_POST['name']);

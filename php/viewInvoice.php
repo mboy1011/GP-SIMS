@@ -130,6 +130,13 @@ $oop = new CRUD();
                     </ul>
                 </li>
                 <li>
+                    <a href="#" data-toggle="collapse" data-target="#submenu-9"><i class="fa fa-fw  fa-ruble"></i> Expenses<i class="fa fa-fw fa-angle-down pull-right"></i></a>
+                    <ul id="submenu-9" class="collapse">
+                        <li><a href="viewExCat"><i class="fa fa-align-left">&nbsp;</i>Expenses Category</a></li>
+                        <li><a href="viewExList"><i class="fa fa-align-right">&nbsp;</i>Expeses List</a></li>
+                    </ul>
+                </li>
+                <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-1"><i class="fa fa-fw fa-tags"></i> Sales <i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-1" class="collapse">
                         <li><a href="addInvoice.php"><i class="fa fa-plus">&nbsp;</i>Add Invoice</a></li>
@@ -232,9 +239,11 @@ $oop = new CRUD();
                             <th>Customer Name</th>
                             <th>Date</th>
                             <th>Less: VAT</th>
-                            <th>Gross</th>
-                            <th>Net Sales</th>
-                            <th>VAT</th>
+                            <th>Gross (₱)</th>
+                            <th>Net Sales (₱)</th>
+                            <th>VAT (₱)</th>
+                            <th>Discount 1 (%)</th>
+                            <th>Discount 2 (%)</th>
                             <th>Due Date</th>
                             <th>Status</th>
                             <th>Print</th> 
@@ -243,7 +252,7 @@ $oop = new CRUD();
                         </tr>
                     </thead>
                     <?php
-                     $result = mysqli_query($db,"SELECT tbl_customers.full_name,tbl_sales.sales_id,LPAD(tbl_sales.sales_no,4,0) as sales_no,tbl_sales.dates,tbl_sales.VAT,tbl_sales.total_amount,tbl_sales.total_sales,tbl_sales.due_date,tbl_sales.amount_net,tbl_sales.status,tbl_customers.cus_id FROM tbl_customers INNER JOIN tbl_sales ON tbl_sales.cus_id=tbl_customers.cus_id ORDER BY sales_no") or die(mysqli_error());
+                     $result = mysqli_query($db,"SELECT tbl_customers.full_name,tbl_sales.sales_id,LPAD(tbl_sales.sales_no,4,0) as sales_no,tbl_sales.dates,tbl_sales.VAT,tbl_sales.total_amount,tbl_sales.total_sales,tbl_sales.due_date,tbl_sales.amount_net,tbl_sales.status,tbl_customers.cus_id,tbl_sales.discount1,tbl_sales.discount2 FROM tbl_customers INNER JOIN tbl_sales ON tbl_sales.cus_id=tbl_customers.cus_id ORDER BY sales_no") or die(mysqli_error());
                       // $result = mysqli_query($db, "SELECT * FROM tbl_sales") or die(mysql_error());
 
                     ?>
@@ -257,9 +266,11 @@ $oop = new CRUD();
                             <td><?php echo $row['full_name']; ?></td>            
                             <td><?php echo $row['dates']; ?></td> 
                             <td><?php echo $row['VAT']; ?>%</td> 
-                            <td>₱<?php echo number_format($row['total_amount'],2); ?></td> 
-                            <td>₱<?php echo number_format($row['total_sales'],2); ?></td> 
-                            <td>₱<?php echo number_format($row['amount_net'],2); ?></td>  
+                            <td><?php echo number_format($row['total_amount'],2); ?></td> 
+                            <td><?php echo number_format($row['total_sales'],2); ?></td> 
+                            <td><?php echo number_format($row['amount_net'],2); ?></td>  
+                            <td><?php echo $row['discount1']?></td>
+                            <td><?php echo $row['discount2']?></td>
                             <td><?php echo $row['due_date'];?></td>
                             <td>
                             <?php
@@ -286,7 +297,7 @@ $oop = new CRUD();
                              <?php
                               if ($row['status']!='CANCELLED') {
                              ?>
-                               <form method="POST" action="print.php">
+                               <form method="POST" action="print.php" target="_blank">
                                  <input type="hidden" name="sales_no" value="<?php echo $row['sales_no']?>">
                                  <input type="hidden" name="cus_id" value="<?php echo $row['cus_id']?>">
                                  <button class="btn btn-info btn-sm" name="print"><b class="fa fa-print fa-bg">&nbsp;</b></button>

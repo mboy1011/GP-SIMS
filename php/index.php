@@ -1,5 +1,5 @@
 <?php
-include 'session.php';
+require 'session.php';
 ?>
 <!DOCTYPE html>
 <html>
@@ -52,6 +52,10 @@ include 'session.php';
                             echo "<li class='dropdown-header'>Out of Stocks</li>";
                             echo "<li><a href='viewProduct'>".$rows['name'].' '.$rows['packing']."</a></li>";
                         }
+                        while ($rows = mysqli_fetch_array($mysql3,MYSQLI_ASSOC)) {
+                            echo "<li class='dropdown-header'>Overdue</li>";
+                            echo "<li><a href='viewInvoice'>Sales No. ".sprintf('%04d',$rows['sales_no'])."</a></li>";
+                        }
                    ?>
                    </li>
                    <li class='divider'></li>
@@ -91,6 +95,13 @@ include 'session.php';
                     <ul id="submenu-8" class="collapse">
                         <li><a href="addPO"><i class="fa fa-plus">&nbsp;</i>Add PO</a></li>
                         <li><a href="viewPO"><i class="fa fa-list">&nbsp;</i>PO List</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" data-toggle="collapse" data-target="#submenu-9"><i class="fa fa-fw  fa-ruble"></i> Expenses<i class="fa fa-fw fa-angle-down pull-right"></i></a>
+                    <ul id="submenu-9" class="collapse">
+                        <li><a href="viewExCat"><i class="fa fa-align-left">&nbsp;</i>Expenses Category</a></li>
+                        <li><a href="viewExList"><i class="fa fa-align-right">&nbsp;</i>Expeses List</a></li>
                     </ul>
                 </li>
                 <li>
@@ -238,9 +249,8 @@ include 'session.php';
                 <div class="thumbnail" style="background-color: #ff0000;color: #fff; text-align: center;">
                     <b style="font-size: 50px;">
                     <?php
-                        $sql5 = mysqli_query($db,"SELECT count(sales_no) as total FROM tbl_overdue");
+                        $sql5 = mysqli_query($db,"SELECT count(*) as total FROM tbl_overdue");
                         $result5 = mysqli_fetch_array($sql5,MYSQLI_ASSOC);
-                        mysqli_query($db,"UPDATE tbl_sales SET status='OVERDUE' WHERE due_date=CURDATE() AND status!='CANCELLED'");
                         echo $result5['total'];
                     ?>
                     </b>
@@ -251,20 +261,93 @@ include 'session.php';
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-1">
-                
+            <div class="col-sm-4 col-md-4">
+                <div class="thumbnail" style="background-color: #003366;color: #fff; text-align: center;">
+                    <b style="font-size: 50px;">₱
+                    <?php 
+                        $sql7 = mysqli_query($db,"SELECT SUM(ex_amount) as total FROM tbl_expensesToday");
+                        $result7 = mysqli_fetch_array($sql7,MYSQLI_ASSOC);
+                        echo number_format($result7['total'],2);
+                    ?>
+                    </b>
+                    <div class="caption" style="color:#fff;">
+                        EXPENSES TODAY
+                    </div>
+                </div>
             </div>
-            
-            <div class="col-sm-1">
-                
+            <div class="col-sm-4 col-md-4">
+                <div class="thumbnail" style="background-color: #003366;color: #fff; text-align: center;">
+                    <b style="font-size: 50px;">₱
+                    <?php 
+                        $sql8 = mysqli_query($db,"SELECT SUM(ex_amount) as total FROM tbl_expenses");
+                        $result8 = mysqli_fetch_array($sql8,MYSQLI_ASSOC);
+                        echo number_format($result8['total'],2);
+                    ?>
+                    </b>
+                    <div class="caption" style="color:#fff;">
+                        TOTAL EXPENSES
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4">
+                <div class="thumbnail" style="background-color: #003366;color: #fff; text-align: center;">
+                    <b style="font-size: 50px;">₱
+                    <?php 
+                        $sql9 = mysqli_query($db,"SELECT SUM(total_sales) as total FROM tbl_sales WHERE status!='CANCELLED'");
+                        $result9 = mysqli_fetch_array($sql9,MYSQLI_ASSOC);
+                        echo number_format($result9['total'],2);
+                    ?>
+                    </b>
+                    <div class="caption" style="color:#fff;">
+                        TOTAL INCOME
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-md-6">
                 <canvas id="sales"></canvas>            
             </div>
-            <div class="col-sm-6">
+            <div class="col-md-6">
+                <canvas id="expenses"></canvas>
+            </div>
+            
+        </div>
+        <div class="row">
+            <div class="col-md-6">
                 <canvas id="products"></canvas>
+            </div>
+             <div class="col-md-6">
+                <div class="panel panel-primary">
+                  <div class="panel-heading">Last Expenses</div>
+                  <div class="panel-body" style="height: 225px;overflow-y: auto;">
+                      <table class="table table-hover table-fixed table-striped">
+                          <thead class="thead-inverse">
+                              <tr>
+                                  <th>ID</th>
+                                  <th>Date</th>
+                                  <th>Category</th>
+                                  <th>Customer</th>
+                                  <th>Amount</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                            <?php 
+                            $queryExp = mysqli_query($db,"SELECT * FROM tbl_expensesLast INNER JOIN tbl_category ON tbl_expensesLast.cat_id=tbl_category.cat_id");
+                            $i=1; 
+                            while($row = mysqli_fetch_array($queryExp,MYSQLI_ASSOC)){?>
+                              <tr>
+                                  <td><?php echo $i++;?></td>
+                                  <td><?php echo $row['ex_date'];?></td>
+                                  <td><?php echo $row['cat_name'];?></td>
+                                  <td><?php echo $row['ex_custName'];?></td>
+                                  <td><?php echo number_format($row['ex_amount'],2);?></td>
+                              </tr>
+                            <?php }?>
+                          </tbody>
+                      </table>
+                  </div>
+                </div>
             </div>
         </div>
         <!-- /.row -->
@@ -280,6 +363,7 @@ include 'session.php';
 $(function() {
 var ctx1 = $("#sales");
 var ctx2 = $("#products");
+var ctx3 = $("#expenses");
 var a = $("#si").val();
 var b = $("#pd").val();
 var c = $("#up").val();
@@ -323,7 +407,7 @@ var f = $("#od").val();
             responsive: true,
             title: {
                 display: true,
-                text: 'Total Products Out'
+                text: 'MONTHLY INVENTORY OUT'
             }
         }
         });
@@ -366,12 +450,54 @@ $.post('data', {sales:"sales"}, function(data, textStatus, xhr) {
         responsive: true,
         title: {
             display: true,
-            text: 'Total Sales Chart'
+            text: 'MONTHLY INCOME'
         }
     }
     });
 });
 // });
+// 
+$.post('data', {expenses:"expenses"}, function(data, textStatus, xhr) {
+    var obj = JSON.parse(data);
+    var label = [];
+    var total = [];
+    for (var i = 0; i < obj.length; i++) {
+        label.push(obj[i].Month);
+        total.push(obj[i].Total);
+    }
+   var expenses = new Chart(ctx3, {
+    type: 'bar',
+    data: {
+        labels: label,
+        datasets: [{
+            label: [],
+            data: total,
+            backgroundColor: 'rgba(26, 255, 140,0.5)',
+            borderColor:    'rgba(26, 255, 140,1)'
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }],
+            xAxes:[{
+                ticks:{
+                    beginAtZero:true
+                }
+            }]
+        },
+        responsive: true,
+        title: {
+            display: true,
+            text: 'MONTHLY EXPENSES'
+        }
+    }
+    });
+});
+// 
     $("#not").click(function(event) {
         $("#notify").hide();
     });

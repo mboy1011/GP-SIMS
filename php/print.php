@@ -1,15 +1,36 @@
 <?php
-include 'session.php';
-require 'fpdf/fpdf.php';
+require 'session.php';
+require 'pdf_js.php';
+class PDF_AutoPrint extends PDF_JavaScript
+{
+    function AutoPrint($printer='')
+    {
+        // Open the print dialog
+        if($printer)
+        {
+            $printer = str_replace('\\', '\\\\', $printer);
+            $script = "var pp = getPrintParams();";
+            $script .= "pp.interactive = pp.constants.interactionLevel.full;";
+            $script .= "pp.printerName = '$printer'";
+            $script .= "print(pp);";
+        }
+        else
+            $script = 'print(true);';
+        $this->IncludeJS($script);
+    }
+}
 if (isset($_POST['print'])) {
 $si_no = mysqli_escape_string($db,$_POST['sales_no']);
 $cu_id = mysqli_escape_string($db,$_POST['cus_id']);
-$pdf = new FPDF('P','mm','Legal');
+$pdf = new PDF_AutoPrint('P','mm','Legal');
 $pdf->AddPage();
-$query1 = mysqli_query($db,"SELECT tbl_customers.full_name,tbl_customers.tin,tbl_customers.terms,tbl_customers.opidno,tbl_sales.total_amount,tbl_sales.total_sales,tbl_sales.amount_net,tbl_customers.bstyle,tbl_sales.VAT,tbl_customers.address,tbl_sales.dates FROM tbl_customers, tbl_sales WHERE tbl_sales.cus_id='$cu_id' AND tbl_customers.cus_id='$cu_id' AND tbl_sales.sales_no='$si_no'");
+$query1 = mysqli_query($db,"SELECT tbl_customers.full_name,tbl_customers.tin,tbl_customers.terms,tbl_customers.opidno,tbl_sales.total_amount,tbl_sales.total_sales,tbl_sales.amount_net,tbl_customers.bstyle,tbl_sales.VAT,tbl_customers.address,DATE_FORMAT(tbl_sales.dates,'%M %m, %Y') AS dates,tbl_sales.discount1,tbl_sales.discount2 FROM tbl_customers, tbl_sales WHERE tbl_sales.cus_id='$cu_id' AND tbl_customers.cus_id='$cu_id' AND tbl_sales.sales_no='$si_no'");
 $rows=mysqli_fetch_assoc($query1);
 $pdf->SetTitle("Print Sales Invoice",true);
 $pdf->SetFont('Arial','B',11);
+$pdf->SetXY(150,20);//Coordinates for Fixed Position
+$pdf->Cell(30,7,'Invoice No.',0,0);
+$pdf->Cell(20,7,sprintf("%04d",$si_no),0,0,'R');
 $pdf->Ln(30);
 $pdf->Cell(20,7,'SOLD to',0,0);
 $pdf->SetFont('Arial','',11);
@@ -48,7 +69,7 @@ $pdf->Cell(18,10,'Expiry',0,0,'C');
 $pdf->Cell(18,10,'Quantity',0,0,'C');
 $pdf->Cell(19,10,'Unit Price',0,0,'C');
 $pdf->Cell(22,10,'AMOUNT',0,1,'C');
-$query = mysqli_query($db,"SELECT tbl_products.name,tbl_products.packing,tbl_salesdetails.id,tbl_salesdetails.sales_no,tbl_products.lot_no,tbl_products.expiry_date,tbl_salesdetails.quantity, tbl_salesdetails.price, tbl_salesdetails.amount
+$query = mysqli_query($db,"SELECT tbl_products.name,tbl_products.packing,tbl_salesdetails.id,tbl_salesdetails.sales_no,tbl_products.lot_no,DATE_FORMAT(tbl_products.expiry_date,'%Y-%m') AS expiry_date,tbl_salesdetails.quantity, tbl_salesdetails.price, tbl_salesdetails.amount
 FROM tbl_salesdetails, tbl_products WHERE
 tbl_salesdetails.prod_id=tbl_products.prod_id AND tbl_salesdetails.sales_no='$si_no'");
 	$o = 1;
@@ -58,26 +79,43 @@ while ($row = mysqli_fetch_array($query,MYSQLI_ASSOC)) {
 }
 $pdf->SetFont('Arial','',10);
 for ($i=0; $i < count($arr); $i++) { 
-	$pdf->Cell(10,10,$o++,0,0,'C');
-	$pdf->Cell(88,10,$arr[$i][name]." ".$arr[$i][packing],0,0,'C');
-	$pdf->Cell(18,10,$arr[$i][lot_no],0,0,'C');
-	$pdf->Cell(18,10,$arr[$i][expiry_date],0,0,'C');
-	$pdf->Cell(18,10,$arr[$i][quantity],0,0,'C');
-	$pdf->Cell(19,10,number_format($arr[$i][price],2),0,0,'C');
-	$pdf->Cell(22,10,number_format($arr[$i][amount],2),0,1,'C');
+	$pdf->Cell(20,5,$o++,0,0,'L');
+	$pdf->Cell(84,5,$arr[$i][name]." ".$arr[$i][packing],0,0,'L');
+	$pdf->Cell(16,5,$arr[$i][lot_no],0,0,'L');
+	$pdf->Cell(16,5,$arr[$i][expiry_date],0,0,'L');
+	$pdf->Cell(15,5,$arr[$i][quantity],0,0,'C');
+	$pdf->Cell(17,5,number_format($arr[$i][price],2),0,0,'C');
+	$pdf->Cell(20,5,number_format($arr[$i][amount],2),0,1,'C');
 }
-$pdf->SetXY(120,270);//Coordinates for Fixed Position
-$pdf->Cell(30,10,'Total Amount Due:',0,0);
-$pdf->Cell(50,10,number_format($rows['total_amount'],2),0,1,'C');
-$pdf->SetXY(120,280);//Coordinates for Fixed Position
-$pdf->Cell(30,10,'Total Net Amount:',0,0);
-$pdf->Cell(50,10,number_format($rows['amount_net'],2),0,1,'C');
+$pdf->SetXY(50,290);//Coordinates for Fixed Position
+$pdf->Cell(30,5,'Total Sales',0,0);
+$pdf->Cell(20,5,number_format($rows['total_amount'],2),0,1,'R');
+$pdf->SetXY(50,295);//Coordinates for Fixed Position
+$pdf->Cell(30,5,'Less Discount 1',0,0);
+$pdf->Cell(20,5,number_format($rows['discount1']).'%',0,1,'R');
+$pdf->SetXY(50,300);//Coordinates for Fixed Position
+$pdf->Cell(30,5,'Less Discount 2',0,0);
+$pdf->Cell(20,5,number_format($rows['discount2']).'%',0,1,'R');
+$pdf->SetXY(40,305);//Coordinates for Fixed Position
+$pdf->Cell(40,5,'Total Amount Due',0,0,'R');
+$pdf->SetFont('','U');
+$pdf->Cell(20,5,number_format($rows['total_amount'],2),0,1,'R');
+$pdf->SetFont('','');
 $pdf->SetXY(120,290);//Coordinates for Fixed Position
-$pdf->Cell(30,10,'Total Amount Sales:',0,0);
-$pdf->Cell(50,10,number_format($rows['total_sales'],2),0,1,'C');
+$pdf->Cell(30,5,'Total Net of VAT',0,0);
+$pdf->Cell(50,5,number_format($rows['amount_net'],2),0,1,'R');
+$pdf->SetXY(120,295);//Coordinates for Fixed Position
+$pdf->Cell(30,5,'Total Sales',0,0);
+$pdf->Cell(50,5,number_format($rows['total_sales'],2),0,1,'R');
 $pdf->SetXY(120,300);//Coordinates for Fixed Position
-$pdf->Cell(49,10,'VAT:',0,0);
-$pdf->Cell(10,10,$rows['VAT']."%",0,1,'C');
+$pdf->Cell(50,5,'Less: VAT',0,0);
+$pdf->Cell(30,5,$rows['VAT']."%",0,1,'R');
+$pdf->SetXY(120,305);//Coordinates for Fixed Position
+$pdf->SetFont('Arial','B',11);
+$pdf->Cell(30,5,'Total Amount Due',0,0);
+$pdf->Cell(50,5,number_format($rows['total_amount'],2),0,1,'R');
+
+$pdf->AutoPrint();
 $pdf->Output();
 }
 ?>

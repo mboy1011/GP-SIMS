@@ -16,5 +16,13 @@
 			}
 			print json_encode($data);
 			mysqli_close($db);		
+		}else if ($_REQUEST['expenses']) {
+			$sql = mysqli_query($db,"SELECT Month, Total FROM tbl_monthly_expenses WHERE Year='$year' ORDER BY Month ASC");
+			$data = array();
+			foreach ($sql as $row) {
+				$data[] = $row;
+			}
+			print json_encode($data);
+			mysqli_close($db);
 		}
 ?>

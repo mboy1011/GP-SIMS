@@ -96,6 +96,13 @@ include 'session.php';
                     </ul>
                 </li>
                 <li>
+                    <a href="#" data-toggle="collapse" data-target="#submenu-9"><i class="fa fa-fw  fa-ruble"></i> Expenses<i class="fa fa-fw fa-angle-down pull-right"></i></a>
+                    <ul id="submenu-9" class="collapse">
+                        <li><a href="viewExCat"><i class="fa fa-align-left">&nbsp;</i>Expenses Category</a></li>
+                        <li><a href="viewExList"><i class="fa fa-align-right">&nbsp;</i>Expeses List</a></li>
+                    </ul>
+                </li>
+                <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-1"><i class="fa fa-fw fa-tags"></i> Sales <i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-1" class="collapse">
                         <li><a href="addInvoice.php"><i class="fa fa-plus">&nbsp;</i>Add Invoice</a></li>
@@ -545,8 +552,8 @@ $(document).ready(function() {
        var terms = $("#terms1").val();
        var product = $("#cprod").val();
        var quantity = $("#qty").val();
-       var dis1 = parseFloat($("#discount1").val())/100 || 0;
-       var dis2 = parseFloat($("#discount2").val())/100 || 0;
+       var dis1 = parseFloat($("#discount1").val());
+       var dis2 = parseFloat($("#discount2").val());
        $.post('save.php', {save: 'ok',terms: terms,sales_no: sales_no, cust_id: cust_id, date: date, prepare: prepare, check: check, vat: vat, tad: tad, net: net, tsales: tsales, product: product, quantity: quantity,dis1: dis1,dis2: dis2}, function(data, textStatus, xhr) {
            $("#hideme").slideUp('slow/400/fast', function() {
                 $(".result").html(data);    
