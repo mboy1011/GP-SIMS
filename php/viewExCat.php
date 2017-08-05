@@ -194,40 +194,33 @@ $oop = new CRUD();
             </div>
         </div>
 <?php
-    if (isset($_POST['update'])) {
-        $id = mysqli_real_escape_string($db,$_POST['id']);
-        $proname = mysqli_real_escape_string($db,$_POST['proname']);
-        $desc = mysqli_real_escape_string($db,$_POST['desc']);
-        $lot = mysqli_real_escape_string($db,$_POST['lot']);
-        $price = mysqli_real_escape_string($db,$_POST['price']);
-        $exp = mysqli_real_escape_string($db,$_POST['exp']);
-        $pack = mysqli_real_escape_string($db,$_POST['pack']);
-        $qty = mysqli_real_escape_string($db,$_POST['qty']);
-        $sql = $oop->upPro($id,$proname,$desc,$lot,$price,$exp,$pack,$qty);
+    if (isset($_POST['updateCat'])) {
+        $cn = mysqli_real_escape_string($db,$_POST['upcatname']);
+        $id = mysqli_real_escape_string($db,$_POST['upid']);
+        $sql = $oop->updateCat($cn,$id);
         if(!$sql){
                    ?>
                       <div class="alert alert-warning alert-dismissable">
                           <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Update!</strong> Try Again.
+                        <strong><b class="fa fa-exclamation-triangle fa-bg">&nbsp;</b>Failed to Update!</strong> Try Again.
                       </div>
                   <?php
-                }else{
-                    ?>
-                      <div class="alert alert-success alert-dismissable">
-                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Updated!</strong>
-                      </div>
-                  <?php
-                }
-    }
-    if (isset($_POST['delete'])) {
-        $did = mysqli_real_escape_string($db,$_POST['delid']);
-        $sql = $oop->delPro($did);
+        }else{
+            ?>
+              <div class="alert alert-success alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Updated!</strong>
+              </div>
+          <?php
+        }
+    }else if (isset($_POST['deleteCat'])) {
+        $id = mysqli_real_escape_string($db,$_POST['delid']);
+        $sql = $oop->deleteCat($id);
         if(!$sql){
            ?>
               <div class="alert alert-warning alert-dismissable">
                   <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Delete Customer!</strong> Try Again.
+                <strong><b class="fa fa-exclamation-triangle fa-bg">&nbsp;</b>Failed to Delete Category!</strong> Try Again.
               </div>
           <?php
         }else{
@@ -235,6 +228,24 @@ $oop = new CRUD();
               <div class="alert alert-success alert-dismissable">
                   <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                 <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Deleted!</strong>
+              </div>
+          <?php
+        }
+    }else if (isset($_POST['addCat'])) {
+        $cat = mysqli_real_escape_string($db,$_POST['catname']);
+        $sql = $oop->insertCat($cat);
+        if(!$sql){
+           ?>
+              <div class="alert alert-warning alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-exclamation-triangle fa-bg">&nbsp;</b>Already Added!</strong> Try Again.
+              </div>
+          <?php
+        }else{
+            ?>
+              <div class="alert alert-success alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Added!</strong>
               </div>
           <?php
         }
@@ -248,9 +259,34 @@ $oop = new CRUD();
 
           </div>
           <div class="col-sm-2">
-            <button type="button" class="btn btn-info btn-sm form-control"><b class="fa fa-plus">&nbsp;</b>Add Category</button>
+            <button type="button" data-toggle="modal" data-target="#addCat" class="btn btn-info btn-sm form-control"><b class="fa fa-plus">&nbsp;</b>Add Category</button>
           </div>
         </div>
+<!-- Add Modal -->
+<div id="addCat" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Add Category</h4>
+      </div>
+      <form method="POST" action="">
+      <div class="modal-body">
+        <div class="input-group">
+          <span class="input-group-addon">Category Name: </span>
+          <input type="text" name="catname" class="form-control" required="">
+        </div>        
+      </div>
+      <div class="modal-footer">
+         <button type="submit" name="addCat" class="btn btn-primary">Submit</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+      </form>
+    </div>
+
+  </div>
+</div>        
         <div class="row">
           <div class="col-sm-12">
             <div class="table-responsive">
@@ -274,10 +310,10 @@ $oop = new CRUD();
                             <td><?php echo $row['cat_name']; ?></td>
                             <td><?php echo $row['timestamp']; ?></td>
                             <td>
-                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
+                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit" data-cn="<?php echo $row['cat_name']; ?>" data-id="<?php echo $row['cat_id']; ?>" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
                             </td>      
                             <td>
-                                <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['id']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
+                                <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['cat_id']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
                             </td> 
                           </tr>
                       <?php } ?>
@@ -294,16 +330,22 @@ $oop = new CRUD();
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Edit Inventory Out</h4>
+        <h4 class="modal-title">Edit Category Name</h4>
       </div>
+      <form method="POST" action="">
       <div class="modal-body">
-
+          <input type="hidden" name="upid" id="upid">
+          <div class="input-group">
+            <span class="input-group-addon">Category Name: </span>
+            <input type="text" name="upcatname" id="upcat" class="form-control" required="">
+        </div>   
       </div>
       <div class="modal-footer">
-
+          <button type="submit" name="updateCat" class="btn btn-warning">Update</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
       </div>
+      </form>
     </div>
-
   </div>
 </div>  
 <!-- Delete -->
@@ -311,18 +353,21 @@ $oop = new CRUD();
   <div class="modal-dialog">
     <!-- Modal content-->
     <div class="modal-content">
+    <form method="POST" action="">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Delete Inventory Out</h4>
+        <h4 class="modal-title">Delete Category</h4>
       </div>
       <div class="modal-body">
-        
+        <input type="hidden" name="delid" id="delid">
+        <strong>Are you sure you want to delete?</strong>
       </div>
       <div class="modal-footer">
-         
+        <button type="submit" name="deleteCat" class="btn btn-danger">Delete</button>
+         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
       </div>
+    </form>
     </div>
-
   </div>
 </div>
             <!-- /.row -->
@@ -375,10 +420,14 @@ $(document).ready(function(){
         ]
     });
     $('.btn-edits').click(function(event) {
-        
+        var cn = $(this).data('cn');
+        var id = $(this).data('id');
+        $("#upid").val(id);
+        $("#upcat").val(cn);
     });
     $('.btn-deletes').click(function(event) {
-       
+       var did = $(this).data('did');
+       $("#delid").val(did);
     });
     $("#not").click(function(event) {
         $("#notify").hide();

@@ -228,7 +228,44 @@ class CRUD
 	}
 	public function deleteExp($id)
 	{
-		
+		require 'config.php';
+		$sql = mysqli_query($db,"DELETE FROM tbl_expenses WHERE ex_id='$id'");
+		if (!$sql) {
+			return false;
+		}else{
+			return true;
+		}
+	}
+	public function insertCat($cat)
+	{
+		require 'config.php';
+		$query = mysqli_query($db,"SELECT * FROM tbl_category WHERE cat_name='$cat'");
+		if ($query->num_rows>0) {
+			return false;
+		}else{
+			mysqli_query($db,"INSERT INTO tbl_category (cat_name) VALUES ('".$cat."')");
+			return true;
+		}
+	}
+	public function deleteCat($id)
+	{
+		require 'config.php';
+		$sql=mysqli_query($db,"DELETE FROM tbl_category WHERE cat_id='$id'");
+		if (!$sql) {
+			return false;
+		}else{
+			return true;
+		}
+	}
+	public function updateCat($cn,$id)
+	{
+		require 'config.php';
+		$sql = mysqli_query($db,"UPDATE tbl_category SET cat_name='$cn' WHERE cat_id='$id'");
+		if (!$sql) {
+			return false;
+		}else{
+			return true;
+		}
 	}
 }
 ?>

@@ -196,7 +196,7 @@ $oop = new CRUD();
             </div>
         </div>
 <?php
-    if (isset($_POST['delete'])) {
+    if (isset($_POST['deleteExp'])) {
         $did = mysqli_real_escape_string($db,$_POST['delid']);
         $sql = $oop->deleteExp($did);
         if(!$sql){
@@ -265,7 +265,7 @@ $oop = new CRUD();
 
           </div>
           <div class="col-sm-5">
-            <button type="button" class="btn btn-info btn-sm" id="refresh"><b class="fa fa-refresh"></b></button>
+            
           </div>
           <div class="col-sm-2">
             <button type="button" data-toggle="modal" data-target="#addexp" class="btn btn-info btn-sm form-control"><b class="fa fa-plus">&nbsp;</b>Add Expenses</button>
@@ -417,13 +417,14 @@ $oop = new CRUD();
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Delete Expenses</h4>
       </div>
-      <form>
+      <form method="POST" action="">
       <div class="modal-body">
         <input type="hidden" name="delid" id="delid">
         <strong>Are you sure you want to delete?</strong>
       </div>
       <div class="modal-footer">
-         
+         <button type="submit" name="deleteExp" class="btn btn-danger">Delete</button>
+         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
       </div>
       </form>
     </div>
@@ -504,7 +505,8 @@ $(document).ready(function(){
         $("#exid").val(id);
     });
     $('.btn-deletes').click(function(event) {
-       
+       var did = $(this).data('did');
+       $("#delid").val(did);
     });
     $("#not").click(function(event) {
         $("#notify").hide();
@@ -516,9 +518,6 @@ $(document).ready(function(){
         }
     }
     check();    
-    $("#refresh").click(function(event) {
-        window.location.reload(true);
-    });
 });
 </script>
 </body>
