@@ -14,6 +14,7 @@ $oop = new CRUD();
     <link rel="stylesheet" type="text/css" href="../css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/fixedColumns.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/buttons.bootstrap.min.css">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <style type="text/css" media="screen">
 .modal-header{
@@ -380,9 +381,10 @@ $oop = new CRUD();
 <script type="text/javascript" src="../js/bootstrap.min.js"></script>
 <!-- DataTables -->
 <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="../js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="../js/buttons.colVis.min.js"></script>
 <script type="text/javascript" src="../js/dataTables.bootstrap.min.js"></script>
 <script type="text/javascript" src="../js/dataTables.fixedColumns.min.js"></script>
-<script type="text/javascript" src="../js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="../js/buttons.bootstrap.min.js"></script>
 <script type="text/javascript" src="../js/buttons.flash.min.js"></script>
 <script type="text/javascript" src="../js/jszip.min.js"></script>
@@ -390,6 +392,7 @@ $oop = new CRUD();
 <script type="text/javascript" src="../js/vfs_fonts.js"></script>
 <script type="text/javascript" src="../js/buttons.html5.min.js"></script>
 <script type="text/javascript" src="../js/buttons.print.min.js"></script>
+
 <script type="text/javascript">
 $(document).ready(function(){
     $('#datatables').dataTable({
@@ -409,13 +412,21 @@ $(document).ready(function(){
         dom: 'lBfrtip',
         buttons: [
             {
+              extend:'colvis', "text":'<span class="fa fa-eye fa-lg">&nbsp;Column Visibility</span>',"className": 'btn btn-default btn-xs',
+              collectionLayout: 'fixed two-column'
+            },
+            {
               "extend":'copy', "text":'<span class="fa fa-copy fa-lg">&nbsp;</span>Copy',"className": 'btn btn-primary btn-xs' 
             },{
               "extend":'excel', "text":'<span class="fa fa-file-excel-o fa-lg">&nbsp;</span>Excel',"className": 'btn btn-primary btn-xs' 
             },{
               "extend":'pdf', "text":'<span class="fa fa-file-pdf-o fa-lg">&nbsp;</span>PDF',"className": 'btn btn-primary btn-xs' 
             },{
-              "extend":'print', "text":'<span class="fa fa-print fa-lg">&nbsp;</span>Print',"className": 'btn btn-primary btn-xs' 
+              "extend":'print', "text":'<span class="fa fa-print fa-lg">&nbsp;</span>Print',"className": 'btn btn-primary btn-xs',
+               exportOptions: {
+                    columns: ':visible'
+                },
+                message: 'Expenses' 
             }
         ]
     });
