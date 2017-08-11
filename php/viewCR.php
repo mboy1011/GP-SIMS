@@ -153,8 +153,8 @@ $oop = new CRUD();
                     </ul>
                 </li>
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-9"><i class="fa fa-fw fa-truck"></i> Suppliers <i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-9" class="collapse">
+                    <a href="#" data-toggle="collapse" data-target="#submenu-10"><i class="fa fa-fw fa-truck"></i> Suppliers <i class="fa fa-fw fa-angle-down pull-right"></i></a>
+                    <ul id="submenu-10" class="collapse">
                         <li><a href="addSup.php"><i class="fa fa-user-plus">&nbsp;</i>Add Suppliers</a></li>
                         <li><a href="viewSup.php"><i class="fa fa-users">&nbsp;</i>View Suppliers</a></li>
                     </ul>
@@ -251,13 +251,15 @@ $oop = new CRUD();
                             <th>Customer Name</th>
                             <th>Total Sales</th>
                             <th>Date</th>
+                            <th>Payment Type</th>
+                            <th>Check No</th>
                             <th>Date Added</th>
                             <th>Edit</th> 
                             <th>Delete</th> 
                         </tr>
                     </thead>
                     <?php
-                      $result = mysqli_query($db, "SELECT tbl_customers.full_name,LPAD(tbl_CR.cr_no,4,0) as cr_no,tbl_CR.cr_date,tbl_CR.cr_totalSales,tbl_CR.timestamp FROM tbl_CR INNER JOIN tbl_customers ON tbl_customers.cus_id=tbl_CR.cus_id ORDER BY tbl_CR.cr_no") or die(mysql_error());
+                      $result = mysqli_query($db, "SELECT tbl_customers.full_name,LPAD(tbl_CR.cr_no,4,0) as cr_no,tbl_CR.cr_date,tbl_CR.cr_totalSales,tbl_CR.timestamp,tbl_CR.pay_type,tbl_CR.check_no FROM tbl_CR INNER JOIN tbl_customers ON tbl_customers.cus_id=tbl_CR.cus_id ORDER BY tbl_CR.cr_no") or die(mysql_error());
                       $i=1;
                     ?>
                     <tbody>
@@ -268,6 +270,8 @@ $oop = new CRUD();
                             <td><?php echo $row['full_name']; ?></td>
                             <td><?php echo number_format($row['cr_totalSales'],2); ?></td>
                             <td><?php echo $row['cr_date'];?></td>
+                            <td><?php echo $row['pay_type'];?></td>
+                            <td><?php echo $row['check_no'];?></td>
                             <td><?php echo $row['timestamp'];?></td>
                             <td>
                                <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 

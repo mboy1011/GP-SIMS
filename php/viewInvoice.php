@@ -10,10 +10,13 @@ $oop = new CRUD();
 	<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="../css/style.css">
     <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
-    <!-- DataTables Bootstrap -->
+        <!-- DataTables Bootstrap -->
     <link rel="stylesheet" type="text/css" href="../css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/fixedColumns.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/buttons.bootstrap.min.css">
+    <!-- DatePicker -->
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-datepicker3.min.css">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <style type="text/css" media="screen">
 .modal-header{
@@ -167,8 +170,8 @@ $oop = new CRUD();
                     </ul>
                 </li>
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-9"><i class="fa fa-fw fa-truck"></i> Suppliers <i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-9" class="collapse">
+                    <a href="#" data-toggle="collapse" data-target="#submenu-10"><i class="fa fa-fw fa-truck"></i> Suppliers <i class="fa fa-fw fa-angle-down pull-right"></i></a>
+                    <ul id="submenu-10" class="collapse">
                         <li><a href="addSup.php"><i class="fa fa-user-plus">&nbsp;</i>Add Suppliers</a></li>
                         <li><a href="viewSup.php"><i class="fa fa-users">&nbsp;</i>View Suppliers</a></li>
                     </ul>
@@ -208,6 +211,28 @@ $oop = new CRUD();
           </div>
         </div>
         <div class="row">
+            <div class="col-sm-3">
+              <div class="input-group date min">
+                <span class="input-group-addon" ><b class="fa fa-calendar">&nbsp;</b>Date From:</span>
+                <input name="date" id="min" class="form-control" size="16" type="text" placeholder="">
+                <input type="hidden" id="dateFrom">
+              </div> 
+            </div>
+            <div class="col-sm-3">
+              <div class="input-group date max">
+                <span class="input-group-addon" ><b class="fa fa-calendar">&nbsp;</b>Date To:</span>
+                <input name="date" id="max" class="form-control" size="16" type="text" placeholder="">
+                <input type="hidden" id="dateTo">
+              </div>
+            </div>
+            <div class="col-sm-4">
+              
+            </div>
+            <div class="col-sm-2">
+              
+            </div>
+          </div>
+        <div class="row">
 <?php
       if (isset($_POST['cancel'])){
         $si_no = mysqli_real_escape_string($db,$_POST['si_no']);
@@ -238,12 +263,13 @@ $oop = new CRUD();
                             <th>Sales No.</th>
                             <th>Customer Name</th>
                             <th>Date</th>
-                            <th>Less: VAT</th>
+                            <th>Less: VAT (%)</th>
                             <th>Gross (₱)</th>
                             <th>Net Sales (₱)</th>
                             <th>VAT (₱)</th>
                             <th>Discount 1 (%)</th>
                             <th>Discount 2 (%)</th>
+                            <th>Total Discount</th>
                             <th>Due Date</th>
                             <th>Status</th>
                             <th>Print</th> 
@@ -252,7 +278,7 @@ $oop = new CRUD();
                         </tr>
                     </thead>
                     <?php
-                     $result = mysqli_query($db,"SELECT tbl_customers.full_name,tbl_sales.sales_id,LPAD(tbl_sales.sales_no,4,0) as sales_no,tbl_sales.dates,tbl_sales.VAT,tbl_sales.total_amount,tbl_sales.total_sales,tbl_sales.due_date,tbl_sales.amount_net,tbl_sales.status,tbl_customers.cus_id,tbl_sales.discount1,tbl_sales.discount2 FROM tbl_customers INNER JOIN tbl_sales ON tbl_sales.cus_id=tbl_customers.cus_id ORDER BY sales_no") or die(mysqli_error());
+                     $result = mysqli_query($db,"SELECT ((tbl_sales.discount1+tbl_sales.discount2)/100)*tbl_sales.total_amount as total_discount,tbl_customers.full_name,tbl_sales.sales_id,LPAD(tbl_sales.sales_no,4,0) as sales_no,tbl_sales.dates,tbl_sales.VAT,tbl_sales.total_amount,tbl_sales.total_sales,tbl_sales.due_date,tbl_sales.amount_net,tbl_sales.status,tbl_customers.cus_id,tbl_sales.discount1,tbl_sales.discount2 FROM tbl_customers INNER JOIN tbl_sales ON tbl_sales.cus_id=tbl_customers.cus_id ORDER BY sales_no") or die(mysqli_error());
                       // $result = mysqli_query($db, "SELECT * FROM tbl_sales") or die(mysql_error());
 
                     ?>
@@ -265,12 +291,13 @@ $oop = new CRUD();
                             <td><?php echo $row['sales_no']; ?></td>
                             <td><?php echo $row['full_name']; ?></td>            
                             <td><?php echo $row['dates']; ?></td> 
-                            <td><?php echo $row['VAT']; ?>%</td> 
+                            <td><?php echo $row['VAT']; ?></td> 
                             <td><?php echo number_format($row['total_amount'],2); ?></td> 
                             <td><?php echo number_format($row['total_sales'],2); ?></td> 
                             <td><?php echo number_format($row['amount_net'],2); ?></td>  
                             <td><?php echo $row['discount1']?></td>
                             <td><?php echo $row['discount2']?></td>
+                            <td><?php echo number_format($row['total_discount'],2);?></td>
                             <td><?php echo $row['due_date'];?></td>
                             <td>
                             <?php
@@ -328,6 +355,26 @@ $oop = new CRUD();
                           </tr>
                       <?php } ?>
                     </tbody>
+                    <tfoot>
+                      <tr>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                      </tr>
+                    </tfoot>
                 </table>            
                 </div>
           </div>
@@ -363,9 +410,13 @@ $oop = new CRUD();
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script type="text/javascript" src="../js/script.js"></script>
 <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<!-- DatePicker -->
+<script type="text/javascript" src="../js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="../js/bootstrap-datepicker.en-AU.min.js"></script>
 <!-- DataTables -->
 <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="../js/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript" src="../js/buttons.colVis.min.js"></script>
 <script type="text/javascript" src="../js/dataTables.fixedColumns.min.js"></script>
 <script type="text/javascript" src="../js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="../js/buttons.bootstrap.min.js"></script>
@@ -377,7 +428,65 @@ $oop = new CRUD();
 <script type="text/javascript" src="../js/buttons.print.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-    $('#datatables').dataTable({
+  var table = $('#datatables').dataTable({
+      "footerCallback": function ( row, data, start, end, display ) {
+            var api = this.api(), data;
+ 
+            // Remove the formatting to get integer data for summation
+            var intVal = function ( i ) {
+                return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '')*1 :
+                    typeof i === 'number' ?
+                        i : 0;
+            };
+ 
+            // Total over all pages
+              // total = api
+              //     .column( 4 )
+              //     .data()
+              //     .reduce( function (a, b) {
+              //         return intVal(a) + intVal(b);
+              //     }, 0 );
+  
+            // Total over this page
+            pageTotal = api
+                .column( 5, { page: 'current'} )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+            pageTotal1 = api
+                .column( 6, { page: 'current'} )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+            pageTotal2 = api
+                .column( 7, { page: 'current'} )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+            pageTotal3 = api
+                .column( 10, { page: 'current'} )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+            // Update footer
+            $( api.column( 5 ).footer() ).html(
+                'Total: ₱'+pageTotal.toFixed(2)
+            );
+            $( api.column( 6 ).footer() ).html(
+                'Total: ₱'+pageTotal1.toFixed(2)
+            );
+            $( api.column( 7 ).footer() ).html(
+                'Total: ₱'+pageTotal2.toFixed(2)
+            );
+            $( api.column( 10 ).footer() ).html(
+                'Total: ₱'+pageTotal3.toFixed(2)
+            );
+        },
         "pageLength": -1,
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
         scrollY:        "500px",
@@ -394,16 +503,46 @@ $(document).ready(function(){
         dom: 'lBfrtip',
         buttons: [
             {
-              "extend":'copy', "text":'<span class="fa fa-copy fa-lg">&nbsp;</span>Copy',"className": 'btn btn-primary btn-xs' 
+              extend:'colvis', "text":'<span class="fa fa-eye fa-lg">&nbsp;Column Visibility</span>',"className": 'btn btn-default btn-xs',
+              collectionLayout: 'fixed two-column'
+            },
+            {
+              "extend":'copyHtml5', "text":'<span class="fa fa-copy fa-lg">&nbsp;</span>Copy',"className": 'btn btn-primary btn-xs',footer: true,
+              exportOptions: {
+                    columns: ':visible'
+                }
             },{
-              "extend":'excel', "text":'<span class="fa fa-file-excel-o fa-lg">&nbsp;</span>Excel',"className": 'btn btn-primary btn-xs' 
+              "extend":'excelHtml5', "text":'<span class="fa fa-file-excel-o fa-lg">&nbsp;</span>Excel',"className": 'btn btn-primary btn-xs',footer: true, 
+              exportOptions: {
+                    columns: ':visible'
+                }
             },{
-              "extend":'pdf', "text":'<span class="fa fa-file-pdf-o fa-lg">&nbsp;</span>PDF',"className": 'btn btn-primary btn-xs' 
+              "extend":'pdfHtml5', "text":'<span class="fa fa-file-pdf-o fa-lg">&nbsp;</span>PDF',"className": 'btn btn-primary btn-xs',footer: true, 
+              exportOptions: {
+                                  columns: ':visible'
+                              }                    
             },{
-              "extend":'print', "text":'<span class="fa fa-print fa-lg">&nbsp;</span>Print',"className": 'btn btn-primary btn-xs' 
+              "extend":'print', "text":'<span class="fa fa-print fa-lg">&nbsp;</span>Print',"className": 'btn btn-primary btn-xs',footer: true, 
+              exportOptions: {
+                    columns: ':visible'
+                }
             }
         ]
     });
+    $('.min,.max').datepicker({format: "yyyy-mm-dd",'clearBtn':true,todayHighlight:true,autoclose:true}).change(function () {
+           table.fnFilter();
+    });
+    // DateRange
+    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+      var min = $('.min').datepicker('getDate');
+      var max = $('.max').datepicker('getDate');
+      var startDate = new Date(data[3]);
+      if (min == null && max == null) { return true; }
+      if (min == null && startDate <= max) { return true;}
+      if(max == null && startDate >= min) {return true;}
+      if (startDate <= max && startDate >= min) { return true; }
+      return false;
+    });   
     $(".cancel").click(function(event) {
       var sales = $(this).data('sale');
       $("#sales_no").val(sales);

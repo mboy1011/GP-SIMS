@@ -1,5 +1,7 @@
 <?php
 	include 'config.php';
+	require 'crud.php';
+	$oop = new CRUD();
 	if ($_REQUEST['product']) {	
 		$prod = mysqli_real_escape_string($db,$_POST['product']);
 		$qty = mysqli_real_escape_string($db,$_POST['quantity']);
@@ -31,5 +33,36 @@
 		$query = mysqli_query($db,"SELECT prod_id,quantity FROM tbl_products WHERE prod_id='$prod'");
 		$row = mysqli_fetch_assoc($query);
 		echo $row['quantity']." box/boxes";	
+	}else if($_REQUEST['cust']){
+		$cust = mysqli_real_escape_string($db,$_POST['cust']);
+		$query = mysqli_query($db,"SELECT sales_no FROM tbl_sales WHERE cus_id='$cust' AND status!='CANCELLED' AND status!='PAID'");
+		while($row = mysqli_fetch_assoc($query)){
+			echo "<option value='".$row['sales_no']."'>".$row['sales_no']."</option>";
+		}
+	}else if ($_REQUEST['tad']) {
+		$tad = mysqli_real_escape_string($db,$_POST['tad']);
+		$query = mysqli_query($db,"SELECT tbl_sales.total_amount-IFNULL(SUM(tbl_CRdetails.amount),0) as total_amount,tbl_sales.sales_no FROM tbl_sales INNER JOIN tbl_CRdetails ON tbl_sales.sales_no=tbl_CRdetails.sales_no WHERE tbl_sales.sales_no='$tad'");
+		$row = mysqli_fetch_assoc($query);
+		echo $row['total_amount'];
+	}else if ($_REQUEST['cr_si']) {
+		$si = mysqli_real_escape_string($db,$_POST['cr_si']);
+		$cr = mysqli_real_escape_string($db,$_POST['cr_no']);
+		$am = mysqli_real_escape_string($db,$_POST['amount']);
+		$sql = mysqli_query($db,"SELECT * FROM tbl_CRdetails WHERE cr_no='$cr' AND sales_no='$si'");
+		if ($sql->num_rows>0) {
+			return false;
+		}else{
+			$query = mysqli_query($db,"INSERT INTO tbl_CRdetails (cr_no,sales_no,amount) VALUES ('".$cr."','".$si."','".$am."')");
+			if (!$query) {
+				return false;
+			}else{
+				$sql1 = $oop->upStat($si);
+				if (!$sql1) {
+					return false;
+				}else{
+					return true;
+				}
+			}
+		}
 	}
 ?>

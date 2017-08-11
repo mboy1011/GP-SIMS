@@ -1,5 +1,7 @@
 <?php
 	include 'config.php';
+	require 'crud.php';
+	$oop = new CRUD();
 	if($_REQUEST['deleted']){	
 		$id = mysqli_real_escape_string($db,$_POST['deleted']);
 		$qty = mysqli_real_escape_string($db,$_POST['qty']);
@@ -32,6 +34,20 @@
 			return false;
 		}else{
 			return true;
+		}
+	}else if ($_REQUEST['cr_del']) {
+		$id = mysqli_real_escape_string($db,$_POST['cr_del']);
+		$si = mysqli_real_escape_string($db,$_POST['si']);
+		$sql = mysqli_query($db,"DELETE FROM tbl_CRdetails WHERE crd_id='$id'");
+		if (!$sql) {
+			return false;
+		}else{
+			$sql1 = $oop->upStat($si);
+			if (!$sql1) {
+				return false;
+			}else{
+				return true;
+			}
 		}
 	}
 ?>

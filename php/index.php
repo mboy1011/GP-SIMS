@@ -135,10 +135,10 @@ require 'session.php';
                     </ul>
                 </li>
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-9"><i class="fa fa-fw fa-truck"></i> Suppliers <i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-9" class="collapse">
-                        <li><a href="addSup"><i class="fa fa-user-plus">&nbsp;</i>Add Suppliers</a></li>
-                        <li><a href="viewSup"><i class="fa fa-users">&nbsp;</i>View Suppliers</a></li>
+                    <a href="#" data-toggle="collapse" data-target="#submenu-10"><i class="fa fa-fw fa-truck"></i> Suppliers <i class="fa fa-fw fa-angle-down pull-right"></i></a>
+                    <ul id="submenu-10" class="collapse">
+                        <li><a href="addSup.php"><i class="fa fa-user-plus">&nbsp;</i>Add Suppliers</a></li>
+                        <li><a href="viewSup.php"><i class="fa fa-users">&nbsp;</i>View Suppliers</a></li>
                     </ul>
                 </li>
                 <li>

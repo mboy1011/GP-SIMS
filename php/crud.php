@@ -85,13 +85,21 @@ class CRUD
 		}
 
 	}
-	public function upStat($val,$sino)
+	public function upStat($si)
 	{
 		require 'config.php';
-	    if ($val!=0) {
-	      $inserts = mysqli_query($db,"UPDATE tbl_sales SET status='PARTIALLY PAID' WHERE sales_no='$sino'");
+		$sql = mysqli_query($db,"SELECT tbl_sales.total_amount-IFNULL(SUM(tbl_CRdetails.amount),0) as total,tbl_sales.total_amount FROM tbl_sales INNER JOIN tbl_CRdetails ON tbl_sales.sales_no=tbl_CRdetails.sales_no WHERE tbl_CRdetails.sales_no='$si'");
+		$row = mysqli_fetch_assoc($sql);
+		$amount = $row['total'];
+	    if($amount==$row['total_amount']){
+	      mysqli_query($db,"UPDATE tbl_sales SET status='UNPAID' WHERE sales_no='$si'");
+	      return true;
+	    }else if ($amount!=0) {
+	      mysqli_query($db,"UPDATE tbl_sales SET status='PARTIALLY PAID' WHERE sales_no='$si'");
+	      return true;
 	    }else{
-	      $inserts1 = mysqli_query($db,"UPDATE tbl_sales SET status='PAID' WHERE sales_no='$sino'");
+	      mysqli_query($db,"UPDATE tbl_sales SET status='PAID' WHERE sales_no='$si'");
+	      return true;
 	    }
 	}
 	public function upProd($si_no)
@@ -264,6 +272,17 @@ class CRUD
 		if (!$sql) {
 			return false;
 		}else{
+			return true;
+		}
+	}
+	public function insertCR($cr,$date,$cs,$ts,$p_type,$chk_no)
+	{
+		require 'config.php';
+		$sql = mysqli_query($db,"SELECT * FROM tbl_CR WHERE cr_no='$cr'");
+		if ($sql->num_rows>0) {
+			return false;
+		}else{
+			mysqli_query($db,"INSERT INTO tbl_CR (cr_no,cr_date,cus_id,cr_totalSales,pay_type,check_no) VALUES ('".$cr."','".$date."','".$cs."','".$ts."','".$p_type."','".$chk_no."')");
 			return true;
 		}
 	}
