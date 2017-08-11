@@ -293,7 +293,7 @@ require 'session.php';
                 <div class="thumbnail" style="background-color: #003366;color: #fff; text-align: center;">
                     <b style="font-size: 50px;">₱
                     <?php 
-                        $sql9 = mysqli_query($db,"SELECT SUM(total_sales) as total FROM tbl_sales WHERE status!='CANCELLED'");
+                        $sql9 = mysqli_query($db,"SELECT SUM(Total) as total FROM tbl_monthly_income");
                         $result9 = mysqli_fetch_array($sql9,MYSQLI_ASSOC);
                         echo number_format($result9['total'],2);
                     ?>

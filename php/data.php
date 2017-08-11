@@ -1,7 +1,7 @@
 <?php
 		include 'session.php';
 		if ($_REQUEST['sales']) {
-			$sql = mysqli_query($db,"SELECT Month, Total FROM tbl_monthly_sales_report WHERE Year='$year' ORDER BY Month DESC");
+			$sql = mysqli_query($db,"SELECT Month, Total FROM tbl_monthly_income WHERE Year='$year' ORDER BY Month ASC");
 			$data = array();
 			foreach ($sql as $row) {
 				$data[] = $row;

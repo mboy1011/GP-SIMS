@@ -254,6 +254,7 @@ $oop = new CRUD();
                             <th>Payment Type</th>
                             <th>Check No</th>
                             <th>Date Added</th>
+                            <th>Info</th>
                             <th>Edit</th> 
                             <th>Delete</th> 
                         </tr>
@@ -273,6 +274,7 @@ $oop = new CRUD();
                             <td><?php echo $row['pay_type'];?></td>
                             <td><?php echo $row['check_no'];?></td>
                             <td><?php echo $row['timestamp'];?></td>
+                            <td><button class="b-infos btn btn-info btn-xs" id="infos" data-cr="<?php echo $row['cr_no'];?>"><span class="fa fa-question"></span></button></td>
                             <td>
                                <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
                             </td>      
@@ -325,6 +327,56 @@ $oop = new CRUD();
 
   </div>
 </div>
+<!-- Info -->
+<div id="info" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Collection Receipt Details</h4>
+      </div>
+      <div class="modal-body">
+          <div class="panel-body" style="height:200px; overflow-y: auto;">
+                <div class="table-responsive">      
+                  <table class="table table-hover table-fixed table-striped">
+                    <thead class="thead-inverse">
+                      <tr>
+                        <th>ID</th>
+                        <th>Sales No.</th>
+                        <th>Amount</th>
+                        <th>Edit</th>
+                        <th>Remove</th>
+                      </tr>
+                    </thead>
+                    <tbody id="cr_details">
+                    </tbody>
+                  </table>       
+                </div>
+          </div><!-- panel body-->
+      </div>
+    </div>
+    <!-- Update Amount Modal -->
+    <div id="editAm" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Edit Amount</h4>
+          </div>
+          <div class="modal-body">
+          <input type="number" step="any" id="upAmount" name="">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-warning" id="upOk">Ok</button>
+            <button type="button" class="btn btn-primary" id="upNo">Cancel</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!--  -->
+  </div>  
+</div>  
             <!-- /.row -->
         <!-- /.container-fluid -->
      </div>
@@ -380,6 +432,18 @@ $(document).ready(function(){
     $('.btn-deletes').click(function(event) {
        
     });
+    $('.b-infos').click(function(event) {
+      var cr = parseInt($(this).data('cr'));
+      $.post('showjax.php', {cr_d: cr}, function(data, textStatus, xhr) {
+         $("#cr_details").html(data);
+         $("#info").modal();
+      });
+    });
+    $(document).on('click', '#btn-update', function(event) {
+      var si = $(this).data('si');
+      $("#upAmount").val(si); 
+      $("#editAm").modal();
+    });
     $("#not").click(function(event) {
         $("#notify").hide();
     });
@@ -390,6 +454,12 @@ $(document).ready(function(){
         }
     }
     check();    
+    $("#upOk").click(function(event) {
+        $('#editAm').modal('toggle');
+    });
+    $("#upNo").click(function(event) {
+        $('#editAm').modal('toggle');
+    });
 });
 </script>
 </body>
