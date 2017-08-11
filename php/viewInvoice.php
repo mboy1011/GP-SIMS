@@ -439,7 +439,8 @@ $(document).ready(function(){
                     typeof i === 'number' ?
                         i : 0;
             };
- 
+           var min = $("#min").val();
+            var max = $("#max").val();
             // Total over all pages
               // total = api
               //     .column( 4 )
@@ -474,6 +475,12 @@ $(document).ready(function(){
                     return intVal(a) + intVal(b);
                 }, 0 );
             // Update footer
+            $(api.column(1).footer()).html(
+                'Date From: '+min
+            );
+            $(api.column(2).footer()).html(
+                'Date To: '+max
+            );
             $( api.column( 5 ).footer() ).html(
                 'Total: ₱'+pageTotal.toFixed(2)
             );

@@ -174,10 +174,7 @@ include 'session.php';
             </div>
         </div>
         <div class="row">
-          <div class="col-sm-4">
-            
-          </div>
-          <div class="col-sm-4">
+            <div class="col-sm-12">
             <?php
             include 'crud.php';
             $oop = new CRUD();
@@ -206,14 +203,55 @@ include 'session.php';
                   <?php
                 }
             }
-            ?>          
+            ?>                 
+                <center><p><li class="fa fa-cart-plus fa-2x">&nbsp;</li><b style="font-size: 18px;">New Products</b></p></center>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                
+            </div>
+            <div class="col-sm-3">
+                <button class="btn btn-primary form-control" id="newB"><b class="fa fa-plus">&nbsp;</b>New batch</button>
+            </div>
+            <div class="col-sm-3">
+                <button class="btn btn-primary form-control" id="newP"><b class="fa fa-plus">&nbsp;</b>New Product</button>
+            </div>
+            <div class="col-sm-2">
+                
+            </div>
+        </div>
+        <div class="row">
+         <div class="col-sm-4">
+             
+         </div>
+         <div class="col-sm-4">
+            <div class="input-group" id="batch" style="display: none;">
+              <span class="input-group-addon">Product:</span>
+              <select name="customer" class="form-control" id="prod_batch">
+                <option>-- Select Product Here --</option>
+                      <?php
+                        $result =mysqli_query($db, "SELECT prod_id,name,packing FROM tbl_products");
+                        while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
+                          echo"<option value='$row[prod_id]'>";
+                          echo $row['name'].' '.$row['packing'];
+                          echo"</option>";
+                        }
+                      ?>
+             </select> 
+            </div>
+          </div>
+        </div>
+        <div class="row"> 
+          <div class="col-sm-4">
+              
+          </div>   
+          <div class="col-sm-4" id="new" style="display: none;">         
             <form method="POST" action="" class="form-horizontal">
-            <center><p><li class="fa fa-cart-plus fa-2x">&nbsp;</li><b style="font-size: 18px;">Product Details:</b></p></center>
-            <hr>
-                <input type="text" name="pname" placeholder="Product Name" class="form-control" required="">
+                <input type="text" name="pname" placeholder="Product Name" class="form-control" required="" id="product_name">
                 <div class="input-group">
                   <label for="comment"></label>
-                  <textarea class="form-control" rows="8" cols="60" name="pdesc" id="comment" placeholder="Product Description"></textarea>
+                  <textarea class="form-control" rows="8" cols="60" name="pdesc" placeholder="Product Description" id="product_desc"></textarea>
                 </div>
                 <div class="input-group date form_date">
                     <span class="input-group-addon" ><span class="glyphicon glyphicon-calendar"></span></span>
@@ -221,7 +259,7 @@ include 'session.php';
                 </div>
                 <input type="text" name="lotno" placeholder="Lot No." class="form-control" required="">
                 <input type="number" name="quantity" placeholder="Quantity / BOX" class="form-control" required="">
-                <input type="text" name="pack" placeholder="Packing" class="form-control" required="">
+                <input type="text" name="pack" placeholder="Packing" class="form-control" required="" id="product_pack">
                 <div class="input-group">
                     <span class="input-group-addon">₱</span>
                     <input type="number" step="any" name="price" placeholder="Unit Price" class="form-control">
@@ -266,6 +304,38 @@ $(document).ready(function() {
         }
     }
     check();  
+    $("#newB").click(function(event) {
+        $("#new").hide();
+        $("#batch").slideToggle('300', function() {
+            
+        });
+    });
+    $("#newP").click(function(event) {
+       $("#batch").hide();
+       $("#new").slideToggle('300', function() {
+
+       });
+    });
+    $("#prod_batch").change(function(event) {
+        var prod =  $("#prod_batch").val();
+       $.post('data.php', {prod_det: prod}, function(data, textStatus, xhr) {
+            if(prod!='-- Select Product Here --'){
+                $("#new").show();
+                var obj = JSON.parse(data);
+                var name = [];
+                var desc = [];
+                var pack = [];
+                for (var i = 0; i < obj.length; i++) {
+                    name.push(obj[i].name);
+                    desc.push(obj[i].description);
+                    pack.push(obj[i].packing);
+                }
+                $("#product_name").val(name);
+                $("#product_desc").text(desc);
+                $("#product_pack").val(pack);
+            }
+       });
+    });
 });
 
     /**/
