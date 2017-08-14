@@ -1,24 +1,23 @@
 <?php
-require 'session.php';
-require 'crud.php';
-$oop = new CRUD();
+include 'session.php';
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 	<title>Golden Pharmaceutical</title>
+    <!-- Bootstrap CSS -->
 	<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="../css/style.css">
-  <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
-  <!-- DatePicker -->
-  <link rel="stylesheet" type="text/css" href="../css/bootstrap-datepicker3.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
+    <!-- DatePicker -->
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-datepicker3.min.css">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
- <style type="text/css" media="screen">
+  <style type="text/css" media="screen">
      #notify{
          background-color: #ff3333;
          color: #fff;
      }
- </style>  
+ </style>
  </head>
 <body>
 <div id="wrapper">
@@ -170,114 +169,125 @@ $oop = new CRUD();
             <div class="col-sm-12">
               <ol class="breadcrumb">
               <li><a href="index.php">Dashboard</a></li>
-              <li class="active">Add Collections Receipt</li>
+              <li class="active">Add Credit/Debit Memo</li>
               </ol>
               <hr>
             </div>
         </div>
-<?php
-      if (isset($_POST['save'])){
-        $cr = mysqli_real_escape_string($db,$_POST['cr']);
-        $date = mysqli_real_escape_string($db,$_POST['today']);
-        $p_type = mysqli_real_escape_string($db,$_POST['payment']);
-        $chk_no = mysqli_real_escape_string($db,$_POST['check']);
-        $ts = mysqli_real_escape_string($db,$_POST['totalsales']);
-        $cs = mysqli_real_escape_string($db,$_POST['customer']);
-        $sql = $oop->insertCR($cr,$date,$cs,$ts,$p_type,$chk_no);
-        if (!$sql) {
-          ?>
-              <div class="alert alert-warning alert-dismissable">
-                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong><b class="fa fa-times fa-bg">&nbsp;</b>Already Added!</strong>
-              </div>
-          <?php
-        }else{
-          ?>
-              <div class="alert alert-success alert-dismissable">
-                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Added!</strong>
-              </div>
-          <?php
-        }
-      }
-?>        
+            <?php
+            include 'crud.php';
+            $oop = new CRUD();
+            if ($_SERVER['REQUEST_METHOD']=='POST') {
+                $fn = mysqli_real_escape_string($db,$_POST['fname']);
+                $ln = mysqli_real_escape_string($db,$_POST['lname']);
+                $mn = mysqli_real_escape_string($db,$_POST['mname']);
+                $po = mysqli_real_escape_string($db,$_POST['position']);
+                $sql=$oop->insertEmp($fn,$ln,$mn,$po);
+                if(!$sql){
+                   ?>
+                      <div class="alert alert-warning alert-dismissable">
+                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Already Registered!</strong> Try Again.
+                      </div>
+                  <?php
+                }else{
+                    ?>
+                      <div class="alert alert-success alert-dismissable">
+                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Successfully Registered!</strong>
+                      </div>
+                  <?php
+                }
+            }
+            ?>        
         <div class="row">
-        <form method="POST" action="">
-          <div class="col-sm-6">
-            <div class="input-group">
-              <span class="input-group-addon">Customer:</span>
-              <select name="customer" class="form-control" id="cust">
-                <option>-- Select Customer Here --</option>
-                      <?php
-                        $result =mysqli_query($db, "SELECT cus_id,full_name FROM tbl_customers");
-                        while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
-                          echo"<option value='$row[cus_id]'>";
-                          echo $row['full_name'];
-                          echo"</option>";
-                        }
-                      ?>
-             </select> 
-            </div>
+          <div class="col-sm-4">
+            
           </div>
-          <div class="col-sm-3">
-            <div class="input-group">
-              <span class="input-group-addon">C.R #</span>
-              <?php 
-                $max = mysqli_query($db,"SELECT MAX(cr_no) as max_id FROM tbl_CR");
-                $rows = mysqli_fetch_assoc($max);
-                $max_id = $rows['max_id']+1;
-              ?>
-              <input type="number" step="any" id="cr" name="cr" min="<?php echo sprintf('%04d',$max_id);?>" class="form-control" value="<?php echo sprintf('%04d',$max_id);?>">
-            </div>
+          <div class="col-sm-4">
+            <center><p><li class="fa fa-credit-card">&nbsp;</li><b style="font-size: 18px;">Credit Memo</b></p></center>
           </div>
-          <div class="col-sm-3">
-            <div class="input-group date form_date">
-                <span class="input-group-addon" >Date:</span>
-                <input name="today" id="dateToday" class="form-control" size="16" type="text" placeholder="">
-            </div>
+          <div class="col-sm-4">
+            
           </div>
         </div>
         <div class="row">
-          <div class="col-md-4">
-            <div class="input-group">
-              <span class="input-group-addon">Payment Type:</span>
-              <select name="payment" class="form-control" id="pay">
-                <option value="Cash">Cash</option>
-                <option value="Check">Check</option>
-             </select> 
+            <?php
+            $q = mysqli_query($db,"SELECT MAX(cm_no) AS max_id FROM tbl_CM");
+            $row = mysqli_fetch_assoc($q);
+            $max_id = $row['max_id']+1;
+            ?>
+            <div class="col-sm-4">
+                <div class="input-group" id="cmno">
+                  <span class="input-group-addon">Credit/Debit Memo No:</span>
+                  <input type="number" step="any" class="form-control" min="<?php echo $max_id?>" name="cm_no" value="<?php echo sprintf('%04d',$max_id);?>">
+                </div>
             </div>
-          </div>
+            <div class="col-sm-5">
+                
+            </div>
+            <div class="col-sm-3">
+                <div class="input-group date form_date">
+                    <span class="input-group-addon" ><b class="fa fa-calendar">&nbsp;</b>Date:</span>
+                    <input name="today" id="dateToday" class="form-control" size="16" type="text" placeholder="">
+                </div>
+            </div>
         </div>
         <div class="row">
-          <div class="col-md-4">
-            <div class="input-group" id="checkno">
-              <span class="input-group-addon">Check NO:</span>
-              <input type="number" step="any" class="form-control" name="check">
+            <div class="col-sm-4">
+                <div class="input-group" id="cmno">
+                  <span class="input-group-addon">Salesman:</span>
+                  <input type="text"  class="form-control" name="salesman">
+                </div>
             </div>
-          </div>
         </div>
         <div class="row">
-          <div class="col-sm-12">
-              <div class="panel panel-primary">
+            <div class="col-sm-4">
+                <div class="input-group">
+                  <span class="input-group-addon">Customer:</span>
+                  <select name="customer" class="form-control" id="cust">
+                    <option>-- Select Customer Here --</option>
+                          <?php
+                            $result =mysqli_query($db, "SELECT cus_id,full_name FROM tbl_customers");
+                            while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
+                              echo"<option value='$row[cus_id]'>";
+                              echo $row['full_name'];
+                              echo"</option>";
+                            }
+                          ?>
+                 </select> 
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="input-group">
+                   <span class="input-group-addon">Sales No:</span>
+                   <select name="payment" class="form-control" id="sales_no">
+                      
+                   </select> 
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-primary">
                 <div class="panel-heading">
                   <div class="row">
-                    <div class="col-sm-4">
-                      <div class="input-group">
-                        <span class="input-group-addon">Sales No:</span>
-                        <select name="payment" class="form-control" id="sales_no">
-                          
-                       </select> 
+                      <div class="col-sm-6">
+                        <div class="input-group">
+                           <span class="input-group-addon">Choose Product:</span>
+                           <select name="payment" class="form-control" id="prods">
+                              
+                           </select> 
+                        </div>
                       </div>
-                    </div>
-                    <div class="col-sm-3">
-                      <input type="number" step="any" class="form-control" name="tad" id="tad" placeholder="Total Amount Due" disabled="true">
-                    </div>
-                    <div class="col-sm-3">
-                        <input type="number" step="any" class="form-control" id="amt" name="amt" placeholder="Amount" required="">
-                    </div>
-                    <div class="col-sm-2">
-                         <button class="btn btn-default form-control" type="button" id="add" name="addprod" id="addprod"><b class="fa fa-plus fa-bg">&nbsp;</b>Add</button>
-                    </div>
+                      <div class="col-sm-2">
+                          <input type="number" id="qty" name="qty" class="form-control" placeholder="Quantity">
+                      </div>
+                      <div class="col-sm-4">
+                          <button type="button" class="btn btn-info form-control"><b class="fa fa-plus">&nbsp;</b>Add</button>
+                      </div>
                   </div>
                 </div><!-- panel heading-->
               <div class="panel-body" style="height:200px; overflow-y: auto;">
@@ -286,9 +296,11 @@ $oop = new CRUD();
                     <thead class="thead-inverse">
                       <tr>
                         <th>ID</th>
-                        <th>Sales No.</th>
+                        <th>Particulars</th>
+                        <th>QTY</th>
+                        <th>Unit Price</th>
                         <th>Amount</th>
-                        <th>Balance</th>
+                        <th>Edit</th>
                         <th>Remove</th>
                       </tr>
                     </thead>
@@ -298,42 +310,30 @@ $oop = new CRUD();
                 </div>
               </div><!-- panel body-->
               </div><!-- panel-->
-          </div>
+            </div>
         </div>
         <div class="row">
-          <div class="col-sm-4">
-            <div class="input-group" id="checkno">
-              <span class="input-group-addon">Total Sales:</span>
-              <input type="number" step="any" class="form-control" name="totalsales" id="total_s">
+            <div class="col-sm-12">
+                <div class="form-group">
+                  <label for="comment">Reason(s) for Return:</label>
+                  <textarea class="form-control" rows="3" id="comment" name="reasons"></textarea>
+                </div>
             </div>
-          </div>
-          <div class="col-sm-5">
-            
-          </div>
-          <div class="col-sm-3">
-            <button class="btn btn-success form-control" type="submit" name="save"><b class="fa fa-save">&nbsp;</b>Save</button>
-          </div>
         </div>
-        </form>
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">NOTIFICATION</h4>
-      </div>
-      <div class="modal-body">
-        <input type="hidden" name="id" id="idPrice" class="element form-control">
-        <div class="input-group">
-            <p id="texthere" style="font-size: 15px;color:red;"></p>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="input-group" id="cmno">
+                  <span class="input-group-addon">Total Amount:</span>
+                  <input type="number" step="any" class="form-control" name="totalAmount">
+                </div>
+            </div>
+            <div class="col-sm-4">
+                
+            </div>
+            <div class="col-sm-4">
+                <button type="button" class="btn btn-success form-control"><b class="fa fa-save">&nbsp;</b>Save</button>
+            </div>
         </div>
-      </div>
-    </div>
-
-  </div>
-</div>        
             <!-- /.row -->
         <!-- /.container-fluid -->
      </div>
@@ -347,13 +347,7 @@ $oop = new CRUD();
 <script type="text/javascript" src="../js/bootstrap-datepicker.min.js"></script>
 <script type="text/javascript" src="../js/bootstrap-datepicker.en-AU.min.js"></script>
 <script type="text/javascript">
-  ;(function(){
-    $("#checkno").hide();
-      function calc(){
-        var total = parseFloat($("#total_amounts").val())||0;
-        $("#total_s").val(total);
-      }
-      calc();
+    ;(function(){
     $("#cust").change(function(event) {
       var c = $("#cust").val()
       if (c!='-- Select Customer Here --') {
@@ -365,79 +359,41 @@ $oop = new CRUD();
       }
     });
     $("#sales_no").change(function(event) {
-      var c = $("#sales_no").val();
-      if (c!='--Select Sales Invoice--') {
-        var tad = parseInt($("#sales_no").val());
-        $.post('addjax.php', {tad: tad}, function(data, textStatus, xhr) {
-          $("#tad").val(data);
-        });
-      }
+       var s = $("#sales_no").val();
+       if (s!='--Select Sales Invoice--') {
+            $.post('addjax.php', {products: s}, function(data, textStatus, xhr) {
+                $("#prods option").remove();
+                $("#prods").append("<option value='--Select Products--'>--Select Products--</option>");
+                $("#prods").append(data);
+            });
+       }
     });
-    $("#pay").change(function(event) {
-      var c = $("#pay").val();
-      if (c!='Cash'){
-        $("#checkno").show('slow/400/fast', function() {
-          
-        });
-      }else{
-        $("#checkno").hide('slow/400/fast', function() {
-          
-        });
-      }
-    });
-    $("#add").click(function(event) {
-      var min = parseInt($("#cr").attr('min'));
-      var total = parseInt($("#cr").val());
-      var tad = parseFloat($("#tad").val());
-      var am = parseFloat($("#amt").val());
-      var si = parseInt($("#sales_no").val());
-      if (total<min) {
-        $("#texthere").text("Invalid C.R No, Try Again!");
-        $("#myModal").modal();
-      }else{
-        if (am>tad) {
-          $("#texthere").text("The Amount Value is more than the Total Amount Due, Try Again!");
-          $("#myModal").modal();
-        }else{
-          $.post('addjax', {cr_si: si,cr_no: total, amount: am}, function(data, textStatus, xhr) {
-            viewData();
-          });
-        }
-      }
-    });
-    $(document).on('click', '#btn-delete', function(event) {
-        var deleted = $(this).data('dids');
-        var si = $(this).data('sids');
-        $.post('deljax.php', {cr_del: deleted,si:si}, function(data, textStatus, xhr) {
-            viewData();
-        });
+    $("#prods").change(function(event) {
+       var p = $("#prods").val();
+       var s = $("#sales_no").val();
+       if (p!='--Select Products--') {
+            $.post('addjax.php', {quantity: p,sales: s}, function(data, textStatus, xhr) {
+                $("#qty").val(data);
+            });
+       }
     });
     $("#not").click(function(event) {
         $("#notify").hide();
     });
-    function viewData() {
-        var cr_si = $("#sales_no").val();
-        var cr_no = parseInt($("#cr").val());
-        $.post('showjax.php',{cr_si:cr_si,cr_no:cr_no}, function(data, textStatus, xhr) {
-            $("tbody").html(data);
-            calc();
-        });
-    }
-    viewData();
     function check() {
         var val = $("#notify").text();
         if (val==0) {
             $("#notify").hide();
         }
     }
-    check();    
+    check();
     $('.form_date').datepicker({
       format: "yyyy/mm/dd",
       language: 'en-AU',
       todayHighlight: true,
       autoclose: true
-    }).datepicker('setDate', new Date());
-  })();
+    }).datepicker('setDate', new Date());        
+    })();
 </script>
 </body>
 </html>

@@ -231,7 +231,7 @@ $oop = new CRUD();
             <div class="col-sm-2">
               
             </div>
-          </div>
+        </div>
         <div class="row">
 <?php
       if (isset($_POST['cancel'])){
@@ -545,9 +545,9 @@ $(document).ready(function(){
       var max = $('.max').datepicker('getDate');
       var startDate = new Date(data[3]);
       if (min == null && max == null) { return true; }
-      if (min == null && startDate <= max) { return true;}
-      if(max == null && startDate >= min) {return true;}
-      if (startDate <= max && startDate >= min) { return true; }
+      if (min == null && startDate < max) { return true;}
+      if(max == null && startDate > min) {return true;}
+      if (startDate < max && startDate > min) { return true; }
       return false;
     });   
     $(".cancel").click(function(event) {

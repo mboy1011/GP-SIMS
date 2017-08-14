@@ -15,6 +15,8 @@ $oop = new CRUD();
     <link rel="stylesheet" type="text/css" href="../css/fixedColumns.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/buttons.dataTables.min.css">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!-- DatePicker -->
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-datepicker3.min.css">
 <style type="text/css" media="screen">
 .modal-header{
   background-color: #4dffb8;
@@ -241,6 +243,28 @@ $oop = new CRUD();
     }
 ?>        
         <div class="row">
+            <div class="col-sm-3">
+              <div class="input-group date min">
+                <span class="input-group-addon" ><b class="fa fa-calendar">&nbsp;</b>Date From:</span>
+                <input name="date" id="min" class="form-control" size="16" type="text" placeholder="">
+                <input type="hidden" id="dateFrom">
+              </div> 
+            </div>
+            <div class="col-sm-3">
+              <div class="input-group date max">
+                <span class="input-group-addon" ><b class="fa fa-calendar">&nbsp;</b>Date To:</span>
+                <input name="date" id="max" class="form-control" size="16" type="text" placeholder="">
+                <input type="hidden" id="dateTo">
+              </div>
+            </div>
+            <div class="col-sm-4">
+              
+            </div>
+            <div class="col-sm-2">
+              
+            </div>
+        </div>
+        <div class="row">
           <div class="col-sm-12">
             <div class="table-responsive">
                 <table class="table table-striped table-bordered nowrap" width="100%" id="datatables">
@@ -274,7 +298,8 @@ $oop = new CRUD();
                             <td><?php echo $row['pay_type'];?></td>
                             <td><?php echo $row['check_no'];?></td>
                             <td><?php echo $row['timestamp'];?></td>
-                            <td><button class="b-infos btn btn-info btn-xs" id="infos" data-cr="<?php echo $row['cr_no'];?>"><span class="fa fa-question"></span></button></td>
+                            <td><button class="b-infos btn btn-info btn-xs" id="infos" data-cr="<?php echo $row['cr_no'];?>"><span class="fa fa-question"></span></button>
+                            </td>
                             <td>
                                <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
                             </td>      
@@ -284,6 +309,21 @@ $oop = new CRUD();
                           </tr>
                       <?php } ?>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
                 </table>            
                 </div>
           </div>
@@ -385,9 +425,13 @@ $oop = new CRUD();
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script type="text/javascript" src="../js/script.js"></script>
 <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<!-- DatePicker -->
+<script type="text/javascript" src="../js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="../js/bootstrap-datepicker.en-AU.min.js"></script>
 <!-- DataTables -->
 <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="../js/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript" src="../js/buttons.colVis.min.js"></script>
 <script type="text/javascript" src="../js/dataTables.fixedColumns.min.js"></script>
 <script type="text/javascript" src="../js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="../js/buttons.bootstrap.min.js"></script>
@@ -399,7 +443,34 @@ $oop = new CRUD();
 <script type="text/javascript" src="../js/buttons.print.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-    $('#datatables').dataTable({
+    var table = $('#datatables').dataTable({
+        "footerCallback": function ( row, data, start, end, display ) {
+            var api = this.api(), data;
+            var min = $("#min").val();
+            var max = $("#max").val();
+            // // Remove the formatting to get integer data for summation
+            var intVal = function ( i ) {
+                return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '')*1 :
+                    typeof i === 'number' ?
+                    i : 0;
+            };
+            $(api.column(1).footer()).html(
+                'Date From: '+min
+            );
+            $(api.column(2).footer()).html(
+                'Date To: '+max
+            );
+            pageTotal = api
+                .column( 3, { page: 'current'} )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+            $( api.column( 3 ).footer() ).html(
+                'Total: ₱'+pageTotal.toFixed(2)
+            );
+        },
        "pageLength": -1,
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
         scrollY:        "500px",
@@ -416,16 +487,46 @@ $(document).ready(function(){
         dom: 'lBfrtip',
         buttons: [
             {
-              "extend":'copy', "text":'<span class="fa fa-copy fa-lg">&nbsp;</span>Copy',"className": 'btn btn-primary btn-xs' 
+              extend:'colvis', "text":'<span class="fa fa-eye fa-lg">&nbsp;Column Visibility</span>',"className": 'btn btn-default btn-xs',
+              collectionLayout: 'fixed two-column'
+            },
+            {
+              "extend":'copyHtml5', "text":'<span class="fa fa-copy fa-lg">&nbsp;</span>Copy',"className": 'btn btn-primary btn-xs',footer: true,
+              exportOptions: {
+                    columns: ':visible'
+                }
             },{
-              "extend":'excel', "text":'<span class="fa fa-file-excel-o fa-lg">&nbsp;</span>Excel',"className": 'btn btn-primary btn-xs' 
+              "extend":'excelHtml5', "text":'<span class="fa fa-file-excel-o fa-lg">&nbsp;</span>Excel',"className": 'btn btn-primary btn-xs',footer: true, 
+              exportOptions: {
+                    columns: ':visible'
+                }
             },{
-              "extend":'pdf', "text":'<span class="fa fa-file-pdf-o fa-lg">&nbsp;</span>PDF',"className": 'btn btn-primary btn-xs' 
+              "extend":'pdfHtml5', "text":'<span class="fa fa-file-pdf-o fa-lg">&nbsp;</span>PDF',"className": 'btn btn-primary btn-xs',footer: true, 
+              exportOptions: {
+                                  columns: ':visible'
+                              }                    
             },{
-              "extend":'print', "text":'<span class="fa fa-print fa-lg">&nbsp;</span>Print',"className": 'btn btn-primary btn-xs' 
+              "extend":'print', "text":'<span class="fa fa-print fa-lg">&nbsp;</span>Print',"className": 'btn btn-primary btn-xs',footer: true, 
+              exportOptions: {
+                    columns: ':visible'
+                }
             }
         ]
     });
+    $('.min,.max').datepicker({format: "yyyy-mm-dd",'clearBtn':true,todayHighlight:true,autoclose:true}).change(function () {
+        table.fnFilter();
+    });
+    // DateRange
+    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+      var min = $('.min').datepicker('getDate');
+      var max = $('.max').datepicker('getDate');
+      var startDate = new Date(data[4]);
+      if (min == null && max == null) { return true; }
+      if (min == null && startDate < max) { return true;}
+      if(max == null && startDate > min) {return true;}
+      if (startDate < max && startDate > min) { return true; }
+      return false;
+    }); 
     $('.btn-edits').click(function(event) {
         
     });

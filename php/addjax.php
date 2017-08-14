@@ -64,5 +64,17 @@
 				}
 			}
 		}
+	}else if ($_REQUEST['products']) {
+		$si =  mysqli_real_escape_string($db,$_POST['products']);
+		$sql = mysqli_query($db,"SELECT * FROM tbl_salesdetails INNER JOIN tbl_products ON tbl_salesdetails.prod_id=tbl_products.prod_id WHERE tbl_salesdetails.sales_no='$si'");
+		while($row = mysqli_fetch_assoc($sql)){
+			echo "<option value='".$row['prod_id']."'>".$row['name']."</option>";
+		}	
+	}else if ($_REQUEST['quantity']) {
+		$pid = mysqli_real_escape_string($db,$_POST['quantity']);
+		$si = mysqli_real_escape_string($db,$_POST['sales']);
+		$sql = mysqli_query($db,"SELECT quantity FROM tbl_salesdetails WHERE sales_no='$si' AND prod_id='$pid'");
+		$row = mysqli_fetch_assoc($sql);
+		echo intval($row['quantity']);
 	}
 ?>

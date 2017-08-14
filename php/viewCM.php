@@ -1,6 +1,6 @@
 <?php
-require 'session.php';
-require 'crud.php';
+include 'session.php';
+include 'crud.php';
 $oop = new CRUD();
 ?>
 <!DOCTYPE html>
@@ -9,17 +9,35 @@ $oop = new CRUD();
 	<title>Golden Pharmaceutical</title>
 	<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="../css/style.css">
-  <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
-  <!-- DatePicker -->
-  <link rel="stylesheet" type="text/css" href="../css/bootstrap-datepicker3.min.css">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
- <style type="text/css" media="screen">
-     #notify{
-         background-color: #ff3333;
-         color: #fff;
-     }
- </style>  
- </head>
+    <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
+    <!-- DataTables Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="../css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/fixedColumns.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/buttons.dataTables.min.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<style type="text/css" media="screen">
+.modal-header{
+  background-color: #4dffb8;
+  color: #fff;
+}
+.modal-footer{
+    background-color: #333333;
+}        
+#datatables_filter
+{
+  color: #c68c53;
+}
+#data-menu
+{
+  color: #c68c53;
+}
+#notify{
+ background-color: #ff3333;
+ color: #fff;
+}
+
+</style>
+</head>
 <body>
 <div id="wrapper">
     <!-- Navigation -->
@@ -170,260 +188,204 @@ $oop = new CRUD();
             <div class="col-sm-12">
               <ol class="breadcrumb">
               <li><a href="index.php">Dashboard</a></li>
-              <li class="active">Add Collections Receipt</li>
+              <li class="active">Inventory Out</li>
               </ol>
               <hr>
             </div>
         </div>
 <?php
-      if (isset($_POST['save'])){
-        $cr = mysqli_real_escape_string($db,$_POST['cr']);
-        $date = mysqli_real_escape_string($db,$_POST['today']);
-        $p_type = mysqli_real_escape_string($db,$_POST['payment']);
-        $chk_no = mysqli_real_escape_string($db,$_POST['check']);
-        $ts = mysqli_real_escape_string($db,$_POST['totalsales']);
-        $cs = mysqli_real_escape_string($db,$_POST['customer']);
-        $sql = $oop->insertCR($cr,$date,$cs,$ts,$p_type,$chk_no);
-        if (!$sql) {
-          ?>
+    if (isset($_POST['update'])) {
+        $id = mysqli_real_escape_string($db,$_POST['id']);
+        $proname = mysqli_real_escape_string($db,$_POST['proname']);
+        $desc = mysqli_real_escape_string($db,$_POST['desc']);
+        $lot = mysqli_real_escape_string($db,$_POST['lot']);
+        $price = mysqli_real_escape_string($db,$_POST['price']);
+        $exp = mysqli_real_escape_string($db,$_POST['exp']);
+        $pack = mysqli_real_escape_string($db,$_POST['pack']);
+        $qty = mysqli_real_escape_string($db,$_POST['qty']);
+        $sql = $oop->upPro($id,$proname,$desc,$lot,$price,$exp,$pack,$qty);
+        if(!$sql){
+                   ?>
+                      <div class="alert alert-warning alert-dismissable">
+                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Update!</strong> Try Again.
+                      </div>
+                  <?php
+                }else{
+                    ?>
+                      <div class="alert alert-success alert-dismissable">
+                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Updated!</strong>
+                      </div>
+                  <?php
+                }
+    }
+    if (isset($_POST['delete'])) {
+        $did = mysqli_real_escape_string($db,$_POST['delid']);
+        $sql = $oop->delPro($did);
+        if(!$sql){
+           ?>
               <div class="alert alert-warning alert-dismissable">
                   <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong><b class="fa fa-times fa-bg">&nbsp;</b>Already Added!</strong>
+                <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Delete Customer!</strong> Try Again.
               </div>
           <?php
         }else{
-          ?>
+            ?>
               <div class="alert alert-success alert-dismissable">
                   <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Added!</strong>
+                <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Deleted!</strong>
               </div>
           <?php
         }
-      }
+    }
 ?>        
         <div class="row">
-        <form method="POST" action="">
-          <div class="col-sm-6">
-            <div class="input-group">
-              <span class="input-group-addon">Customer:</span>
-              <select name="customer" class="form-control" id="cust">
-                <option>-- Select Customer Here --</option>
-                      <?php
-                        $result =mysqli_query($db, "SELECT cus_id,full_name FROM tbl_customers");
-                        while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
-                          echo"<option value='$row[cus_id]'>";
-                          echo $row['full_name'];
-                          echo"</option>";
-                        }
-                      ?>
-             </select> 
-            </div>
-          </div>
-          <div class="col-sm-3">
-            <div class="input-group">
-              <span class="input-group-addon">C.R #</span>
-              <?php 
-                $max = mysqli_query($db,"SELECT MAX(cr_no) as max_id FROM tbl_CR");
-                $rows = mysqli_fetch_assoc($max);
-                $max_id = $rows['max_id']+1;
-              ?>
-              <input type="number" step="any" id="cr" name="cr" min="<?php echo sprintf('%04d',$max_id);?>" class="form-control" value="<?php echo sprintf('%04d',$max_id);?>">
-            </div>
-          </div>
-          <div class="col-sm-3">
-            <div class="input-group date form_date">
-                <span class="input-group-addon" >Date:</span>
-                <input name="today" id="dateToday" class="form-control" size="16" type="text" placeholder="">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4">
-            <div class="input-group">
-              <span class="input-group-addon">Payment Type:</span>
-              <select name="payment" class="form-control" id="pay">
-                <option value="Cash">Cash</option>
-                <option value="Check">Check</option>
-             </select> 
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4">
-            <div class="input-group" id="checkno">
-              <span class="input-group-addon">Check NO:</span>
-              <input type="number" step="any" class="form-control" name="check">
-            </div>
-          </div>
-        </div>
-        <div class="row">
           <div class="col-sm-12">
-              <div class="panel panel-primary">
-                <div class="panel-heading">
-                  <div class="row">
-                    <div class="col-sm-4">
-                      <div class="input-group">
-                        <span class="input-group-addon">Sales No:</span>
-                        <select name="payment" class="form-control" id="sales_no">
-                          
-                       </select> 
-                      </div>
-                    </div>
-                    <div class="col-sm-3">
-                      <input type="number" step="any" class="form-control" name="tad" id="tad" placeholder="Total Amount Due" disabled="true">
-                    </div>
-                    <div class="col-sm-3">
-                        <input type="number" step="any" class="form-control" id="amt" name="amt" placeholder="Amount" required="">
-                    </div>
-                    <div class="col-sm-2">
-                         <button class="btn btn-default form-control" type="button" id="add" name="addprod" id="addprod"><b class="fa fa-plus fa-bg">&nbsp;</b>Add</button>
-                    </div>
-                  </div>
-                </div><!-- panel heading-->
-              <div class="panel-body" style="height:200px; overflow-y: auto;">
-                <div class="table-responsive">      
-                  <table class="table table-hover table-fixed table-striped">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered nowrap" width="100%" id="datatables">
                     <thead class="thead-inverse">
-                      <tr>
-                        <th>ID</th>
-                        <th>Sales No.</th>
-                        <th>Amount</th>
-                        <th>Balance</th>
-                        <th>Remove</th>
-                      </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>CM No.</th>
+                            <th>Sales No.</th>
+                            <th>Customer Name</th>
+                            <th>Reason</th>
+                            <th>Total Amount</th>
+                            <th>Salesman</th>
+                            <th>Date</th>
+                            <th>Info</th>
+                            <th>Edit</th> 
+                            <th>Delete</th> 
+                        </tr>
                     </thead>
+                    <?php
+                      $result = mysqli_query($db,"SELECT * FROM tbl_CM INNER JOIN tbl_customers ON tbl_customers.cus_id=tbl_CM.cus_id") or die(mysql_error());
+                      $i=1;
+                    ?>
                     <tbody>
+                      <?php while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){?>
+                          <tr>
+                            <td><?php echo $i++;?></td>
+                            <td><?php echo sprintf('%04d',$row['cm_no']); ?></td>
+                            <td><?php echo sprintf('%04d',$row['sales_no']); ?></td>
+                            <td><?php echo $row['full_name']; ?></td>
+                            <td><?php echo $row['cm_reason']; ?></td>
+                            <td><?php echo number_format($row['cm_totalAmount'],2); ?></td>
+                            <td><?php echo $row['salesman']?></td>
+                            <td><?php echo $row['cm_date']; ?></td>
+                            <td><button class="b-infos btn btn-info btn-xs" id="infos" data-cr="<?php echo $row['cm_no'];?>"><span class="fa fa-question"></span></button>
+                            </td>
+                            <td>
+                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
+                            </td>      
+                            <td>
+                                <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['cm_id']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
+                            </td> 
+                          </tr>
+                      <?php } ?>
                     </tbody>
-                  </table>       
+                </table>            
                 </div>
-              </div><!-- panel body-->
-              </div><!-- panel-->
           </div>
         </div>
-        <div class="row">
-          <div class="col-sm-4">
-            <div class="input-group" id="checkno">
-              <span class="input-group-addon">Total Sales:</span>
-              <input type="number" step="any" class="form-control" name="totalsales" id="total_s">
-            </div>
-          </div>
-          <div class="col-sm-5">
-            
-          </div>
-          <div class="col-sm-3">
-            <button class="btn btn-success form-control" type="submit" name="save"><b class="fa fa-save">&nbsp;</b>Save</button>
-          </div>
-        </div>
-        </form>
-<div id="myModal" class="modal fade" role="dialog">
+<!-- Update -->
+<div id="edit" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">NOTIFICATION</h4>
+        <h4 class="modal-title">Edit Inventory Out</h4>
       </div>
       <div class="modal-body">
-        <input type="hidden" name="id" id="idPrice" class="element form-control">
-        <div class="input-group">
-            <p id="texthere" style="font-size: 15px;color:red;"></p>
-        </div>
+
+      </div>
+      <div class="modal-footer">
+
       </div>
     </div>
 
   </div>
-</div>        
+</div>  
+<!-- Delete -->
+<div id="delete" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Delete Inventory Out</h4>
+      </div>
+      <div class="modal-body">
+        
+      </div>
+      <div class="modal-footer">
+         
+      </div>
+    </div>
+
+  </div>
+</div>
             <!-- /.row -->
         <!-- /.container-fluid -->
      </div>
-
     <!-- /#page-wrapper -->
 </div><!-- /#wrapper -->
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script type="text/javascript" src="../js/script.js"></script>
 <script type="text/javascript" src="../js/bootstrap.min.js"></script>
-<!-- DatePicker -->
-<script type="text/javascript" src="../js/bootstrap-datepicker.min.js"></script>
-<script type="text/javascript" src="../js/bootstrap-datepicker.en-AU.min.js"></script>
+<!-- DataTables -->
+<script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="../js/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript" src="../js/dataTables.fixedColumns.min.js"></script>
+<script type="text/javascript" src="../js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="../js/buttons.bootstrap.min.js"></script>
+<script type="text/javascript" src="../js/buttons.flash.min.js"></script>
+<script type="text/javascript" src="../js/jszip.min.js"></script>
+<script type="text/javascript" src="../js/pdfmake.min.js"></script>
+<script type="text/javascript" src="../js/vfs_fonts.js"></script>
+<script type="text/javascript" src="../js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="../js/buttons.print.min.js"></script>
 <script type="text/javascript">
-  ;(function(){
-    $("#checkno").hide();
-      function calc(){
-        var total = parseFloat($("#total_amounts").val())||0;
-        $("#total_s").val(total);
-      }
-      calc();
-    $("#cust").change(function(event) {
-      var c = $("#cust").val()
-      if (c!='-- Select Customer Here --') {
-        $.post('addjax.php', {cust: c}, function(data, textStatus, xhr) {
-          $("#sales_no option").remove();
-          $("#sales_no").append("<option value='--Select Sales Invoice--'>--Select Sales Invoice--</option>");
-          $("#sales_no").append(data);
-        });
-      }
+$(document).ready(function(){
+    $('#datatables').dataTable({
+       "pageLength": -1,
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        scrollY:        "500px",
+        scrollX:        true,
+        scrollCollapse: true,
+        // fixedColumns:{
+        //     leftColumns: 2
+        // },
+        "oLanguage": {
+          "sSearch": "<b class='fa fa-search fa-lg'>&nbsp;</b>",
+          "sLengthMenu": "<b id='data-menu'><b class='fa fa-eye fa-lg'>&nbsp;</b>Show _MENU_ records</b>&nbsp;"
+        },
+        "pagingType": "full_numbers",
+        dom: 'lBfrtip',
+        buttons: [
+            {
+              "extend":'copy', "text":'<span class="fa fa-copy fa-lg">&nbsp;</span>Copy',"className": 'btn btn-primary btn-xs' 
+            },{
+              "extend":'excel', "text":'<span class="fa fa-file-excel-o fa-lg">&nbsp;</span>Excel',"className": 'btn btn-primary btn-xs' 
+            },{
+              "extend":'pdf', "text":'<span class="fa fa-file-pdf-o fa-lg">&nbsp;</span>PDF',"className": 'btn btn-primary btn-xs' 
+            },{
+              "extend":'print', "text":'<span class="fa fa-print fa-lg">&nbsp;</span>Print',"className": 'btn btn-primary btn-xs' 
+            }
+        ]
     });
-    $("#sales_no").change(function(event) {
-      var c = $("#sales_no").val();
-      if (c!='--Select Sales Invoice--') {
-        var tad = parseInt($("#sales_no").val());
-        $.post('addjax.php', {tad: tad}, function(data, textStatus, xhr) {
-          $("#tad").val(data);
-        });
-      }
+    $('.btn-edits').click(function(event) {
+        
     });
-    $("#pay").change(function(event) {
-      var c = $("#pay").val();
-      if (c!='Cash'){
-        $("#checkno").show('slow/400/fast', function() {
-          
-        });
-      }else{
-        $("#checkno").hide('slow/400/fast', function() {
-          
-        });
-      }
-    });
-    $("#add").click(function(event) {
-      var min = parseInt($("#cr").attr('min'));
-      var total = parseInt($("#cr").val());
-      var tad = parseFloat($("#tad").val());
-      var am = parseFloat($("#amt").val());
-      var si = parseInt($("#sales_no").val());
-      if (total<min) {
-        $("#texthere").text("Invalid C.R No, Try Again!");
-        $("#myModal").modal();
-      }else{
-        if (am>tad) {
-          $("#texthere").text("The Amount Value is more than the Total Amount Due, Try Again!");
-          $("#myModal").modal();
-        }else{
-          $.post('addjax', {cr_si: si,cr_no: total, amount: am}, function(data, textStatus, xhr) {
-            viewData();
-          });
-        }
-      }
-    });
-    $(document).on('click', '#btn-delete', function(event) {
-        var deleted = $(this).data('dids');
-        var si = $(this).data('sids');
-        $.post('deljax.php', {cr_del: deleted,si:si}, function(data, textStatus, xhr) {
-            viewData();
-        });
+    $('.btn-deletes').click(function(event) {
+       
     });
     $("#not").click(function(event) {
         $("#notify").hide();
     });
-    function viewData() {
-        var cr_si = $("#sales_no").val();
-        var cr_no = parseInt($("#cr").val());
-        $.post('showjax.php',{cr_si:cr_si,cr_no:cr_no}, function(data, textStatus, xhr) {
-            $("tbody").html(data);
-            calc();
-        });
-    }
-    viewData();
     function check() {
         var val = $("#notify").text();
         if (val==0) {
@@ -431,13 +393,7 @@ $oop = new CRUD();
         }
     }
     check();    
-    $('.form_date').datepicker({
-      format: "yyyy/mm/dd",
-      language: 'en-AU',
-      todayHighlight: true,
-      autoclose: true
-    }).datepicker('setDate', new Date());
-  })();
+});
 </script>
 </body>
 </html>
