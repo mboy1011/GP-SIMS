@@ -1,5 +1,7 @@
 <?php
-include 'session.php';
+require 'session.php';
+require 'crud.php';
+$oop = new CRUD();
 ?>
 <!DOCTYPE html>
 <html>
@@ -173,33 +175,7 @@ include 'session.php';
               </ol>
               <hr>
             </div>
-        </div>
-            <?php
-            include 'crud.php';
-            $oop = new CRUD();
-            if ($_SERVER['REQUEST_METHOD']=='POST') {
-                $fn = mysqli_real_escape_string($db,$_POST['fname']);
-                $ln = mysqli_real_escape_string($db,$_POST['lname']);
-                $mn = mysqli_real_escape_string($db,$_POST['mname']);
-                $po = mysqli_real_escape_string($db,$_POST['position']);
-                $sql=$oop->insertEmp($fn,$ln,$mn,$po);
-                if(!$sql){
-                   ?>
-                      <div class="alert alert-warning alert-dismissable">
-                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong>Already Registered!</strong> Try Again.
-                      </div>
-                  <?php
-                }else{
-                    ?>
-                      <div class="alert alert-success alert-dismissable">
-                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong>Successfully Registered!</strong>
-                      </div>
-                  <?php
-                }
-            }
-            ?>        
+        </div>       
         <div class="row">
           <div class="col-sm-4">
             
@@ -211,6 +187,34 @@ include 'session.php';
             
           </div>
         </div>
+        <?php
+        if (isset($_POST['save'])) {
+            $cm = mysqli_real_escape_string($db,$_POST['cm_no']);
+            $dt = mysqli_real_escape_string($db,$_POST['today']);
+            $sm = mysqli_real_escape_string($db,$_POST['salesman']);
+            $ct = mysqli_real_escape_string($db,$_POST['customer']);
+            $si = mysqli_real_escape_string($db,$_POST['sales_no']);
+            $tt = mysqli_real_escape_string($db,$_POST['totalAmount']);
+            $rs = mysqli_real_escape_string($db,$_POST['reasons']);
+            $sql = $oop->insertCM($cm,$ct,$si,$rs,$dt,$tt,$sm);
+            if(!$sql){
+               ?>
+                  <div class="alert alert-warning alert-dismissable">
+                      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Already Registered!</strong> Try Again.
+                  </div>
+              <?php
+            }else{
+                ?>
+                  <div class="alert alert-success alert-dismissable">
+                      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Successfully Registered!</strong>
+                  </div>
+              <?php
+            }
+        }
+        ?>
+        <form method="POST" action="" accept-charset="utf-8">
         <div class="row">
             <?php
             $q = mysqli_query($db,"SELECT MAX(cm_no) AS max_id FROM tbl_CM");
@@ -220,7 +224,7 @@ include 'session.php';
             <div class="col-sm-4">
                 <div class="input-group" id="cmno">
                   <span class="input-group-addon">Credit/Debit Memo No:</span>
-                  <input type="number" step="any" class="form-control" min="<?php echo $max_id?>" name="cm_no" value="<?php echo sprintf('%04d',$max_id);?>">
+                  <input type="number" step="any" id="cm_no" class="form-control" min="<?php echo $max_id?>" name="cm_no" value="<?php echo sprintf('%04d',$max_id);?>">
                 </div>
             </div>
             <div class="col-sm-5">
@@ -263,7 +267,7 @@ include 'session.php';
             <div class="col-sm-4">
                 <div class="input-group">
                    <span class="input-group-addon">Sales No:</span>
-                   <select name="payment" class="form-control" id="sales_no">
+                   <select name="sales_no" class="form-control" id="sales_no">
                       
                    </select> 
                 </div>
@@ -281,12 +285,13 @@ include 'session.php';
                               
                            </select> 
                         </div>
-                      </div>
+                      </div>    
                       <div class="col-sm-2">
-                          <input type="number" id="qty" name="qty" class="form-control" placeholder="Quantity">
+                          <input type="hidden" id="qty" name="qty" class="form-control" placeholder="Quantity"  hidden="">
+                          <input type="number" id="qty1" name="qty" class="form-control" placeholder="Quantity">
                       </div>
                       <div class="col-sm-4">
-                          <button type="button" class="btn btn-info form-control"><b class="fa fa-plus">&nbsp;</b>Add</button>
+                          <button type="button" class="btn btn-info form-control" id="add"><b class="fa fa-plus">&nbsp;</b>Add</button>
                       </div>
                   </div>
                 </div><!-- panel heading-->
@@ -322,22 +327,38 @@ include 'session.php';
         </div>
         <div class="row">
             <div class="col-sm-4">
-                <div class="input-group" id="cmno">
+                <div class="input-group">
                   <span class="input-group-addon">Total Amount:</span>
-                  <input type="number" step="any" class="form-control" name="totalAmount">
+                  <input type="number" step="any" id="totalAmount" class="form-control" name="totalAmount">
                 </div>
             </div>
             <div class="col-sm-4">
                 
             </div>
             <div class="col-sm-4">
-                <button type="button" class="btn btn-success form-control"><b class="fa fa-save">&nbsp;</b>Save</button>
+                <button type="submit" class="btn btn-success form-control" name="save"><b class="fa fa-save">&nbsp;</b>Save</button>
             </div>
         </div>
+        </form>
+<!-- Notify -->
+<div id="notify-alert" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">NOTIFICATION</h4>
+      </div>
+      <div class="modal-body">
+         
+      </div>
+    </div>
+
+  </div>
+</div>        
             <!-- /.row -->
         <!-- /.container-fluid -->
      </div>
-
     <!-- /#page-wrapper -->
 </div><!-- /#wrapper -->
 <script type="text/javascript" src="../js/jquery.min.js"></script>
@@ -348,14 +369,26 @@ include 'session.php';
 <script type="text/javascript" src="../js/bootstrap-datepicker.en-AU.min.js"></script>
 <script type="text/javascript">
     ;(function(){
+    function calc(){
+        var total = $("#totalAM").val()||0;
+        $("#totalAmount").val(total);
+    }
     $("#cust").change(function(event) {
       var c = $("#cust").val()
       if (c!='-- Select Customer Here --') {
         $.post('addjax.php', {cust: c}, function(data, textStatus, xhr) {
           $("#sales_no option").remove();
+          $("#prods option").remove();
           $("#sales_no").append("<option value='--Select Sales Invoice--'>--Select Sales Invoice--</option>");
           $("#sales_no").append(data);
+          $("#qty").val('');
+          $("#qty1").val('');
         });
+      }else{
+        $("#prods option").remove();
+        $("#sales_no option").remove();
+        $("#qty").val('');
+        $("#qty1").val('');
       }
     });
     $("#sales_no").change(function(event) {
@@ -365,7 +398,13 @@ include 'session.php';
                 $("#prods option").remove();
                 $("#prods").append("<option value='--Select Products--'>--Select Products--</option>");
                 $("#prods").append(data);
+                $("#qty").val('');
+                $("#qty1").val('');
             });
+       }else{
+            $("#prods option").remove();
+            $("#qty").val('');
+            $("#qty1").val('');
        }
     });
     $("#prods").change(function(event) {
@@ -374,9 +413,66 @@ include 'session.php';
        if (p!='--Select Products--') {
             $.post('addjax.php', {quantity: p,sales: s}, function(data, textStatus, xhr) {
                 $("#qty").val(data);
+                $("#qty1").val(data);
             });
+       }else{
+            $("#qty").val('');
+            $("#qty1").val('');
        }
     });
+    $("#add").click(function(event) {
+       var q = $("#qty").val();
+       var q1 = $("#qty1").val();
+       var p = $("#prods").val();
+       var s = $("#sales_no").val();
+       var si = $("#si_no1").val();
+       var c = $("#cm_no").val();
+        if(s==null||s==undefined||p==null||p==undefined||p=='--Select Products--'||p=='--Select Products--'||q==null||q==undefined) {
+            $("#notify-alert").modal();
+       }else{
+            if (q1>q) {
+                $("#notify-alert").modal();   
+            }else{
+                if (si==undefined||si==null) {
+                        $.post('addjax.php', {addCM:'addCM',prod_id: p,qty: q1,si_no:s,cm_no:c}, function(data, textStatus, xhr) {
+                            // console.log(data);
+                            viewData();   
+                        });    
+                }else{
+                    if (s!=si) {
+                        $("#notify-alert").modal();   
+                    }else{
+                        $.post('addjax.php', {addCM:'addCM',prod_id: p,qty: q1,si_no:s,cm_no:c}, function(data, textStatus, xhr) {
+                            // console.log(data);
+                            viewData();
+                        });
+                    }
+                }
+            }
+       }
+    });
+    $(document).on('click', '.btn-remove', function(event) {
+        var id = $(this).data('id');
+        var qt = $(this).data('qt');
+        var pi = $(this).data('pi');
+        var pr = $(this).data('pr');
+        var am = $(this).data('am');
+        var si = $("#sales_no").val();
+        $.post('deljax.php', {removeCM: 'removeCM',id:id,qt:qt,pi:pi,si:si,pr:pr,am:am}, function(data, textStatus, xhr) {
+            // console.log(data);
+            viewData();   
+            calc();
+        });
+    });
+    function viewData(){
+        var cm = $("#cm_no").val();
+        var pi = $("#prods").val();
+        var si = $("#sales_no").val();
+        $.post('showjax.php', {cm_no:cm,pid:pi,si:si}, function(data, textStatus, xhr) {
+            $("tbody").html(data);
+            calc();
+        });
+    }
     $("#not").click(function(event) {
         $("#notify").hide();
     });

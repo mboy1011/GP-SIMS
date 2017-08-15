@@ -261,21 +261,19 @@ $oop = new CRUD();
               <div class="panel panel-primary">
                 <div class="panel-heading">
                   <div class="row">
-                    <div class="col-sm-4">
+                    <div class="col-sm-5">
                       <div class="input-group">
-                        <span class="input-group-addon">Sales No:</span>
-                        <select name="payment" class="form-control" id="sales_no">
+                        <span class="input-group-addon">Sales Invoice No:</span>
+                        <select name="si_no" class="form-control" id="sales_no">
                           
                        </select> 
                       </div>
                     </div>
                     <div class="col-sm-3">
-                      <input type="number" step="any" class="form-control" name="tad" id="tad" placeholder="Total Amount Due" disabled="true">
-                    </div>
-                    <div class="col-sm-3">
+                        <input type="hidden" step="any" class="form-control" name="tad" id="tad" placeholder="Total Amount Due" >
                         <input type="number" step="any" class="form-control" id="amt" name="amt" placeholder="Amount" required="">
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-4">
                          <button class="btn btn-default form-control" type="button" id="add" name="addprod" id="addprod"><b class="fa fa-plus fa-bg">&nbsp;</b>Add</button>
                     </div>
                   </div>
@@ -362,6 +360,10 @@ $oop = new CRUD();
           $("#sales_no").append("<option value='--Select Sales Invoice--'>--Select Sales Invoice--</option>");
           $("#sales_no").append(data);
         });
+      }else{
+        $("#sales_no option").remove();
+        $("#amt").val(0);
+        $("#tad").val(0);
       }
     });
     $("#sales_no").change(function(event) {
@@ -369,8 +371,12 @@ $oop = new CRUD();
       if (c!='--Select Sales Invoice--') {
         var tad = parseInt($("#sales_no").val());
         $.post('addjax.php', {tad: tad}, function(data, textStatus, xhr) {
+          $("#amt").val(data);
           $("#tad").val(data);
         });
+      }else{
+          $("#amt").val(0);
+          $("#tad").val(0);
       }
     });
     $("#pay").change(function(event) {

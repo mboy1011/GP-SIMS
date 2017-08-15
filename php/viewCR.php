@@ -14,6 +14,7 @@ $oop = new CRUD();
     <link rel="stylesheet" type="text/css" href="../css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/fixedColumns.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/buttons.bootstrap.min.css">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <!-- DatePicker -->
     <link rel="stylesheet" type="text/css" href="../css/bootstrap-datepicker3.min.css">
@@ -267,7 +268,7 @@ $oop = new CRUD();
         <div class="row">
           <div class="col-sm-12">
             <div class="table-responsive">
-                <table class="table table-striped table-bordered nowrap" width="100%" id="datatables">
+                <table class="table" width="100%" id="datatables">
                     <thead class="thead-inverse">
                         <tr>
                             <th>ID</th>

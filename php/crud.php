@@ -286,5 +286,43 @@ class CRUD
 			return true;
 		}
 	}
+	public function c_d_prod($si,$pi,$qt,$total)
+	{
+		require 'config.php';
+		$sql1 = mysqli_query($db,"UPDATE tbl_products SET quantity=quantity+$qt WHERE prod_id='$pi'");
+		$sql2 = mysqli_query($db,"UPDATE tbl_salesdetails SET quantity=quantity-$qt, amount=amount-$total WHERE prod_id='$pi' AND sales_no='$si'");
+		if (!$sql1||!$sql2) {
+			return false;
+		}else{
+			return true;
+		}
+	}
+	public function d_c_prod($si,$pi,$qt,$am)
+	{
+		require 'config.php';
+		$sql1 = mysqli_query($db,"UPDATE tbl_products SET quantity=quantity-$qt WHERE prod_id='$pi'");
+		$sql2 = mysqli_query($db,"UPDATE tbl_salesdetails SET quantity=quantity+$qt, amount=amount+$am WHERE prod_id='$pi' AND sales_no='$si'");
+		if (!$sql1||!$sql2) {
+			return false;
+		}else{
+			return true;
+		}
+	}
+	public function insertCM($cm,$ct,$si,$rs,$dt,$tt,$sm)
+	{
+		require 'config.php';
+		$sql = mysqli_query($db,"SELECT * FROM tbl_CM WHERE cm_no='$cm' AND cus_id='$ct'");
+		if ($sql->num_rows>0) {
+			return false;
+		}else{
+			$sql2 = mysqli_query($db,"INSERT INTO tbl_CM (cm_no,cus_id,sales_no,cm_reason,cm_date,cm_totalAmount,salesman) VALUES ('".$cm."','".$ct."','".$si."','".$rs."','".$dt."','".$tt."','".$sm."')");
+			if (!$sql2) {
+				return false;
+			}else{
+				return true;
+			}
+		}
+
+	}
 }
 ?>

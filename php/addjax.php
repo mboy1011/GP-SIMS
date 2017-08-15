@@ -48,19 +48,23 @@
 		$si = mysqli_real_escape_string($db,$_POST['cr_si']);
 		$cr = mysqli_real_escape_string($db,$_POST['cr_no']);
 		$am = mysqli_real_escape_string($db,$_POST['amount']);
-		$sql = mysqli_query($db,"SELECT * FROM tbl_CRdetails WHERE cr_no='$cr' AND sales_no='$si'");
-		if ($sql->num_rows>0) {
+		if ($si=='--Select Sales Invoice--'&&empty($am)||empty($si)||$am==0) {
 			return false;
 		}else{
-			$query = mysqli_query($db,"INSERT INTO tbl_CRdetails (cr_no,sales_no,amount) VALUES ('".$cr."','".$si."','".$am."')");
-			if (!$query) {
+			$sql = mysqli_query($db,"SELECT * FROM tbl_CRdetails WHERE cr_no='$cr' AND sales_no='$si'");
+			if ($sql->num_rows>0) {
 				return false;
 			}else{
-				$sql1 = $oop->upStat($si);
-				if (!$sql1) {
+				$query = mysqli_query($db,"INSERT INTO tbl_CRdetails (cr_no,sales_no,amount) VALUES ('".$cr."','".$si."','".$am."')");
+				if (!$query) {
 					return false;
 				}else{
-					return true;
+					$sql1 = $oop->upStat($si);
+					if (!$sql1) {
+						return false;
+					}else{
+						return true;
+					}
 				}
 			}
 		}
@@ -76,5 +80,29 @@
 		$sql = mysqli_query($db,"SELECT quantity FROM tbl_salesdetails WHERE sales_no='$si' AND prod_id='$pid'");
 		$row = mysqli_fetch_assoc($sql);
 		echo intval($row['quantity']);
+	}else if ($_REQUEST['addCM']) {
+		$pi = mysqli_real_escape_string($db,$_POST['prod_id']);
+		$qt = mysqli_real_escape_string($db,$_POST['qty']);
+		$si = mysqli_real_escape_string($db,$_POST['si_no']);
+		$cm = mysqli_real_escape_string($db,$_POST['cm_no']);
+		$sql1 = mysqli_query($db,"SELECT price FROM tbl_salesdetails WHERE sales_no='$si' AND prod_id='$pi'");
+		$row = mysqli_fetch_assoc($sql1);
+		$total = $row['price']*$qt;
+		$sql2 = mysqli_query($db,"SELECT * FROM tbl_CMdetails WHERE cm_no='$cm' AND prod_id='$pi'");
+		if ($sql2->num_rows>0) {
+			return false;
+		}else{
+			$sql3 = mysqli_query($db,"INSERT INTO tbl_CMdetails (cm_no,prod_id,cmd_qty,cmd_price,cmd_amount) VALUES ('".$cm."','".$pi."','".$qt."','".$row['price']."','".$total."')");
+			if (!$sql3) {
+				return false;
+			}else{
+				$sql4 = $oop->c_d_prod($si,$pi,$qt,$total);
+				if (!$sql4) {
+					return false;
+				}else{
+					return true;
+				}
+			}
+		}
 	}
 ?>

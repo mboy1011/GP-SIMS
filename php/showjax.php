@@ -60,7 +60,7 @@ tbl_salesdetails.prod_id=tbl_products.prod_id AND tbl_salesdetails.sales_no='$si
 	}else if($_REQUEST['cr_d']){
 		$cr = mysqli_real_escape_string($db,$_POST['cr_d']);
 		$sql = mysqli_query($db,"SELECT * FROM tbl_CRdetails WHERE cr_no='$cr'");
-		$i++;
+		$i=1;
 		while ($row = mysqli_fetch_array($sql,MYSQLI_ASSOC)){
 ?>
 	<tr>
@@ -76,5 +76,33 @@ tbl_salesdetails.prod_id=tbl_products.prod_id AND tbl_salesdetails.sales_no='$si
 	</tr>
 <?php
 		}
+	}elseif ($_REQUEST['cm_no']) {
+		$cm = mysqli_real_escape_string($db,$_POST['cm_no']);
+		$pi = mysqli_real_escape_string($db,$_POST['pid']);
+		$si = mysqli_real_escape_string($db,$_POST['si']);
+		$sql2 = mysqli_query($db,"SELECT SUM(cmd_amount) as total FROM tbl_CMdetails WHERE cm_no='$cm' AND prod_id='$pi'");
+		$rows = mysqli_fetch_assoc($sql2);
+		$sql = mysqli_query($db,"SELECT * FROM tbl_CMdetails INNER JOIN tbl_products ON tbl_CMdetails.prod_id=tbl_products.prod_id WHERE tbl_CMdetails.cm_no='$cm' AND tbl_CMdetails.prod_id='$pi'");
+		$i=1;
+		while ($row = mysqli_fetch_array($sql,MYSQLI_ASSOC)) {
+?>
+	<tr>
+		<td><?php echo $i++;?></td>
+		<td><?php echo $row['name'].' '.$row['description'].' '.$row['packing'].' ('.$row['lot_no'].')';?></td>
+		<td><?php echo $row['cmd_qty'];?></td>
+		<td><?php echo number_format($row['cmd_price'],2);?></td>
+		<td><?php echo number_format($row['cmd_amount'],2);?></td>
+		<td>
+			<input type="number" name="sino" id="si_no1" value="<?php echo $si;?>" hidden>
+			<button class="btn btn-warning btn-xs"><b class="fa fa-pencil"></b></button>
+		</td>
+		<td>
+			<input type="number" step="any" id="totalAM" name="tam" value="<?php echo $rows['total'];?>" hidden>
+			<button class="btn-remove btn btn-danger btn-xs" data-id="<?php echo $row['cmd_id'];?>" data-qt="<?php echo $row['cmd_qty']?>" data-pi="<?php echo $row['prod_id']?>" data-pr="<?php echo $row['cmd_price']?>" data-am="<?php echo $row['cmd_amount']?>"><b class="fa fa-times"></b></button>
+		</td>
+	</tr>
+<?php			
+		}
+		
 	}
 ?>	

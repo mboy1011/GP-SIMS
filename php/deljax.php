@@ -1,5 +1,5 @@
 <?php
-	include 'config.php';
+	require 'config.php';
 	require 'crud.php';
 	$oop = new CRUD();
 	if($_REQUEST['deleted']){	
@@ -44,6 +44,24 @@
 		}else{
 			$sql1 = $oop->upStat($si);
 			if (!$sql1) {
+				return false;
+			}else{
+				return true;
+			}
+		}
+	}else if ($_REQUEST['removeCM']) {
+		$id = mysqli_real_escape_string($db,$_POST['id']);
+		$pi = mysqli_real_escape_string($db,$_POST['pi']);
+		$si = mysqli_real_escape_string($db,$_POST['si']);
+		$qt = mysqli_real_escape_string($db,$_POST['qt']);
+		$am = mysqli_real_escape_string($db,$_POST['am']);
+		$pr = mysqli_real_escape_string($db,$_POST['pr']);
+		$sql = mysqli_query($db,"DELETE FROM tbl_CMdetails WHERE cmd_id='$id'");
+		if (!$sql) {
+			return false;
+		}else{
+			$sql2 = $oop->d_c_prod($si,$pi,$qt,$am);
+			if (!$sql2) {
 				return false;
 			}else{
 				return true;
