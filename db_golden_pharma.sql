@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 14, 2017 at 02:28 PM
+-- Generation Time: Aug 15, 2017 at 03:54 PM
 -- Server version: 5.6.36
 -- PHP Version: 7.1.2
 
@@ -65,15 +65,23 @@ INSERT INTO `tbl_category` (`cat_id`, `cat_name`, `timestamp`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `tbl_CM` (
-  `cm_id` int(11) DEFAULT NULL,
+  `cm_id` int(11) NOT NULL,
   `cm_no` int(11) NOT NULL,
   `cus_id` int(11) DEFAULT NULL,
   `sales_no` int(11) DEFAULT NULL,
   `cm_reason` text,
   `cm_date` date DEFAULT NULL,
   `cm_totalAmount` float(11,2) DEFAULT NULL,
+  `salesman` varchar(45) NOT NULL,
   `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tbl_CM`
+--
+
+INSERT INTO `tbl_CM` (`cm_id`, `cm_no`, `cus_id`, `sales_no`, `cm_reason`, `cm_date`, `cm_totalAmount`, `salesman`, `timestamp`) VALUES
+(1, 1, 1, 12, 'Slow Moving', '2017-08-15', 600.00, 'ECS', '2017-08-15 15:28:41');
 
 -- --------------------------------------------------------
 
@@ -88,9 +96,15 @@ CREATE TABLE IF NOT EXISTS `tbl_CMdetails` (
   `cmd_qty` int(11) DEFAULT NULL,
   `cmd_price` float(11,2) DEFAULT NULL,
   `cmd_amount` float(11,2) DEFAULT NULL,
-  `salesman` varchar(45) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tbl_CMdetails`
+--
+
+INSERT INTO `tbl_CMdetails` (`cmd_id`, `cm_no`, `prod_id`, `cmd_qty`, `cmd_price`, `cmd_amount`, `timestamp`) VALUES
+(37, 1, 1, 2, 300.00, 600.00, '2017-08-15 15:28:31');
 
 -- --------------------------------------------------------
 
@@ -120,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `tbl_CR` (
   `pay_type` varchar(10) NOT NULL,
   `check_no` int(11) NOT NULL,
   `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tbl_CR`
@@ -132,10 +146,14 @@ INSERT INTO `tbl_CR` (`cr_id`, `cr_no`, `cr_date`, `cus_id`, `cr_totalSales`, `p
 (3, 4, '2017-08-10', 5, 1000.00, 'Check', 123567, '2017-08-10 12:03:40'),
 (4, 5, '2017-08-10', 1, 2600.00, 'Check', 0, '2017-08-10 12:26:44'),
 (5, 6, '2017-08-10', 1, 25400.00, 'Check', 12346789, '2017-08-10 12:45:04'),
-(6, 7, '2017-08-10', 1, 100.00, '11', 657, '2017-08-10 12:53:50'),
-(7, 8, '2017-08-11', 1, 234.00, '11', 0, '2017-08-11 01:10:13'),
-(8, 9, '2017-08-11', 5, 300.00, '18', 0, '2017-08-11 01:12:29'),
-(9, 10, '2017-09-01', 6, 100.00, '24', 0, '2017-08-11 14:35:19');
+(6, 7, '2017-08-10', 1, 100.00, 'Check', 657, '2017-08-10 12:53:50'),
+(7, 8, '2017-08-11', 1, 234.00, 'Cash', 0, '2017-08-11 01:10:13'),
+(8, 9, '2017-08-11', 5, 300.00, 'Cash', 0, '2017-08-11 01:12:29'),
+(9, 10, '2017-09-01', 6, 100.00, 'Cash', 0, '2017-08-11 14:35:19'),
+(10, 11, '2017-08-15', 1, 100.25, 'Cash', 12098, '2017-08-15 12:47:51'),
+(11, 12, '2017-08-15', 1, 1000.25, 'Cash', 0, '2017-08-15 12:53:35'),
+(12, 13, '2017-08-15', 1, 100.00, 'Cash', 0, '2017-08-15 12:55:34'),
+(13, 14, '2017-08-15', 1, 100.00, 'Check', 98, '2017-08-15 12:57:01');
 
 -- --------------------------------------------------------
 
@@ -149,7 +167,7 @@ CREATE TABLE IF NOT EXISTS `tbl_CRdetails` (
   `sales_no` int(11) DEFAULT NULL,
   `amount` varchar(45) DEFAULT NULL,
   `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tbl_CRdetails`
@@ -165,7 +183,11 @@ INSERT INTO `tbl_CRdetails` (`crd_id`, `cr_no`, `sales_no`, `amount`, `timestamp
 (20, 7, 11, '100', '2017-08-10 12:53:30'),
 (22, 8, 11, '234', '2017-08-11 01:10:11'),
 (23, 9, 18, '300', '2017-08-11 01:12:23'),
-(24, 10, 24, '100', '2017-08-11 14:35:02');
+(24, 10, 24, '100', '2017-08-11 14:35:02'),
+(28, 11, 11, '100.25', '2017-08-15 12:47:47'),
+(31, 12, 13, '1000.25', '2017-08-15 12:53:30'),
+(32, 13, 11, '100', '2017-08-15 12:55:33'),
+(33, 14, 11, '100', '2017-08-15 12:56:58');
 
 -- --------------------------------------------------------
 
@@ -478,15 +500,15 @@ CREATE TABLE IF NOT EXISTS `tbl_products` (
 --
 
 INSERT INTO `tbl_products` (`prod_id`, `name`, `description`, `price`, `expiry_date`, `quantity`, `packing`, `lot_no`, `status`, `timestamp`) VALUES
-(1, 'Mefenamic Acid', 'Paracetamol', 950.25, '2018-01-01', 7, '500 mg Tablet', '090', 'EXPIRING', '2017-07-04 15:27:55'),
-(2, 'Neozep', 'Paracetamol', 1500.00, '2017-07-07', 0, '60mg', '123abc', 'OUT OF STOCKS', '2017-07-07 12:32:01'),
+(1, 'Mefenamic Acid', 'Paracetamol', 950.25, '2018-01-01', 12, '500 mg Tablet', '090', 'EXPIRING', '2017-07-04 15:27:55'),
+(2, 'Neozep', 'Paracetamol', 1500.00, '2017-07-07', 1, '60mg', '123abc', 'EXPIRING', '2017-07-07 12:32:01'),
 (3, 'Neozep', 'Paracetamol', 300.00, '2017-07-15', 76, '500mg', 'abc123', 'EXPIRING', '2017-07-15 10:32:49'),
-(4, 'Neozep', 'Paracetamol', 100.00, '2019-01-02', 80, '600mg', '1bc246', 'ACTIVE', '2017-07-15 10:53:22'),
-(5, 'Multivitamins', 'Paracetamol', 150.75, '2019-09-01', 1, '500mg', 'abc-123a', 'ACTIVE', '2017-07-22 04:30:09'),
-(6, 'Carlidox', 'Doxycycline ', 150.00, '2019-04-30', 5, '100 MG Capsule', 'FC012', 'ACTIVE', '2017-07-26 02:40:36'),
-(7, 'Neozep', 'Paracetamol', 250.00, '2019-11-30', 1, '150mg', '1033BC', 'ACTIVE', '2017-07-27 07:21:01'),
-(8, 'Neozep', 'Paracetamol', 100.00, '2019-07-31', 97, '100mg Tablet', '1bc123', 'ACTIVE', '2017-07-27 07:21:42'),
-(9, 'Neozep', 'Paracetamol', 123.50, '2019-02-13', 12, '60mg', '095bdu0', 'ACTIVE', '2017-08-11 13:03:29');
+(4, 'Neozep', 'Paracetamol', 100.00, '2019-01-02', 79, '600mg', '1bc246', 'ACTIVE', '2017-07-15 10:53:22'),
+(5, 'Multivitamins', 'Paracetamol', 150.75, '2019-09-01', 0, '500mg', 'abc-123a', 'OUT OF STOCKS', '2017-07-22 04:30:09'),
+(6, 'Carlidox', 'Doxycycline ', 150.00, '2019-04-30', 4, '100 MG Capsule', 'FC012', 'ACTIVE', '2017-07-26 02:40:36'),
+(7, 'Neozep', 'Paracetamol', 250.00, '2019-11-30', 0, '150mg', '1033BC', 'OUT OF STOCKS', '2017-07-27 07:21:01'),
+(8, 'Neozep', 'Paracetamol', 100.00, '2019-07-31', 96, '100mg Tablet', '1bc123', 'ACTIVE', '2017-07-27 07:21:42'),
+(9, 'Neozep', 'Paracetamol', 123.50, '2019-02-13', 11, '60mg', '095bdu0', 'ACTIVE', '2017-08-11 13:03:29');
 
 -- --------------------------------------------------------
 
@@ -522,13 +544,13 @@ INSERT INTO `tbl_sales` (`sales_id`, `sales_no`, `cus_id`, `dates`, `prepared_by
 (3, 3, 1, '2017-07-05', 'Omelda, Darios A.. ', 'Omelda, Darios A.. ', 12, 950.25, 114.03, 836.22, 0.00, 0.00, 'CANCELLED', '2017-08-04', '2017-07-04 23:01:51'),
 (4, 4, 1, '2017-07-05', 'Omelda, Darios A.. ', 'Omelda, Darios A.. ', 12, 4751.25, 570.15, 4181.10, 0.00, 0.00, 'CANCELLED', '2017-08-04', '2017-07-05 04:59:15'),
 (6, 5, 1, '2017-07-10', 'Omelda, Darios A.. ', 'Omelda, Darios A.. ', 12, 9502.50, 1140.30, 8362.20, 0.00, 0.00, 'CANCELLED', '2017-08-09', '2017-07-10 05:35:37'),
-(7, 6, 1, '2017-07-15', 'Omelda, Darios A.. ', 'Omelda, Darios A.. ', 12, 3600.00, 432.00, 3168.00, 0.00, 0.00, 'OVERDUE', '2017-08-14', '2017-07-15 10:33:05'),
-(8, 7, 1, '2017-07-15', 'Omelda, Darios A.. ', 'Omelda, Darios A.. ', 12, 26400.00, 2828.57, 23571.43, 0.00, 0.00, 'OVERDUE', '2017-08-14', '2017-07-15 10:49:17'),
+(7, 6, 1, '2017-07-15', 'Omelda, Darios A.. ', 'Omelda, Darios A.. ', 12, 3600.00, 432.00, 3168.00, 0.00, 0.00, 'PAID', '2017-08-14', '2017-07-15 10:33:05'),
+(8, 7, 1, '2017-07-15', 'Omelda, Darios A.. ', 'Omelda, Darios A.. ', 12, 26400.00, 2828.57, 23571.43, 0.00, 0.00, 'PAID', '2017-08-14', '2017-07-15 10:49:17'),
 (9, 8, 2, '2017-07-15', 'Omelda, Darios A.. ', 'Omelda, Darios A.. ', 12, 4.00, 514.29, 4285.71, 0.00, 0.00, 'CANCELLED', '2017-08-14', '2017-07-15 12:06:56'),
 (11, 10, 1, '2017-07-26', 'Omelda, Darios A.. ', 'Omelda, Darios A.. ', 12, 1809.00, 193.82, 1615.18, 0.00, 0.00, 'CANCELLED', '2017-08-25', '2017-07-26 01:31:02'),
 (12, 11, 1, '2017-07-26', 'Omelda, Darios A.. ', 'Omelda, Darios A.. ', 12, 950.25, 101.81, 848.44, 0.00, 0.00, 'PARTIALLY PAID', '2017-08-25', '2017-07-26 03:10:51'),
 (13, 12, 1, '2017-07-27', 'Omelda, Darios A.. ', 'Omelda, Darios A.. ', 12, 600.00, 64.29, 535.71, 0.00, 0.00, 'UNPAID', '2017-08-26', '2017-07-27 01:34:10'),
-(14, 13, 1, '2017-07-27', 'Omelda, Darios A.. ', 'Omelda, Darios A.. ', 12, 4401.25, 471.56, 3929.69, 0.00, 0.00, 'UNPAID', '2017-08-26', '2017-07-27 05:03:53'),
+(14, 13, 1, '2017-07-27', 'Omelda, Darios A.. ', 'Omelda, Darios A.. ', 12, 4401.25, 471.56, 3929.69, 0.00, 0.00, 'PARTIALLY PAID', '2017-08-26', '2017-07-27 05:03:53'),
 (15, 14, 1, '2017-07-28', 'Omelda, Darios A.. ', 'Omelda, Darios A.. ', 12, 1851.00, 198.32, 1652.68, 0.00, 0.00, 'UNPAID', '2017-08-27', '2017-07-28 05:40:36'),
 (16, 15, 1, '2017-07-28', 'Omelda, Darios A.. ', 'Omelda, Darios A.. ', 12, 250.00, 26.79, 223.21, 0.00, 0.00, 'UNPAID', '2017-08-27', '2017-07-28 05:41:24'),
 (22, 16, 3, '2017-07-28', 'Omelda, Darios A.. ', 'Omelda, Darios A.. ', 12, 1250.00, 133.93, 1116.07, 0.00, 0.00, 'UNPAID', '2017-09-16', '2017-07-28 06:05:12'),
@@ -564,12 +586,12 @@ CREATE TABLE IF NOT EXISTS `tbl_salesdetails` (
 --
 
 INSERT INTO `tbl_salesdetails` (`id`, `sales_no`, `prod_id`, `quantity`, `price`, `amount`, `timestamp`) VALUES
-(1, 6, 3, 12, 0.00, 3600.00, '2017-07-15 10:33:03'),
-(4, 7, 3, 88, 0.00, 26400.00, '2017-07-15 10:49:13'),
-(9, 11, 1, 1, 0.00, 950.25, '2017-07-26 02:15:09'),
-(14, 12, 1, 2, 300.00, 600.00, '2017-07-26 23:11:46'),
+(1, 6, 3, 12, 300.00, 3600.00, '2017-07-15 10:33:03'),
+(4, 7, 3, 88, 300.00, 26400.00, '2017-07-15 10:49:13'),
+(9, 11, 1, 1, 950.25, 950.25, '2017-07-26 02:15:09'),
+(14, 12, 1, 2, 300.00, 1900.50, '2017-07-26 23:11:46'),
 (18, 13, 1, 5, 500.25, 2501.25, '2017-07-27 04:55:56'),
-(19, 13, 3, 5, 300.00, 1500.00, '2017-07-27 04:56:00'),
+(19, 13, 3, 4, 300.00, 300.00, '2017-07-27 04:56:00'),
 (21, 13, 4, 2, 200.00, 400.00, '2017-07-27 05:02:27'),
 (22, 14, 8, 1, 100.00, 100.00, '2017-07-28 05:07:28'),
 (23, 14, 7, 1, 250.00, 250.00, '2017-07-28 05:07:51'),
@@ -761,7 +783,8 @@ ALTER TABLE `tbl_category`
 --
 ALTER TABLE `tbl_CM`
   ADD PRIMARY KEY (`cm_no`),
-  ADD KEY `cm_id` (`cm_id`);
+  ADD KEY `cm_id` (`cm_id`),
+  ADD KEY `cm_id_2` (`cm_id`);
 
 --
 -- Indexes for table `tbl_CMdetails`
@@ -877,10 +900,15 @@ ALTER TABLE `tbl_useraccounts`
 ALTER TABLE `tbl_category`
   MODIFY `cat_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=21;
 --
+-- AUTO_INCREMENT for table `tbl_CM`
+--
+ALTER TABLE `tbl_CM`
+  MODIFY `cm_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
 -- AUTO_INCREMENT for table `tbl_CMdetails`
 --
 ALTER TABLE `tbl_CMdetails`
-  MODIFY `cmd_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `cmd_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=38;
 --
 -- AUTO_INCREMENT for table `tbl_collections`
 --
@@ -890,12 +918,12 @@ ALTER TABLE `tbl_collections`
 -- AUTO_INCREMENT for table `tbl_CR`
 --
 ALTER TABLE `tbl_CR`
-  MODIFY `cr_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=10;
+  MODIFY `cr_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `tbl_CRdetails`
 --
 ALTER TABLE `tbl_CRdetails`
-  MODIFY `crd_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=25;
+  MODIFY `crd_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=34;
 --
 -- AUTO_INCREMENT for table `tbl_customers`
 --
