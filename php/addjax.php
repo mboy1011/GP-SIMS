@@ -96,7 +96,7 @@
 			if (!$sql3) {
 				return false;
 			}else{
-				$sql4 = $oop->c_d_prod($si,$pi,$qt,$total);
+				$sql4 = $oop->c_d_prod($si,$pi,$qt);
 				if (!$sql4) {
 					return false;
 				}else{

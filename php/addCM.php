@@ -205,12 +205,22 @@ $oop = new CRUD();
                   </div>
               <?php
             }else{
-                ?>
+                $sql2 = $oop->siCredit($si,$tt);
+                if (!$sql2) {
+                    ?>
+                      <div class="alert alert-warning alert-dismissable">
+                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Failed to Credit on Sales Invoice!</strong> Try Again.
+                      </div>
+                    <?php  
+                }else{
+                    ?>
                   <div class="alert alert-success alert-dismissable">
                       <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                     <strong>Successfully Registered!</strong>
                   </div>
-              <?php
+                    <?php
+                }
             }
         }
         ?>
@@ -451,7 +461,7 @@ $oop = new CRUD();
             }
        }
     });
-    $(document).on('click', '.btn-remove', function(event) {
+    $(document).on('click', '#btn-remove', function(event) {
         var id = $(this).data('id');
         var qt = $(this).data('qt');
         var pi = $(this).data('pi');
@@ -459,9 +469,7 @@ $oop = new CRUD();
         var am = $(this).data('am');
         var si = $("#sales_no").val();
         $.post('deljax.php', {removeCM: 'removeCM',id:id,qt:qt,pi:pi,si:si,pr:pr,am:am}, function(data, textStatus, xhr) {
-            // console.log(data);
             viewData();   
-            calc();
         });
     });
     function viewData(){

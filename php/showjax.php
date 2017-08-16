@@ -98,11 +98,32 @@ tbl_salesdetails.prod_id=tbl_products.prod_id AND tbl_salesdetails.sales_no='$si
 		</td>
 		<td>
 			<input type="number" step="any" id="totalAM" name="tam" value="<?php echo $rows['total'];?>" hidden>
-			<button class="btn-remove btn btn-danger btn-xs" data-id="<?php echo $row['cmd_id'];?>" data-qt="<?php echo $row['cmd_qty']?>" data-pi="<?php echo $row['prod_id']?>" data-pr="<?php echo $row['cmd_price']?>" data-am="<?php echo $row['cmd_amount']?>"><b class="fa fa-times"></b></button>
+			<button class="btn btn-danger btn-xs" id="btn-remove" data-id="<?php echo $row['cmd_id'];?>" data-qt="<?php echo $row['cmd_qty']?>" data-pi="<?php echo $row['prod_id']?>" data-pr="<?php echo $row['cmd_price']?>" data-am="<?php echo $row['cmd_amount']?>" type="button"><b class="fa fa-times"></b></button>
 		</td>
 	</tr>
 <?php			
 		}
 		
+	}else if ($_REQUEST['cm_d']) {
+		$cm = mysqli_real_escape_string($db,$_POST['cm_d']);
+		$sql = mysqli_query($db,"SELECT * FROM tbl_CMdetails INNER JOIN tbl_products ON tbl_CMdetails.prod_id=tbl_products.prod_id WHERE tbl_CMdetails.cm_no='$cm'");
+		$i=1;
+		while ($row = mysqli_fetch_array($sql)) {
+?>
+	<tr>
+		<td><?php echo $i++;?></td>
+		<td><?php echo $row['name'].' '.$row['description'].' '.$row['packing'].' ('.$row['lot_no'].')';?></td>
+		<td><?php echo $row['cmd_qty'];?></td>
+		<td><?php echo number_format($row['cmd_price'],2);?></td>
+		<td><?php echo number_format($row['cmd_amount'],2);?></td>
+		<td>
+			<button class="btn btn-warning btn-xs" id="btn-update" name="btn-update" data-ups=<?php echo $row['cmd_id'];?> data-si="<?php echo sprintf('%04d',$row['sales_no']);?>"><b class="fa fa-pencil"></b></button>
+		</td>
+		<td>
+			<button class="btn btn btn-danger btn-xs" id="btn-delete" name="btn-delete" data-dids=<?php echo $row['cmd_id'];?>><b class="fa fa-times">&nbsp;</b></button></b>   
+		</td>
+	</tr>
+<?php			
+		}
 	}
 ?>	

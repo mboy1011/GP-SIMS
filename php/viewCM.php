@@ -299,7 +299,7 @@ $oop = new CRUD();
                             <td><?php echo number_format($row['cm_totalAmount'],2); ?></td>
                             <td><?php echo $row['salesman']?></td>
                             <td><?php echo $row['cm_date']; ?></td>
-                            <td><button class="b-infos btn btn-info btn-xs" id="infos" data-cr="<?php echo $row['cm_no'];?>"><span class="fa fa-question"></span></button>
+                            <td><button class="b-infos btn btn-info btn-xs" id="infos" data-cm="<?php echo $row['cm_no'];?>"><span class="fa fa-question"></span></button>
                             </td>
                             <td>
                                <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
@@ -310,6 +310,21 @@ $oop = new CRUD();
                           </tr>
                       <?php } ?>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
                 </table>            
                 </div>
           </div>
@@ -360,7 +375,7 @@ $oop = new CRUD();
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Collection Receipt Details</h4>
+        <h4 class="modal-title">Credit Memo Details</h4>
       </div>
       <div class="modal-body">
           <div class="panel-body" style="height:200px; overflow-y: auto;">
@@ -369,13 +384,15 @@ $oop = new CRUD();
                     <thead class="thead-inverse">
                       <tr>
                         <th>ID</th>
-                        <th>Sales No.</th>
+                        <th>Particular</th>
+                        <th>QTY</th>
+                        <th>Price</th>
                         <th>Amount</th>
                         <th>Edit</th>
                         <th>Remove</th>
                       </tr>
                     </thead>
-                    <tbody id="cr_details">
+                    <tbody id="cm_details">
                     </tbody>
                   </table>       
                 </div>
@@ -514,11 +531,11 @@ $(document).ready(function(){
       return false;
     }); 
     $('.b-infos').click(function(event) {
-      // var cr = parseInt($(this).data('cr'));
-      // $.post('showjax.php', {cr_d: cr}, function(data, textStatus, xhr) {
-      //    $("#cr_details").html(data);
+      var cm = parseInt($(this).data('cm'));
+      $.post('showjax.php', {cm_d: cm}, function(data, textStatus, xhr) {
+         $("#cm_details").html(data);
          $("#info").modal();
-      // });
+      });
     });
     $('.btn-edits').click(function(event) {
         

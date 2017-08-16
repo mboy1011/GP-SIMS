@@ -60,7 +60,7 @@
 		if (!$sql) {
 			return false;
 		}else{
-			$sql2 = $oop->d_c_prod($si,$pi,$qt,$am);
+			$sql2 = $oop->d_c_prod($si,$pi,$qt);
 			if (!$sql2) {
 				return false;
 			}else{

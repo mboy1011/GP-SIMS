@@ -286,22 +286,22 @@ class CRUD
 			return true;
 		}
 	}
-	public function c_d_prod($si,$pi,$qt,$total)
+	public function c_d_prod($si,$pi,$qt)
 	{
 		require 'config.php';
 		$sql1 = mysqli_query($db,"UPDATE tbl_products SET quantity=quantity+$qt WHERE prod_id='$pi'");
-		$sql2 = mysqli_query($db,"UPDATE tbl_salesdetails SET quantity=quantity-$qt, amount=amount-$total WHERE prod_id='$pi' AND sales_no='$si'");
+		$sql2 = mysqli_query($db,"UPDATE tbl_salesdetails SET quantity=quantity-$qt, amount=quantity*price WHERE prod_id='$pi' AND sales_no='$si'");
 		if (!$sql1||!$sql2) {
 			return false;
 		}else{
 			return true;
 		}
 	}
-	public function d_c_prod($si,$pi,$qt,$am)
+	public function d_c_prod($si,$pi,$qt)
 	{
 		require 'config.php';
 		$sql1 = mysqli_query($db,"UPDATE tbl_products SET quantity=quantity-$qt WHERE prod_id='$pi'");
-		$sql2 = mysqli_query($db,"UPDATE tbl_salesdetails SET quantity=quantity+$qt, amount=amount+$am WHERE prod_id='$pi' AND sales_no='$si'");
+		$sql2 = mysqli_query($db,"UPDATE tbl_salesdetails SET quantity=quantity+$qt, amount=quantity*price WHERE prod_id='$pi' AND sales_no='$si'");
 		if (!$sql1||!$sql2) {
 			return false;
 		}else{
@@ -323,6 +323,16 @@ class CRUD
 			}
 		}
 
+	}
+	public function siCredit($si,$tt)
+	{
+		require 'config.php';	
+		$sql = mysqli_query($db,"UPDATE tbl_sales SET total_amount=(total_amount-$tt)-((discount1/100*(total_amount-$tt))+(discount2/100*(total_amount-$tt))), total_sales=total_amount/1.12*0.12, amount_net=total_amount-total_sales WHERE sales_no='$si'");
+		if (!$sql) {
+			return false;
+		}else{
+			return true;
+		}
 	}
 }
 ?>
