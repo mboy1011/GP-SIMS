@@ -334,5 +334,20 @@ class CRUD
 			return true;
 		}
 	}
+	public function insertPO($po,$td,$su,$tt,$pp,$nt)
+	{
+		require 'config.php';
+		$sql = mysqli_query($db,"SELECT * FROM tbl_PO WHERE po_no='$po' AND sup_id='$su'");
+		if ($sql->num_rows>0) {
+			return false;
+		}else{
+			$sql = mysqli_query($db,"INSERT INTO tbl_PO (sup_id,po_totalAmount,po_date,noted_by,prepare_by) VALUES ('".$su."','".$tt."','".$td."','".$nt."','".$pp."')");
+			if (!$sql) {
+				return false;
+			}else{
+				return true;
+			}
+		}
+	}
 }
 ?>

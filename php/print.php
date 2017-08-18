@@ -117,5 +117,67 @@ $pdf->Cell(50,5,number_format($rows['total_amount'],2),0,1,'R');
 
 $pdf->AutoPrint();
 $pdf->Output();
+}else if(isset($_POST['printPO'])){
+    $po = mysqli_real_escape_string($db,$_POST['po_no']);
+    $sql = mysqli_query($db,"SELECT DATE_FORMAT(tbl_PO.po_date,'%M %m, %Y') as po_date, SUM(tbl_POdetails.prod_amount) as prod_amount, tbl_PO.prepare_by, tbl_PO.noted_by FROM tbl_PO INNER JOIN tbl_POdetails ON tbl_PO.po_no=tbl_POdetails.po_no WHERE tbl_PO.po_no='$po'");
+    $row = mysqli_fetch_assoc($sql);
+    $pdf = new PDF_AutoPrint('P','mm','Legal');
+    $pdf->AddPage();
+    $pdf->SetFont('Arial','B',16);
+    $pdf->SetXY(75,10);//Coordinates for Fixed Position
+    $pdf->Cell(82,7,'GOLDEN PHARMACEUTICAL',0,0);
+    $pdf->SetFont('Arial','',12);
+    $pdf->SetXY(75,15);
+    $pdf->Cell(82,7,'Tel No. (088) 857-3088 (Telefax)',0,0,'C');
+    $pdf->SetFont('Arial','',11);
+    $pdf->SetXY(75,20);
+    $pdf->Cell(82,7,'Bolonsori Road, Camaman-an, Cagayan de Oro City',0,0,'C');
+    $pdf->SetFont('Arial','B',13);
+    $pdf->SetXY(75,30);
+    $pdf->Cell(82,7,'Purhase Order',0,0,'C');
+    $pdf->SetXY(130,40);
+    $pdf->Cell(25,7,'Date: ',0,0,'R');
+    $pdf->SetXY(175,40);
+    $pdf->SetFont('Arial','U',13);
+    $pdf->Cell(25,7,$row['po_date'],0,1,'R');
+    $sql2 = mysqli_query($db,"SELECT * FROM tbl_POdetails WHERE po_no='$po'");
+    $arr = array();
+    $o=1;
+    while ($rows = mysqli_fetch_array($sql2)) {
+        $arr[] = $rows;
+    }
+    $pdf->Cell(10,5,'',0,1,'C');
+    $pdf->SetFont('Arial','B',12);
+    $pdf->Cell(10,5,'ID',1,0,'C');
+    $pdf->Cell(80,5,'Product',1,0,'C');
+    $pdf->Cell(40,5,'Maker',1,0,'C');
+    $pdf->Cell(20,5,'Qty.',1,0,'C');
+    $pdf->Cell(20,5,'Price',1,0,'C');
+    $pdf->Cell(25,5,'Amount',1,1,'C');
+    // 
+    $pdf->SetFont('Arial','',11);
+    for ($i=0; $i < count($arr); $i++) { 
+        $pdf->Cell(10,5,$o++,1,0,'C');
+        $pdf->Cell(80,5,$arr[$i][prod_name],1,0,'C');
+        $pdf->Cell(40,5,$arr[$i][prod_maker],1,0,'C');
+        $pdf->Cell(20,5,$arr[$i][prod_qty],1,0,'C');
+        $pdf->Cell(20,5,number_format($arr[$i][prod_price],2),1,0,'C');
+        $pdf->Cell(25,5,number_format($arr[$i][prod_amount],2),1,1,'R');
+    }
+    $pdf->Cell(10,5,'',1,0,'C');
+    $pdf->Cell(80,5,'',1,0,'C');
+    $pdf->Cell(40,5,'',1,0,'C');
+    $pdf->Cell(20,5,'',1,0,'C');
+    $pdf->SetFont('Arial','B',11);
+    $pdf->Cell(20,5,'Total:',1,0,'C');
+    $pdf->Cell(25,5,number_format($row['prod_amount'],2),1,1,'R');
+    // 
+    $pdf->Ln(20);
+    $pdf->Cell(30,5,'Prepared By:',0,0);
+    $pdf->Cell(70,5,strtoupper($row['prepare_by']),0,0);
+    $pdf->Cell(30,5,'Noted By:',0,0);
+    $pdf->Cell(65,5,strtoupper($row['noted_by']),0,0);
+    // $pdf->AutoPrint();
+    $pdf->Output();
 }
 ?>

@@ -104,5 +104,26 @@
 				}
 			}
 		}
+	}else if($_REQUEST['addPO']){
+		$nm = mysqli_real_escape_string($db,$_POST['nm']);
+		$mk = mysqli_real_escape_string($db,$_POST['mk']);
+		$pr = mysqli_real_escape_string($db,$_POST['pr']);
+		$qt = mysqli_real_escape_string($db,$_POST['qt']);
+		$po = mysqli_real_escape_string($db,$_POST['po']);
+		$sql = mysqli_query($db,"SELECT * FROM tbl_POdetails WHERE po_no='$po' AND prod_name='$nm'");
+		if ($sql->num_rows>0) {
+			return false;
+		}else{
+			if (empty($nm)||empty($mk)||empty($pr)||empty($qt)) {
+				return false;
+			}else{
+				$sql1 = mysqli_query($db,"INSERT INTO tbl_POdetails (po_no,prod_name,prod_maker,prod_price,prod_qty,prod_amount) VALUES ('".$po."','".$nm."','".$mk."','".$pr."','".$qt."','".floatval($pr)*$qt."')");
+				if (!$sql1) {
+					return false;
+				}else{
+					return true;
+				}
+			}
+		}
 	}
 ?>

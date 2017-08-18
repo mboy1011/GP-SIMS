@@ -67,5 +67,13 @@
 				return true;
 			}
 		}
+	}else if($_REQUEST['remPO']){
+		$pod = mysqli_real_escape_string($db,$_POST['pod']);
+		$sql = mysqli_query($db,"DELETE FROM tbl_POdetails WHERE pod_no='$pod'");
+		if (!$sql) {
+			return false;
+		}else{
+			return true;
+		}
 	}
 ?>

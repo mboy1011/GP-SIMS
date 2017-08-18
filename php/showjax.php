@@ -125,5 +125,27 @@ tbl_salesdetails.prod_id=tbl_products.prod_id AND tbl_salesdetails.sales_no='$si
 	</tr>
 <?php			
 		}
+	}elseif ($_REQUEST['po']) {
+		$po = mysqli_real_escape_string($db,$_POST['po']);
+		$query = mysqli_query($db,"SELECT SUM(prod_amount) as total FROM tbl_POdetails WHERE po_no='$po'");
+		$rows = mysqli_fetch_assoc($query);
+		$sql = mysqli_query($db,"SELECT * FROM tbl_POdetails WHERE po_no='$po'");
+		$i=1;
+		while($row = mysqli_fetch_array($sql)){
+?>
+	<tr>
+		<td><?php echo $i++;?></td>
+		<td><?php echo $row['prod_name'];?></td>
+		<td><?php echo $row['prod_maker'];?></td>
+		<td><?php echo $row['prod_qty'];?></td>
+		<td><?php echo number_format($row['prod_price'],2);?></td>
+		<td><?php echo number_format($row['prod_amount'],2);?></td>
+		<td>
+			<input type="hidden" name="" id="total" value="<?php echo $rows['total'];?>">
+			<button type="button" class="btn-remove btn btn-danger btn-xs" data-id="<?php echo $row['pod_no'];?>"><b class="fa fa-close"></b></button>
+		</td>
+	</tr>
+<?php
+		}
 	}
 ?>	
