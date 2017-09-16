@@ -233,7 +233,12 @@ $oop = new CRUD();
                 <div class="input-group">
                     <span class="input-group-addon">Supplier:</span>
                     <select name="supplier" class="form-control">
-                        <option value="0">-- Choose Supplier Here --</option>
+                       <?php  
+                        $sup = mysqli_query($db,"SELECT * FROM tbl_supplier");
+                        while ($out = mysqli_fetch_array($sup)) {
+                            echo "<option value=".$out['sup_id'].">".$out['sup_name']."</option>";
+                        }
+                       ?>
                     </select>
                 </div>
             </div>
@@ -286,7 +291,7 @@ $oop = new CRUD();
             <div class="col-sm-3">
                 <div class="input-group">
                     <span class="input-group-addon" >Total:</span>
-                    <input name="total" type="number" class="form-control" id="totalAmount">
+                    <input name="total" type="number" step="any" class="form-control" id="totalAmount" required="">
                 </div>
             </div>
             <div class="col-sm-3">
@@ -298,7 +303,7 @@ $oop = new CRUD();
             <div class="col-sm-3">
                 <div class="input-group">
                     <span class="input-group-addon">Noted By:</span>
-                    <input type="text"  name="note" class="form-control">
+                    <input type="text"  name="note" class="form-control" required="">
                 </div>
             </div>
             <div class="col-sm-3">
