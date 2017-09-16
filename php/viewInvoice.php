@@ -503,7 +503,7 @@ $(document).ready(function(){
               exportOptions: {
                     columns: ':visible'
                 },
-                message:'Printed By: '+user
+                message:"<b style='font-size:20px;'>Book Sales Report</b> <br>"+"Printed By: "+user
             }
         ]
     });
