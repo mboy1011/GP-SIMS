@@ -43,7 +43,7 @@
 		$tad = mysqli_real_escape_string($db,$_POST['tad']);
 		$query = mysqli_query($db,"SELECT tbl_sales.total_amount-IFNULL(SUM(tbl_CRdetails.amount),0) as total_amount,tbl_sales.sales_no FROM tbl_sales INNER JOIN tbl_CRdetails ON tbl_sales.sales_no=tbl_CRdetails.sales_no WHERE tbl_sales.sales_no='$tad'");
 		$row = mysqli_fetch_assoc($query);
-		echo $row['total_amount'];
+		echo number_format($row['total_amount'],2,'.','');
 	}else if ($_REQUEST['cr_si']) {
 		$si = mysqli_real_escape_string($db,$_POST['cr_si']);
 		$cr = mysqli_real_escape_string($db,$_POST['cr_no']);
@@ -59,12 +59,12 @@
 				if (!$query) {
 					return false;
 				}else{
-					$sql1 = $oop->upStat($si);
-					if (!$sql1) {
-						return false;
-					}else{
+					// $sql1 = $oop->upStat($si);
+					// if (!$sql1) {
+					// 	return false;
+					// }else{
 						return true;
-					}
+					// }
 				}
 			}
 		}

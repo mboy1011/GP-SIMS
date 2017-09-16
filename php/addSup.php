@@ -1,5 +1,7 @@
 <?php
-include 'session.php';
+require 'session.php';
+require 'crud.php';
+$oop = new CRUD();
 ?>
 <!DOCTYPE html>
 <html>
@@ -7,9 +9,12 @@ include 'session.php';
 	<title>Golden Pharmaceutical</title>
 	<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="../css/style.css">
-  <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
-  <link rel="stylesheet" type="text/css" href="../css/style_css.css">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
+    <!-- DataTables Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="../css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/fixedColumns.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/style_css.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
  </head>
 <body>
 <div id="wrapper">
@@ -162,104 +167,106 @@ include 'session.php';
     </nav>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-12">
-              <ol class="breadcrumb">
-              <li><a href="index.php">Dashboard</a></li>
-              <li class="active">Add User</li>
-              </ol>
-              <hr>
+          <ol class="breadcrumb">
+          <li><a href="index">Overview</a></li>
+          <li class="active">Add Supplier</li>
+          </ol>
+          <hr>
+        </div>
+        <center><p><li class="fa fa-plus fa-2x">&nbsp;</li><li class="fa fa-truck fa-2x">&nbsp;</li><b style="font-size: 25px;">Add Supplier</b></p></center>
+        <div class="row">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-6">
+                <?php
+                if ($_SERVER['REQUEST_METHOD']=='POST') {
+                    $nm = mysqli_real_escape_string($db,$_POST['name']);
+                    $ad = mysqli_real_escape_string($db,$_POST['address']);
+                    $co = mysqli_real_escape_string($db,$_POST['contact']);
+                    $sql=$oop->insertSup($nm,$ad,$co);
+                    if(!$sql){
+                       ?>
+                          <div class="alert alert-warning alert-dismissable">
+                              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>Already Added!</strong> Try Again.
+                          </div>
+                      <?php
+                    }else{
+                        ?>
+                          <div class="alert alert-success alert-dismissable">
+                              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>Successfully Added!</strong>
+                          </div>
+                      <?php
+                    }
+                }
+                ?>   
             </div>
+            <div class="col-sm-3"></div>
         </div>
         <div class="row">
-          <div class="col-sm-4">
-            
-          </div>
-          <div class="col-sm-4">
-          
-            <form method="POST" action="" class="form-horizontal">
-            <center><p><li class="fa fa-user fa-2x">&nbsp;</li><b style="font-size: 18px;">User's Authentication:</b></p></center>
-            <hr>
-                <select name="userid" class="form-control">
-                  <?php
-                    $result =mysqli_query($db, "SELECT * FROM tbl_employee");
-                    while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
-                      echo"<option value='$row[emp_id]'>";
-                      echo $row['fname']." ".$row['lname'];
-                      echo"</option>";
-                    }
-                  ?>
-                </select> 
-                <input type="username" name="username" class="form-control" required="" placeholder="Username">
-                <select name="usertype" class="form-control">
-                    <option value="admin">Admin</option>
-                    <option value="user">User</option>
-                </select>
-                <input type="password" name="password" placeholder="Password" class="form-control" required="" size="8">
-                <input type="password" name="password1" placeholder="Retype Password" class="form-control" required="" size="8">
-                <input type="submit" name="Submit" class="btn btn-primary form-control" value="Submit">
-            </form>
-            <?php
-            include 'crud.php';
-            $oop = new CRUD();
-            if ($_SERVER['REQUEST_METHOD']=='POST') {
-                $id = mysqli_real_escape_string($db,$_POST['userid']);
-                $user = mysqli_real_escape_string($db,$_POST['username']);
-                $type = mysqli_real_escape_string($db,$_POST['usertype']);
-                $pass = mysqli_real_escape_string($db,$_POST['password']);
-                $pass1 = mysqli_real_escape_string($db,$_POST['password1']);
-                $length = strlen($pass) >= 8;
-                if(!$length){
-                    ?>
-                          <div class="alert alert-danger alert-dismissable">
-                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                            <strong>At Least 8 size of password!</strong> Try Again.
-                          </div>
-                    <?php
-                }else{
-                    if($pass!=$pass1){
-                    ?>
-                          <div class="alert alert-danger alert-dismissable">
-                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                            <strong>Password Does Not Match!</strong> Try Again.
-                          </div>
-                    <?php
-                    }else{
-                        $sql=$oop->insertUser($id,$user,$pass,$type);
-                        if(!$sql){
-                           ?>
-                              <div class="alert alert-warning alert-dismissable">
-                              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                                <strong>Already Registered!</strong> Try Again.
-                              </div>
-                          <?php
-                        }else{
-                            ?>
-                              <div class="alert alert-success alert-dismissable">
-                              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                                <strong>Successfully Registered!</strong>
-                              </div>
-                          <?php
-                        }     
-                    } 
-                }
-            }
-            ?>
-          </div>
-          <div class="col-sm-4">
-            
-          </div>
+             <div class="col-sm-3">
+                 
+             </div>
+             <div class="col-sm-6">
+                <form method="POST" action="">
+                  <div class="input-group">
+                    <span class="input-group-addon">Name:</span>
+                    <input type="text" class="form-control" name="name" placeholder="Supplier's Name">
+                  </div>
+                  <div class="input-group">
+                    <span class="input-group-addon">Address:</span>
+                    <input type="text" class="form-control" name="address" placeholder="Supplier's Address">
+                  </div>
+                  <div class="input-group">
+                    <span class="input-group-addon">Contact No.:</span>
+                    <input type="number" class="form-control" max="99999999999" name="contact" placeholder="Ex. 09123456789">
+                  </div>
+                  <button type="submit" name="addSup" class="btn btn-primary form-control">Submit</button>
+                </form>
+             </div>
+             <div class="col-sm-3">
+                 
+             </div>
         </div>
             <!-- /.row -->
         <!-- /.container-fluid -->
      </div>
-
     <!-- /#page-wrapper -->
 </div><!-- /#wrapper -->
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script type="text/javascript" src="../js/script.js"></script>
 <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="../js/dataTables.bootstrap.min.js"></script>
 <script type="text/javascript">
-  ;(function(){
+$(document).ready(function(){
+    $('#datatables').dataTable({
+       "pageLength": -1,
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        scrollY:        "500px",
+        scrollX:        true,
+        scrollCollapse: true,
+        fixedColumns:{
+            leftColumns: 2
+        },
+        "oLanguage": {
+          "sSearch": "<b class='fa fa-search fa-lg'>&nbsp;</b>",
+          "sLengthMenu": "<b id='data-menu'><b class='fa fa-list fa-lg'></b> _MENU_ records</b>"
+        }
+    });
+    $('.btn-edits').click(function(event) {
+        var id = $(this).data("id");
+        var us = $(this).data("us");
+        var pa = $(this).data("pa");
+        $("#us").val(us);
+        $("#pa").val(pa);
+        $("#id").val(id);
+    });
+    $('.btn-deletes').click(function(event) {
+       var did = $(this).data("did");
+       $("#delid").val(did);
+    });
     $("#not").click(function(event) {
         $("#notify").hide();
     });
@@ -270,7 +277,7 @@ include 'session.php';
         }
     }
     check();    
-  })();
+});
 </script>
 </body>
 </html>

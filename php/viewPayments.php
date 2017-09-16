@@ -14,42 +14,8 @@ $oop = new CRUD();
     <link rel="stylesheet" type="text/css" href="../css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/fixedColumns.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/buttons.dataTables.min.css">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<style type="text/css" media="screen">
-.modal-header{
-  background-color: #4dffb8;
-  color: #fff;
-}
-.modal-footer{
-    background-color: #333333;
-} 
-#notify{
- background-color: #ff3333;
- color: #fff;
-}
-
-/*Full View for Modals*/
-/*.modal-dialog {
-      width: 100%;
-      height: 100%;
-      padding: 0;
-      margin:0;
-}
-.modal-content {    
-      height: 100%;
-      border-radius: 0;
-      color:white;
-      overflow:auto;
-}*/
-#datatables_filter
-{
-  color: #c68c53;
-}
-#data-menu
-{
-  color: #c68c53;
-}
-</style>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../css/style_css.css">
  </head>
 <body>
 <div id="wrapper">

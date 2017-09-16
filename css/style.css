@@ -142,9 +142,11 @@ body {
   font-family: Impact;
    font-size: 35px;
   text-align: center;
+  color: #3f3f3f;
 }
 .sys{
   font-family: Times, "Times New Roman", Georgia, serif;
    font-size: 15px;
   text-align: center; 
+  color: #ababab;
 }

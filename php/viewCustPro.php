@@ -1,6 +1,6 @@
 <?php
-include 'session.php';
-include 'crud.php';
+require 'session.php';
+require 'crud.php';
 $oop = new CRUD();
 ?>
 <!DOCTYPE html>
@@ -8,17 +8,16 @@ $oop = new CRUD();
 <head>
 	<title>Golden Pharmaceutical</title>
 	<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="../css/style.css">
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
     <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
-        <!-- DataTables Bootstrap -->
+    <!-- DataTables Bootstrap -->
     <link rel="stylesheet" type="text/css" href="../css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/fixedColumns.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/buttons.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/buttons.bootstrap.min.css">
-    <!-- DatePicker -->
+        <!-- DatePicker -->
     <link rel="stylesheet" type="text/css" href="../css/bootstrap-datepicker3.min.css">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../css/style_css.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
  </head>
 <body>
 <div id="wrapper">
@@ -69,7 +68,7 @@ $oop = new CRUD();
                     <a href="index"><i class="fa fa-fw fa-tachometer">&nbsp;</i>Dashboard</a>
             </li>
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fa fa-fw fa-user-md"></b><input type="hidden" id="user" value="<?php echo $name;?>"><?php echo $name;?><b class="fa fa-angle-down"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fa fa-fw fa-user-md"></b><?php echo $name;?><b class="fa fa-angle-down"></b></a>
                 <ul class="dropdown-menu">
                     <li><a href="#"><i class="fa fa-fw fa-user"></i> Edit Profile</a></li>
                     <li class="divider"></li>
@@ -171,12 +170,40 @@ $oop = new CRUD();
     </nav>
     <div class="container-fluid">
         <div class="row">
-          <div class="col-sm-12">
-              <ol class="breadcrumb">
-              <li><a href="index.php">Dashboard</a></li>
-              <li class="active">View Sales Report</li>
-              </ol>
+          <ol class="breadcrumb">
+          <li><a href="index">Overview</a></li>
+          <li class="active">View Customer's Profile</li>
+          </ol>
           <hr>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+              
+            </div>
+            <div class="col-sm-4">
+              <button type="button" id="soa" class="btn btn-info form-control"><b class="fa fa-file-text">&nbsp;</b>Statement of Accounts</button>
+            </div>
+            <div class="col-sm-4">
+              
+            </div>
+        </div>   
+        <div class="row">
+          <div class="col-sm-4">
+            
+          </div>
+          <div class="col-sm-4">
+            <select name="cust" class="cus form-control" style="display: none;">
+              <?php
+                $sql = mysqli_query($db,"SELECT * FROM tbl_customers GROUP BY full_name ASC");
+                while ($row = mysqli_fetch_array($sql)) {
+                    echo "<option value='".$row['cus_id']."'>".$row['full_name']."</option>";
+                }
+              ?>
+            </select>
+            <button class="btn btn-primary form-control cus"  style="display: none;">Submit</button>
+          </div>
+          <div class="col-sm-4">
+            
           </div>
         </div>
         <div class="row">
@@ -200,181 +227,78 @@ $oop = new CRUD();
             <div class="col-sm-2">
               
             </div>
-        </div>
+        </div> 
         <div class="row">
-<?php
-      if (isset($_POST['cancel'])){
-        $si_no = mysqli_real_escape_string($db,$_POST['si_no']);
-        $sql = $oop->upProd($si_no);
-        if (!$sql) {
-          ?>
-              <div class="alert alert-warning alert-dismissable">
-                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Cancel!</strong> Try Again.
-              </div>
-          <?php
-        }else{
-          ?>
-              <div class="alert alert-success alert-dismissable">
-                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Cancelled!</strong>
-              </div>
-          <?php
-        }
-      }
-?>
           <div class="col-sm-12">
             <div class="table-responsive">
-                <table class="table" width="100%" id="datatables">
+                <table class="table table-striped table-bordered nowrap" width="100%" id="datatables">
                     <thead class="thead-inverse">
                         <tr>
                             <th>ID</th>
-                            <th>Sales No.</th>
-                            <th>Customer Name</th>
                             <th>Date</th>
-                            <th>Less: VAT (%)</th>
-                            <th>Gross (₱)</th>
-                            <th>Net Sales (₱)</th>
-                            <th>VAT (₱)</th>
-                            <th>Discount 1 (%)</th>
-                            <th>Discount 2 (%)</th>
-                            <th>Total Discount</th>
-                            <th>Due Date</th>
-                            <th>Status</th>
-                            <th>Print</th> 
+                            <th>Sales Invoice No.</th>
+                            <th>Terms</th> 
+                            <th>Due Date</th> 
+                            <th>DEBIT</th> 
+                            <th>CREDIT</th> 
+                            <th>Balance</th> 
+                            <th>Edit</th> 
                             <th>Delete</th>
-                            <th>Cancel</th>
                         </tr>
                     </thead>
                     <?php
-                     $result = mysqli_query($db,"SELECT ((tbl_sales.discount1+tbl_sales.discount2)/100)*tbl_sales.total_amount as total_discount,tbl_customers.full_name,tbl_sales.sales_id,LPAD(tbl_sales.sales_no,4,0) as sales_no,DATE_FORMAT(tbl_sales.dates,'%m-%d-%Y') as dates,tbl_sales.VAT,tbl_sales.total_amount,tbl_sales.total_sales,tbl_sales.due_date,tbl_sales.amount_net,tbl_sales.status,tbl_customers.cus_id,tbl_sales.discount1,tbl_sales.discount2 FROM tbl_customers INNER JOIN tbl_sales ON tbl_sales.cus_id=tbl_customers.cus_id ORDER BY sales_no") or die(mysqli_error());
-                      // $result = mysqli_query($db, "SELECT * FROM tbl_sales") or die(mysql_error());
-
+                      $result = mysqli_query($db, "SELECT * FROM tbl_SOA") or die(mysql_error());
+                      $i=1;
                     ?>
                     <tbody>
-                      <?php 
-                      $o=1;
-                      while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){?>
+                      <?php
+                    while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
+                        // if ($row['total']==$row['CREDIT']) {
+                                
+                        // }else{    
+                        ?>
                           <tr>
-                            <td><?php echo $o++; ?></td>
-                            <td><?php echo $row['sales_no']; ?></td>
-                            <td><?php echo $row['full_name']; ?></td>            
-                            <td><?php echo $row['dates']; ?></td> 
-                            <td><?php echo $row['VAT']; ?></td> 
-                            <td><?php echo number_format($row['total_amount'],2); ?></td> 
-                            <td><?php echo number_format($row['total_sales'],2); ?></td> 
-                            <td><?php echo number_format($row['amount_net'],2); ?></td>  
-                            <td><?php echo $row['discount1']?></td>
-                            <td><?php echo $row['discount2']?></td>
-                            <td><?php echo number_format($row['total_discount'],2);?></td>
+                            <td><?php echo $i++; ?></td>
+                            <td><?php echo $row['dates']; ?></td>
+                            <td><?php echo sprintf('%04d',$row['sales_no']); ?></td>
+                            <td><?php echo $row['terms'];?></td>
                             <td><?php echo $row['due_date'];?></td>
+                            <td><?php echo number_format($row['DEBIT'],2);?></td>
+                            <td><?php echo number_format($row['CREDIT'],2);?></td>
+                            <td><?php echo number_format($row['BALANCE'],2); ?></td>
                             <td>
-                            <?php
-                              if ($row['status']=='UNPAID') {
-                                ?>
-                                <span class="label label-warning"><?php echo $row['status'];?></span>
-                                <?php
-                              }else if ($row['status']=='PARTIALLY PAID') {
-                                ?>
-                                <span class="label label-info"><?php echo $row['status'];?></span>
-                                <?php
-                              }else if($row['status']=='PAID'){
-                                ?>
-                                <span class="label label-success"><?php echo $row['status'];?></span>
-                                <?php
-                              }else{
-                                ?>
-                                <span class="label label-danger"><?php echo $row['status'];?></span>
-                                <?php
-                              }
-                             ?>
-                             </td>  
-                             <td>
-                             <?php
-                              if ($row['status']!='CANCELLED') {
-                             ?>
-                               <form method="POST" action="print.php" target="_blank">
-                                 <input type="hidden" name="sales_no" value="<?php echo $row['sales_no']?>">
-                                 <input type="hidden" name="cus_id" value="<?php echo $row['cus_id']?>">
-                                 <button class="btn btn-info btn-sm" name="print"><b class="fa fa-print fa-bg">&nbsp;</b></button>
-                               </form>
-                             <?php 
-                              }else{
-                             ?>
-                                 <b class="fa fa-check fa-bg"></b>
-                             <?php
-                              }
-                             ?>
-                             </td>
-                             <td><button class="btn btn-danger btn-sm" name="delete"><b class="fa fa-trash fa-bg">&nbsp;
-                             </b></button></td>
-                             <td>
-                             <?php
-                             if ($row['status']=='PAID'||$row['status']=='CANCELLED') {
-                             ?>
-                             <b class="fa fa-check fa-bg"></b>
-                             <?php
-                             }else{
-                             ?>
-                               <button type="button" data-sale="<?php echo $row['sales_no'];?>" class="cancel btn btn-primary btn-sm" data-toggle="modal"  data-target="#cancel"><b class="fa fa-close fa-bg"></b></button>
-                              <?php
-                              }
-                              ?>
-                             </td>
+                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
+                            </td>      
+                            <td>
+                                <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['id']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
+                            </td> 
                           </tr>
-                      <?php } ?>
+                      <?php 
+                        // }
+                    }
+                         ?>
                     </tbody>
                     <tfoot>
-                      <tr>
-                          <th></th>
-                          <th></th>
-                          <th></th>
-                          <th></th>
-                          <th></th>
-                          <th></th>
-                          <th></th>
-                          <th></th>
-                          <th></th>
-                          <th></th>
-                          <th></th>
-                          <th></th>
-                          <th></th>
-                          <th></th>
-                          <th></th>
-                          <th></th>
-                      </tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th> 
+                        <th></th> 
+                        <th></th> 
+                        <th></th> 
+                        <th></th> 
+                        <th></th> 
+                        <th></th>
                     </tfoot>
-                </table>            
-                </div>
+                </table>               
+            </div>
           </div>
-<div id="cancel" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Delete Customer</h4>
-      </div>
-      <form method="POST" action="">
-      <div class="modal-body">
-                <input type="text" id="sales_no" name="si_no" hidden="">
-                <b><strong>Are you sure do you want to cancel this sales invoice?</strong></b>
-      </div>
-      <div class="modal-footer">
-            <button class="btn btn-default" type="submit" name="cancel"><b class="fa fa-check fa-bg">&nbsp;</b>Yes</button>
-            <button type="button" class="btn btn-default" data-dismiss="modal"><b class="fa fa-close fa-bg">&nbsp;</b>No</button>
-      </div>
-      </form>
-    </div>
-
-  </div>
-</div>          
         </div>
+    </div>
             <!-- /.row -->
         <!-- /.container-fluid -->
-     </div>
-    <!-- /#page-wrapper -->
+</div>
+<!-- /#page-wrapper -->
 </div><!-- /#wrapper -->
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script type="text/javascript" src="../js/script.js"></script>
@@ -397,9 +321,8 @@ $oop = new CRUD();
 <script type="text/javascript" src="../js/buttons.print.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-    var user = $("#user").val();
-  var table = $('#datatables').dataTable({
-      "footerCallback": function ( row, data, start, end, display ) {
+    var table = $('#datatables').dataTable({
+        "footerCallback": function ( row, data, start, end, display ) {
             var api = this.api(), data;
  
             // Remove the formatting to get integer data for summation
@@ -412,34 +335,10 @@ $(document).ready(function(){
            var min = $("#min").val();
             var max = $("#max").val();
             // Total over all pages
-              // total = api
-              //     .column( 4 )
-              //     .data()
-              //     .reduce( function (a, b) {
-              //         return intVal(a) + intVal(b);
-              //     }, 0 );
-  
+
             // Total over this page
-            pageTotal = api
-                .column( 5, { page: 'current'} )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            pageTotal1 = api
-                .column( 6, { page: 'current'} )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
             pageTotal2 = api
                 .column( 7, { page: 'current'} )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            pageTotal3 = api
-                .column( 10, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
@@ -451,26 +350,20 @@ $(document).ready(function(){
             $(api.column(2).footer()).html(
                 'Date To: '+max
             );
-            $( api.column( 5 ).footer() ).html(
-                'Total: ₱'+pageTotal.toFixed(2)
-            );
             $( api.column( 6 ).footer() ).html(
-                'Total: ₱'+pageTotal1.toFixed(2)
-            );
+                'Accounts Receivable:'
+            );    
             $( api.column( 7 ).footer() ).html(
-                'Total: ₱'+pageTotal2.toFixed(2)
-            );
-            $( api.column( 10 ).footer() ).html(
-                'Total: ₱'+pageTotal3.toFixed(2)
-            );
+                '₱'+pageTotal2.toFixed(2)
+            );      
         },
-        "pageLength": -1,
+       "pageLength": -1,
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
         scrollY:        "500px",
         scrollX:        true,
         scrollCollapse: true,
         // fixedColumns:{
-        //     leftColumns: 3
+        //     leftColumns: 2
         // },
         "oLanguage": {
           "sSearch": "<b class='fa fa-search fa-lg'>&nbsp;</b>",
@@ -480,50 +373,41 @@ $(document).ready(function(){
         dom: 'lBfrtip',
         buttons: [
             {
-              extend:'colvis', "text":'<span class="fa fa-eye fa-lg">&nbsp;Column Visibility</span>',"className": 'btn btn-default btn-xs',
-              collectionLayout: 'fixed two-column'
-            },
-            {
-              "extend":'copyHtml5', "text":'<span class="fa fa-copy fa-lg">&nbsp;</span>Copy',"className": 'btn btn-primary btn-xs',footer: true,
-              exportOptions: {
-                    columns: ':visible'
-                }
+              "extend":'copy', "text":'<span class="fa fa-copy fa-lg">&nbsp;</span>Copy',"className": 'btn btn-primary btn-xs' 
             },{
-              "extend":'excelHtml5', "text":'<span class="fa fa-file-excel-o fa-lg">&nbsp;</span>Excel',"className": 'btn btn-primary btn-xs',footer: true, 
-              exportOptions: {
-                    columns: ':visible'
-                }
+              "extend":'excel', "text":'<span class="fa fa-file-excel-o fa-lg">&nbsp;</span>Excel',"className": 'btn btn-primary btn-xs' 
             },{
-              "extend":'pdfHtml5', "text":'<span class="fa fa-file-pdf-o fa-lg">&nbsp;</span>PDF',"className": 'btn btn-primary btn-xs',footer: true, 
-              exportOptions: {
-                                  columns: ':visible'
-                              }                    
+              "extend":'pdf', "text":'<span class="fa fa-file-pdf-o fa-lg">&nbsp;</span>PDF',"className": 'btn btn-primary btn-xs' 
             },{
-              "extend":'print', "text":'<span class="fa fa-print fa-lg">&nbsp;</span>Print',"className": 'btn btn-primary btn-xs',footer: true, 
-              exportOptions: {
-                    columns: ':visible'
-                },
-                message:'Printed By: '+user
+              "extend":'print', "text":'<span class="fa fa-print fa-lg">&nbsp;</span>Print',"className": 'btn btn-primary btn-xs' 
             }
         ]
     });
-    $('.min,.max').datepicker({format: "mm-dd-yyyy",'clearBtn':true,todayHighlight:true,autoclose:true}).change(function () {
+     $('.min,.max').datepicker({format: "mm-dd-yyyy",'clearBtn':true,todayHighlight:true,autoclose:true}).change(function () {
            table.fnFilter();
     });
     // DateRange
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
       var min = $('.min').datepicker('getDate');
       var max = $('.max').datepicker('getDate');
-      var startDate = new Date(data[3]);
+      var startDate = new Date(data[1]);
       if (min == null && max == null) { return true; }
       if (min == null && startDate <= max) { return true;}
       if(max == null && startDate >= min) {return true;}
       if (startDate <= max && startDate >= min) { return true; }
       return false;
     });   
-    $(".cancel").click(function(event) {
-      var sales = $(this).data('sale');
-      $("#sales_no").val(sales);
+    $('.btn-edits').click(function(event) {
+        var id = $(this).data("id");
+        var us = $(this).data("us");
+        var pa = $(this).data("pa");
+        $("#us").val(us);
+        $("#pa").val(pa);
+        $("#id").val(id);
+    });
+    $('.btn-deletes').click(function(event) {
+       var did = $(this).data("did");
+       $("#delid").val(did);
     });
     $("#not").click(function(event) {
         $("#notify").hide();
@@ -535,6 +419,9 @@ $(document).ready(function(){
         }
     }
     check();    
+    $("#soa").click(function(event) {
+      $(".cus").slideToggle('500');
+    });
 });
 </script>
 </body>

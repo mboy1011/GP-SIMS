@@ -18,6 +18,18 @@ class PDF_AutoPrint extends PDF_JavaScript
             $script = 'print(true);';
         $this->IncludeJS($script);
     }
+    function head(){
+        $this->Image('../img/logos.png',30,6,30);
+        $this->SetFont('Arial','B',16);
+        $this->SetXY(75,10);//Coordinates for Fixed Position
+        $this->Cell(82,7,'GOLDEN PHARMACEUTICAL',0,0);
+        $this->SetFont('Arial','',12);
+        $this->SetXY(75,15);
+        $this->Cell(82,7,'Tel No. (088) 857-3088 (Telefax)',0,0,'C');
+        $this->SetFont('Arial','',11);
+        $this->SetXY(75,20);
+        $this->Cell(82,7,'Bolonsori Road, Camaman-an, Cagayan de Oro City',0,0,'C');
+    }
 }
 if (isset($_POST['print'])) {
 $si_no = mysqli_escape_string($db,$_POST['sales_no']);
@@ -27,8 +39,9 @@ $pdf->AddPage();
 $query1 = mysqli_query($db,"SELECT tbl_customers.full_name,tbl_customers.tin,tbl_customers.terms,tbl_customers.opidno,tbl_sales.total_amount,tbl_sales.total_sales,tbl_sales.amount_net,tbl_customers.bstyle,tbl_sales.VAT,tbl_customers.address,DATE_FORMAT(tbl_sales.dates,'%M %m, %Y') AS dates,tbl_sales.discount1,tbl_sales.discount2 FROM tbl_customers, tbl_sales WHERE tbl_sales.cus_id='$cu_id' AND tbl_customers.cus_id='$cu_id' AND tbl_sales.sales_no='$si_no'");
 $rows=mysqli_fetch_assoc($query1);
 $pdf->SetTitle("Print Sales Invoice",true);
+$pdf->head();
 $pdf->SetFont('Arial','B',11);
-$pdf->SetXY(150,20);//Coordinates for Fixed Position
+$pdf->SetXY(150,30);//Coordinates for Fixed Position
 $pdf->Cell(30,7,'Invoice No.',0,0);
 $pdf->Cell(20,7,sprintf("%04d",$si_no),0,0,'R');
 $pdf->Ln(30);
@@ -119,19 +132,12 @@ $pdf->AutoPrint();
 $pdf->Output();
 }else if(isset($_POST['printPO'])){
     $po = mysqli_real_escape_string($db,$_POST['po_no']);
-    $sql = mysqli_query($db,"SELECT DATE_FORMAT(tbl_PO.po_date,'%M %m, %Y') as po_date, SUM(tbl_POdetails.prod_amount) as prod_amount, tbl_PO.prepare_by, tbl_PO.noted_by FROM tbl_PO INNER JOIN tbl_POdetails ON tbl_PO.po_no=tbl_POdetails.po_no WHERE tbl_PO.po_no='$po'");
+    $sql = mysqli_query($db,"SELECT DATE_FORMAT(tbl_PO.po_date,'%M %d, %Y') as po_date, SUM(tbl_POdetails.prod_amount) as prod_amount, tbl_PO.prepare_by, tbl_PO.noted_by FROM tbl_PO INNER JOIN tbl_POdetails ON tbl_PO.po_no=tbl_POdetails.po_no WHERE tbl_PO.po_no='$po'");
     $row = mysqli_fetch_assoc($sql);
     $pdf = new PDF_AutoPrint('P','mm','Legal');
     $pdf->AddPage();
-    $pdf->SetFont('Arial','B',16);
-    $pdf->SetXY(75,10);//Coordinates for Fixed Position
-    $pdf->Cell(82,7,'GOLDEN PHARMACEUTICAL',0,0);
-    $pdf->SetFont('Arial','',12);
-    $pdf->SetXY(75,15);
-    $pdf->Cell(82,7,'Tel No. (088) 857-3088 (Telefax)',0,0,'C');
-    $pdf->SetFont('Arial','',11);
-    $pdf->SetXY(75,20);
-    $pdf->Cell(82,7,'Bolonsori Road, Camaman-an, Cagayan de Oro City',0,0,'C');
+    $pdf->SetTitle("Print Purchase Order",true);
+    $pdf->head();
     $pdf->SetFont('Arial','B',13);
     $pdf->SetXY(75,30);
     $pdf->Cell(82,7,'Purhase Order',0,0,'C');

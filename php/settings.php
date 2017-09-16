@@ -10,13 +10,8 @@ $oop = new CRUD();
 	<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="../css/style.css">
   <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
- <style type="text/css" media="screen">
-     #notify{
-         background-color: #ff3333;
-         color: #fff;
-     }
- </style>  
+  <link rel="stylesheet" type="text/css" href="../css/style_css.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"> 
  </head>
 <body>
 <div id="wrapper">
@@ -24,7 +19,7 @@ $oop = new CRUD();
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-brand">
-            <b style="background-color: transparent;font-family: 'Impact', Georgia, sans-serif;"><b class="fa fa-address-book-o fa-bg" style="font-size: 50px;"></b>|<i>SIMS</i></b>
+            <img src="../img/logo.png" alt="Company Logo" style="height:55px;width: 55px;">   
         </div>
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
@@ -48,11 +43,15 @@ $oop = new CRUD();
                    <?php 
                         while ($row = mysqli_fetch_array($mysql,MYSQLI_ASSOC)) {
                             echo "<li class='dropdown-header'>Expiring Product</li>";
-                            echo "<li><a href='viewProduct.php'>".$row['name'].' '.$row['packing']."</a></li>";
+                            echo "<li><a href='viewProduct'>".$row['name'].' '.$row['packing']."</a></li>";
                         }
                         while ($rows = mysqli_fetch_array($mysql2,MYSQLI_ASSOC)) {
                             echo "<li class='dropdown-header'>Out of Stocks</li>";
-                            echo "<li><a href='viewProduct.php'>".$rows['name'].' '.$rows['packing']."</a></li>";
+                            echo "<li><a href='viewProduct'>".$rows['name'].' '.$rows['packing']."</a></li>";
+                        }
+                        while ($rows = mysqli_fetch_array($mysql3,MYSQLI_ASSOC)) {
+                            echo "<li class='dropdown-header'>Overdue</li>";
+                            echo "<li><a href='viewInvoice'>Sales No. ".sprintf('%04d',$rows['sales_no'])."</a></li>";
                         }
                    ?>
                    </li>
@@ -60,14 +59,14 @@ $oop = new CRUD();
                </ul>
             </li>        
             <li>
-                    <a href="index.php"><i class="fa fa-fw fa-tachometer">&nbsp;</i>Dashboard</a>
+                    <a href="index"><i class="fa fa-fw fa-tachometer">&nbsp;</i>Dashboard</a>
             </li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fa fa-fw fa-user-md"></b><?php echo $name;?><b class="fa fa-angle-down"></b></a>
                 <ul class="dropdown-menu">
                     <li><a href="#"><i class="fa fa-fw fa-user"></i> Edit Profile</a></li>
                     <li class="divider"></li>
-                    <li><a href="logout.php"><i class="fa fa-fw fa-power-off"></i> Logout</a></li>
+                    <li><a href="logout"><i class="fa fa-fw fa-power-off"></i> Logout</a></li>
                 </ul>
             </li>
         </ul>
@@ -77,22 +76,22 @@ $oop = new CRUD();
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-6"><i class="fa fa-fw fa-inbox"></i> Collections Receipt <i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-6" class="collapse">
-                        <li><a href="addCR.php"><i class="fa fa-plus">&nbsp;</i>Add CR</a></li>
-                        <li><a href="viewCR.php"><i class="fa fa-list">&nbsp;</i>CR List</a></li>
+                        <li><a href="addCR"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
+                        <li><a href="viewCR"><i class="fa fa-list">&nbsp;</i>View</a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-7"><i class="fa fa-fw  fa-credit-card"></i> Credit/Debit Memo <i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-7" class="collapse">
-                        <li><a href="addCM.php"><i class="fa fa-plus">&nbsp;</i>Add C/D Memo</a></li>
-                        <li><a href="viewCM.php"><i class="fa fa-list">&nbsp;</i>C/D Memo List</a></li>
+                        <li><a href="addCM"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
+                        <li><a href="viewCM"><i class="fa fa-list">&nbsp;</i>View</a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-8"><i class="fa fa-fw  fa-shopping-cart"></i> Purchase Orders<i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-8" class="collapse">
-                        <li><a href="addPO.php"><i class="fa fa-plus">&nbsp;</i>Add PO</a></li>
-                        <li><a href="viewPO.php"><i class="fa fa-list">&nbsp;</i>PO List</a></li>
+                        <li><a href="addPO"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
+                        <li><a href="viewPO"><i class="fa fa-list">&nbsp;</i>View</a></li>
                     </ul>
                 </li>
                 <li>
@@ -105,49 +104,49 @@ $oop = new CRUD();
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-1"><i class="fa fa-fw fa-tags"></i> Sales <i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-1" class="collapse">
-                        <li><a href="addInvoice.php"><i class="fa fa-plus">&nbsp;</i>Add Invoice</a></li>
-                        <li><a href="viewInvoice.php"><i class="fa fa-list">&nbsp;</i>Sales Report</a></li>
+                        <li><a href="addInvoice"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
+                        <li><a href="viewInvoice"><i class="fa fa-list">&nbsp;</i>View</a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-2"><i class="fa fa-fw fa-archive">&nbsp;</i>Inventory<i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-2" class="collapse">
-                        <li><a href="addProduct.php"><i class="fa fa-plus">&nbsp;</i>Inventory In</a></li>
-                        <li><a href="viewProduct.php"><i class="fa fa-list">&nbsp;</i>List Products</a></li>
-                        <li><a href="viewInvOut.php"><i class="fa fa-minus">&nbsp;</i>Inventory Out</a></li>
+                        <li><a href="addProduct"><i class="fa fa-plus">&nbsp;</i>Inventory In</a></li>
+                        <li><a href="viewProduct"><i class="fa fa-list">&nbsp;</i>View</a></li>
+                        <li><a href="viewInvOut"><i class="fa fa-minus">&nbsp;</i>Inventory Out</a></li>
                     </ul>
                 </li>
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-3"><i class="fa fa-fw fa-user-o"></i> Customers Profile <i class="fa fa-fw fa-angle-down pull-right"></i></a>
+                    <a href="#" data-toggle="collapse" data-target="#submenu-3"><i class="fa fa-fw fa-user-o"></i> Customers<i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-3" class="collapse">
-                        <li><a href="addCustomer.php"><i class="fa fa-user-plus">&nbsp;</i>Add Customers</a></li>
-                        <li><a href="viewCustomers.php"><i class="fa fa-users">&nbsp;</i>Customers List</a></li>
-                        <li><a href="viewCustPro.php"><i class="fa fa-user-circle">&nbsp;</i>View Profile</a></li>
+                        <li><a href="addCustomer"><i class="fa fa-user-plus">&nbsp;</i>Add</a></li>
+                        <li><a href="viewCustomers"><i class="fa fa-users">&nbsp;</i>View</a></li>
+                        <li><a href="viewCustPro"><i class="fa fa-user-circle">&nbsp;</i>Customers Profile</a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-4"><i class="fa fa-fw fa-id-card"></i> Employee <i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-4" class="collapse">
-                        <li><a href="addEmployee.php"><i class="fa fa-user-plus">&nbsp;</i>Add Employees</a></li>
-                        <li><a href="viewEmployee.php"><i class="fa fa-users">&nbsp;</i>View Employees</a></li>
+                        <li><a href="addEmployee"><i class="fa fa-user-plus">&nbsp;</i>Add </a></li>
+                        <li><a href="viewEmployee"><i class="fa fa-users">&nbsp;</i>View </a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-10"><i class="fa fa-fw fa-truck"></i> Suppliers <i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-10" class="collapse">
-                        <li><a href="addSup.php"><i class="fa fa-user-plus">&nbsp;</i>Add Suppliers</a></li>
-                        <li><a href="viewSup.php"><i class="fa fa-users">&nbsp;</i>View Suppliers</a></li>
+                        <li><a href="addSup.php"><i class="fa fa-user-plus">&nbsp;</i>Add </a></li>
+                        <li><a href="viewSup.php"><i class="fa fa-users">&nbsp;</i>View </a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-5"><i class="fa fa-fw fa-user"></i> Users <i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-5" class="collapse">
-                        <li><a href="addUser.php"><i class="fa fa-user-plus">&nbsp;</i>Add Users</a></li>
-                        <li><a href="viewUser.php"><i class="fa fa-users">&nbsp;</i>View Users</a></li>
+                        <li><a href="addUser"><i class="fa fa-user-plus">&nbsp;</i>Add</a></li>
+                        <li><a href="viewUser"><i class="fa fa-users">&nbsp;</i>View</a></li>
                     </ul>
                 </li>
                 <li>
-                    <a href="settings.php"><i class="fa fa-fw fa-cogs">&nbsp;</i> Settings</a>
+                    <a href="settings"><i class="fa fa-fw fa-cogs">&nbsp;</i>Settings</a>
                 </li>
                 <li>
                     <hr>
@@ -225,40 +224,21 @@ if(isset($_POST['backup'])){
              <strong><b class="fa fa-check">&nbsp;</b>Database Backup Successfully!</strong>
         </div>
         <?php
-}
-if(isset($_POST['year1'])) {
+}else if(isset($_POST['year1'])) {
     $yr = mysqli_real_escape_string($db,$_POST['yr1']);
     $sql = $oop->upYear($yr);
     if (!$sql) {
         ?>
         <div class="alert alert-warning alert-dismissable">
              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-             <strong><b class="fa fa-check">&nbsp;</b>Failed to Update Total Sales Year!</strong>
+             <strong><b class="fa fa-check">&nbsp;</b>Failed to update year to display!</strong>
         </div>
         <?php
     }else{
         ?>
         <div class="alert alert-success alert-dismissable">
              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-             <strong><b class="fa fa-check">&nbsp;</b>Successfully Total Sales Year Updated!</strong>
-        </div>
-        <?php
-    }
-}else if(isset($_POST['year2'])) {
-    $yr = mysqli_real_escape_string($db,$_POST['yr2']);
-    $sql = $oop->upYear($yr);
-    if (!$sql) {
-        ?>
-        <div class="alert alert-warning alert-dismissable">
-             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-             <strong><b class="fa fa-check">&nbsp;</b>Failed to Update Products Out Year!</strong>
-        </div>
-        <?php
-    }else{
-        ?>
-        <div class="alert alert-success alert-dismissable">
-             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-             <strong><b class="fa fa-check">&nbsp;</b>Successfully Products Out Year Updated!</strong>
+             <strong><b class="fa fa-check">&nbsp;</b>Successfully year to display updated!</strong>
         </div>
         <?php
     }
@@ -268,14 +248,14 @@ if(isset($_POST['year1'])) {
         </div>        
         <div class="row">
             <div class="col-sm-4">
-                <form method="POST" action="">
+            <form method="POST" action="">
               <div class="input-group">
-                <span class="input-group-addon">Total Sales Year</span>
+                <span class="input-group-addon">Current Year To Display</span>
                 <select name="yr1" class="form-control" id='yr'>
                         <?php
                         $result =mysqli_query($db, "SELECT Year FROM tbl_monthly_sales_report GROUP BY Year");
                         while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
-                          echo"<option> ";
+                          echo"<option value=".$row['Year']."> ";
                           echo $row['Year'];
                           echo"</option>";
                           // echo "<option>";
@@ -290,38 +270,24 @@ if(isset($_POST['year1'])) {
                   </button>
                 </div>
               </div>
-                </form>
             </div>
             <div class="col-sm-4">
-                <form method="POST" action="">
-             <div class="input-group">
-             <span class="input-group-addon">Total Products Out Year</span>
-                <select name="yr2" class="form-control" id='yr2'>
-                        <?php
-                        $result =mysqli_query($db, "SELECT Year FROM tbl_monthly_products_out GROUP BY Year");
-                        while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
-                          echo"<option> ";
-                          echo $row['Year'];
-                          echo"</option>";
-                        }
-                        ?>
-                </select>
-                <div class="input-group-btn">
-                  <button class="btn btn-primary form-control" name="year2" type="submit">
-                    <b class="fa fa-paper-plane fa-lg"></b>
-                  </button>
-                </div>
-                </form>
-              </div>
-            </div>
-            <div class="col-sm-4">
-                <form method="POST" action="">
                     <div class="input-group">
                         <span class="input-group-addon"><b class="fa fa-database">&nbsp;</b>Backup Database</span>
                         <span class="input-group-btn"><button type="submit" name="backup" class="btn btn-primary">Backup</button></span>
                     </div>
-                </form>
             </div>
+            <div class="col-sm-4">
+                <div class="input-group">
+                    <span class="input-group-addon">Out of Stocks</span>
+                    <select name="os" class="form-control">
+                        <option value="">DO NOTHING</option>
+                        <option value="">MARK INACTIVE</option>
+                    </select>
+                    <span class="input-group-btn"><button class="btn btn-primary" type="submit">Submit</button></span>
+                </div>
+            </div>
+            </form>
         </div>
         <!-- /.row -->
         <!-- /.container-fluid -->
@@ -332,5 +298,19 @@ if(isset($_POST['year1'])) {
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script type="text/javascript" src="../js/bootstrap.min.js"></script>
 <script type="text/javascript" src="../js/script.js"></script>
+<script type="text/javascript">
+;(function(){
+    $("#not").click(function(event) {
+    $("#notify").hide();
+    });
+    function check() {
+        var val = $("#notify").text();
+        if (val==0) {
+            $("#notify").hide();
+        }
+    }
+    check();
+})();
+</script>
 </body>
 </html>

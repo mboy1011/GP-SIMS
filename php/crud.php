@@ -53,19 +53,23 @@ class CRUD
 			return true;
 		}
 	}
-	public function insertUser($user,$pass)
+	public function insertUser($id,$user,$pass,$type)
 	{
 		require 'config.php';
 		$pass = password_hash($pass, PASSWORD_BCRYPT);
-		$sql = mysqli_query($db,"SELECT * FROM tbl_useraccounts WHERE lname='$user'");
+		$sql = mysqli_query($db,"SELECT * FROM tbl_useraccounts WHERE emp_id='$id'");
 		if($sql->num_rows>0){
 			return false;
 		}else{
-			$result = mysqli_query($db,"INSERT INTO tbl_useraccounts(lname,password)VALUES('".$user."','".$pass."')");
-			if (!$result) {
+			if ($row['username']==$user) {
 				return false;
 			}else{
-				return true;
+				$result = mysqli_query($db,"INSERT INTO tbl_useraccounts(emp_id,username,password,usertype)VALUES('".$id."','".$user."','".$pass."','".$type."')");
+				if (!$result) {
+					return false;
+				}else{
+					return true;
+				}
 			}
 		}
 	}
@@ -85,23 +89,23 @@ class CRUD
 		}
 
 	}
-	public function upStat($si)
-	{
-		require 'config.php';
-		$sql = mysqli_query($db,"SELECT tbl_sales.total_amount-IFNULL(SUM(tbl_CRdetails.amount),0) as total,tbl_sales.total_amount FROM tbl_sales INNER JOIN tbl_CRdetails ON tbl_sales.sales_no=tbl_CRdetails.sales_no WHERE tbl_CRdetails.sales_no='$si'");
-		$row = mysqli_fetch_assoc($sql);
-		$amount = $row['total'];
-	    if($amount==$row['total_amount']){
-	      mysqli_query($db,"UPDATE tbl_sales SET status='UNPAID' WHERE sales_no='$si'");
-	      return true;
-	    }else if ($amount!=0) {
-	      mysqli_query($db,"UPDATE tbl_sales SET status='PARTIALLY PAID' WHERE sales_no='$si'");
-	      return true;
-	    }else{
-	      mysqli_query($db,"UPDATE tbl_sales SET status='PAID' WHERE sales_no='$si'");
-	      return true;
-	    }
-	}
+	// public function upStat($si)
+	// {
+	// 	require 'config.php';
+	// 	$sql = mysqli_query($db,"SELECT tbl_sales.total_amount-IFNULL(SUM(tbl_CRdetails.amount),0) as total,tbl_sales.total_amount FROM tbl_sales INNER JOIN tbl_CRdetails ON tbl_sales.sales_no=tbl_CRdetails.sales_no WHERE tbl_CRdetails.sales_no='$si'");
+	// 	$row = mysqli_fetch_assoc($sql);
+	// 	$amount = $row['total'];
+	//     if($amount==$row['total_amount']){
+	//       mysqli_query($db,"UPDATE tbl_sales SET status='UNPAID' WHERE sales_no='$si'");
+	//       return true;
+	//     }else if ($amount!=0) {
+	//       mysqli_query($db,"UPDATE tbl_sales SET status='PARTIALLY PAID' WHERE sales_no='$si'");
+	//       return true;
+	//     }else{
+	//       mysqli_query($db,"UPDATE tbl_sales SET status='PAID' WHERE sales_no='$si'");
+	//       return true;
+	//     }
+	// }
 	public function upProd($si_no)
 	{
 		require 'config.php';
@@ -189,12 +193,13 @@ class CRUD
 	public function login($user,$pass)
 	{
 		require 'config.php';
-		$sql = mysqli_query($db, "SELECT * FROM tbl_useraccounts WHERE lname='$user'");
+		$sql = mysqli_query($db, "SELECT * FROM tbl_useraccounts WHERE username='$user'");
         $row = mysqli_fetch_array($sql, MYSQLI_ASSOC);
-        if ($row['lname']==$user) {
+        if ($sql->num_rows>0) {
           if (password_verify($pass,$row['password'])) {
             session_start();
-            $_SESSION['login_user']=$user;
+            $_SESSION['login_user']=$row['emp_id'];
+            $_SESSION['login_userType']=$row['usertype'];
             header('location:php/index'); 
           }else{
          	return false;
@@ -206,11 +211,21 @@ class CRUD
 	public function upYear($yr)
 	{
 		require 'config.php';
-		$sql = mysqli_query($db,"UPDATE tbl_year SET year='$yr'");
-		if (!$sql) {
-			return false;
+		$query = mysqli_query($db,"SELECT * FROM tbl_year");
+		if ($query->num_rows>0) {
+			$sql = mysqli_query($db,"UPDATE tbl_year SET year='$yr'");
+			if (!$sql) {
+				return false;
+			}else{
+				return true;
+			}
 		}else{
-			return true;
+			$sql2 = mysqli_query($db,"INSERT INTO tbl_year (year) VALUES ('".$yr."')");
+			if (!$sql2) {
+				return false;
+			}else{
+				return true;
+			}
 		}
 	}
 	public function insertExp($cn,$dt,$ca,$am)
@@ -324,16 +339,16 @@ class CRUD
 		}
 
 	}
-	public function siCredit($si,$tt)
-	{
-		require 'config.php';	
-		$sql = mysqli_query($db,"UPDATE tbl_sales SET total_amount=(total_amount-$tt)-((discount1/100*(total_amount-$tt))+(discount2/100*(total_amount-$tt))), total_sales=total_amount/1.12*0.12, amount_net=total_amount-total_sales WHERE sales_no='$si'");
-		if (!$sql) {
-			return false;
-		}else{
-			return true;
-		}
-	}
+	// public function siCredit($si,$tt)
+	// {
+	// 	require 'config.php';	
+	// 	$sql = mysqli_query($db,"UPDATE tbl_sales SET total_amount=(total_amount-$tt)-((discount1/100*(total_amount-$tt))+(discount2/100*(total_amount-$tt))), total_sales=total_amount/1.12*0.12, amount_net=total_amount-total_sales WHERE sales_no='$si'");
+	// 	if (!$sql) {
+	// 		return false;
+	// 	}else{
+	// 		return true;
+	// 	}
+	// }
 	public function insertPO($po,$td,$su,$tt,$pp,$nt)
 	{
 		require 'config.php';
@@ -341,13 +356,28 @@ class CRUD
 		if ($sql->num_rows>0) {
 			return false;
 		}else{
-			$sql = mysqli_query($db,"INSERT INTO tbl_PO (sup_id,po_totalAmount,po_date,noted_by,prepare_by) VALUES ('".$su."','".$tt."','".$td."','".$nt."','".$pp."')");
-			if (!$sql) {
+			$sql2 = mysqli_query($db,"INSERT INTO tbl_PO (sup_id,po_totalAmount,po_date,noted_by,prepare_by) VALUES ('".$su."','".$tt."','".$td."','".$nt."','".$pp."')");
+			if (!$sql2) {
 				return false;
 			}else{
 				return true;
 			}
 		}
+	}
+	public function insertSup($nm,$ad,$co)
+	{
+		require 'config.php';
+		$sql = mysqli_query($db,"SELECT sup_name FROM tbl_supplier WHERE sup_name='$nm'");
+		if ($sql->num_rows>0) {
+			return false;
+		}else{
+			$sql2 = mysqli_query($db,"INSERT INTO tbl_supplier (sup_name,sup_address,sup_telNo) VALUES ('".$nm."','".$ad."','".$co."')");
+			if (!$sql2) {
+				return false;
+			}else{
+				return true;
+			}
+		}	
 	}
 }
 ?>

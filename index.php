@@ -7,8 +7,16 @@
   <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="css/style.css">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <style type="text/css" media="screen">
+    body{
+       background-image: url("img/logo.png");
+       background-size: 15% 40%;
+       background-position: center;
+       background-repeat: no-repeat;
+    }  
+  </style>
 </head>
-<body>    
+<body>  
 <div class="row">
     <div class="col-sm-4">
       

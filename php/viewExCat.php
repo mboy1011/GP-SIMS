@@ -16,28 +16,7 @@ $oop = new CRUD();
     <link rel="stylesheet" type="text/css" href="../css/buttons.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="../css/buttons.bootstrap.min.css">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<style type="text/css" media="screen">
-.modal-header{
-  background-color: #4dffb8;
-  color: #fff;
-}
-.modal-footer{
-    background-color: #333333;
-}        
-#datatables_filter
-{
-  color: #c68c53;
-}
-#data-menu
-{
-  color: #c68c53;
-}
-#notify{
- background-color: #ff3333;
- color: #fff;
-}
-
-</style>
+    <link rel="stylesheet" type="text/css" href="../css/style_css.css">
 </head>
 <body>
 <div id="wrapper">
@@ -45,7 +24,7 @@ $oop = new CRUD();
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-brand">
-            <b style="background-color: transparent;font-family: 'Impact', Georgia, sans-serif;"><b class="fa fa-address-book-o fa-bg" style="font-size: 50px;"></b>|<i>SIMS</i></b>
+            <img src="../img/logo.png" alt="Company Logo" style="height:55px;width: 55px;">   
         </div>
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
@@ -69,11 +48,15 @@ $oop = new CRUD();
                    <?php 
                         while ($row = mysqli_fetch_array($mysql,MYSQLI_ASSOC)) {
                             echo "<li class='dropdown-header'>Expiring Product</li>";
-                            echo "<li><a href='viewProduct.php'>".$row['name'].' '.$row['packing']."</a></li>";
+                            echo "<li><a href='viewProduct'>".$row['name'].' '.$row['packing']."</a></li>";
                         }
                         while ($rows = mysqli_fetch_array($mysql2,MYSQLI_ASSOC)) {
                             echo "<li class='dropdown-header'>Out of Stocks</li>";
-                            echo "<li><a href='viewProduct.php'>".$rows['name'].' '.$rows['packing']."</a></li>";
+                            echo "<li><a href='viewProduct'>".$rows['name'].' '.$rows['packing']."</a></li>";
+                        }
+                        while ($rows = mysqli_fetch_array($mysql3,MYSQLI_ASSOC)) {
+                            echo "<li class='dropdown-header'>Overdue</li>";
+                            echo "<li><a href='viewInvoice'>Sales No. ".sprintf('%04d',$rows['sales_no'])."</a></li>";
                         }
                    ?>
                    </li>
@@ -81,14 +64,14 @@ $oop = new CRUD();
                </ul>
             </li>        
             <li>
-                    <a href="index.php"><i class="fa fa-fw fa-tachometer">&nbsp;</i>Dashboard</a>
+                    <a href="index"><i class="fa fa-fw fa-tachometer">&nbsp;</i>Dashboard</a>
             </li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fa fa-fw fa-user-md"></b><?php echo $name;?><b class="fa fa-angle-down"></b></a>
                 <ul class="dropdown-menu">
                     <li><a href="#"><i class="fa fa-fw fa-user"></i> Edit Profile</a></li>
                     <li class="divider"></li>
-                    <li><a href="logout.php"><i class="fa fa-fw fa-power-off"></i> Logout</a></li>
+                    <li><a href="logout"><i class="fa fa-fw fa-power-off"></i> Logout</a></li>
                 </ul>
             </li>
         </ul>
@@ -98,22 +81,22 @@ $oop = new CRUD();
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-6"><i class="fa fa-fw fa-inbox"></i> Collections Receipt <i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-6" class="collapse">
-                        <li><a href="addCR.php"><i class="fa fa-plus">&nbsp;</i>Add CR</a></li>
-                        <li><a href="viewCR.php"><i class="fa fa-list">&nbsp;</i>CR List</a></li>
+                        <li><a href="addCR"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
+                        <li><a href="viewCR"><i class="fa fa-list">&nbsp;</i>View</a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-7"><i class="fa fa-fw  fa-credit-card"></i> Credit/Debit Memo <i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-7" class="collapse">
-                        <li><a href="addCM.php"><i class="fa fa-plus">&nbsp;</i>Add C/D Memo</a></li>
-                        <li><a href="viewCM.php"><i class="fa fa-list">&nbsp;</i>C/D Memo List</a></li>
+                        <li><a href="addCM"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
+                        <li><a href="viewCM"><i class="fa fa-list">&nbsp;</i>View</a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-8"><i class="fa fa-fw  fa-shopping-cart"></i> Purchase Orders<i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-8" class="collapse">
-                        <li><a href="addPO.php"><i class="fa fa-plus">&nbsp;</i>Add PO</a></li>
-                        <li><a href="viewPO.php"><i class="fa fa-list">&nbsp;</i>PO List</a></li>
+                        <li><a href="addPO"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
+                        <li><a href="viewPO"><i class="fa fa-list">&nbsp;</i>View</a></li>
                     </ul>
                 </li>
                 <li>
@@ -126,49 +109,49 @@ $oop = new CRUD();
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-1"><i class="fa fa-fw fa-tags"></i> Sales <i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-1" class="collapse">
-                        <li><a href="addInvoice.php"><i class="fa fa-plus">&nbsp;</i>Add Invoice</a></li>
-                        <li><a href="viewInvoice.php"><i class="fa fa-list">&nbsp;</i>Sales Report</a></li>
+                        <li><a href="addInvoice"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
+                        <li><a href="viewInvoice"><i class="fa fa-list">&nbsp;</i>View</a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-2"><i class="fa fa-fw fa-archive">&nbsp;</i>Inventory<i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-2" class="collapse">
-                        <li><a href="addProduct.php"><i class="fa fa-plus">&nbsp;</i>Inventory In</a></li>
-                        <li><a href="viewProduct.php"><i class="fa fa-list">&nbsp;</i>List Products</a></li>
-                        <li><a href="viewInvOut.php"><i class="fa fa-minus">&nbsp;</i>Inventory Out</a></li>
+                        <li><a href="addProduct"><i class="fa fa-plus">&nbsp;</i>Inventory In</a></li>
+                        <li><a href="viewProduct"><i class="fa fa-list">&nbsp;</i>View</a></li>
+                        <li><a href="viewInvOut"><i class="fa fa-minus">&nbsp;</i>Inventory Out</a></li>
                     </ul>
                 </li>
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-3"><i class="fa fa-fw fa-user-o"></i> Customers Profile <i class="fa fa-fw fa-angle-down pull-right"></i></a>
+                    <a href="#" data-toggle="collapse" data-target="#submenu-3"><i class="fa fa-fw fa-user-o"></i> Customers<i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-3" class="collapse">
-                        <li><a href="addCustomer.php"><i class="fa fa-user-plus">&nbsp;</i>Add Customers</a></li>
-                        <li><a href="viewCustomers.php"><i class="fa fa-users">&nbsp;</i>Customers List</a></li>
-                        <li><a href="viewCustPro.php"><i class="fa fa-user-circle">&nbsp;</i>View Profile</a></li>
+                        <li><a href="addCustomer"><i class="fa fa-user-plus">&nbsp;</i>Add</a></li>
+                        <li><a href="viewCustomers"><i class="fa fa-users">&nbsp;</i>View</a></li>
+                        <li><a href="viewCustPro"><i class="fa fa-user-circle">&nbsp;</i>Customers Profile</a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-4"><i class="fa fa-fw fa-id-card"></i> Employee <i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-4" class="collapse">
-                        <li><a href="addEmployee.php"><i class="fa fa-user-plus">&nbsp;</i>Add Employees</a></li>
-                        <li><a href="viewEmployee.php"><i class="fa fa-users">&nbsp;</i>View Employees</a></li>
+                        <li><a href="addEmployee"><i class="fa fa-user-plus">&nbsp;</i>Add </a></li>
+                        <li><a href="viewEmployee"><i class="fa fa-users">&nbsp;</i>View </a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-10"><i class="fa fa-fw fa-truck"></i> Suppliers <i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-10" class="collapse">
-                        <li><a href="addSup.php"><i class="fa fa-user-plus">&nbsp;</i>Add Suppliers</a></li>
-                        <li><a href="viewSup.php"><i class="fa fa-users">&nbsp;</i>View Suppliers</a></li>
+                        <li><a href="addSup.php"><i class="fa fa-user-plus">&nbsp;</i>Add </a></li>
+                        <li><a href="viewSup.php"><i class="fa fa-users">&nbsp;</i>View </a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-5"><i class="fa fa-fw fa-user"></i> Users <i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-5" class="collapse">
-                        <li><a href="addUser.php"><i class="fa fa-user-plus">&nbsp;</i>Add Users</a></li>
-                        <li><a href="viewUser.php"><i class="fa fa-users">&nbsp;</i>View Users</a></li>
+                        <li><a href="addUser"><i class="fa fa-user-plus">&nbsp;</i>Add</a></li>
+                        <li><a href="viewUser"><i class="fa fa-users">&nbsp;</i>View</a></li>
                     </ul>
                 </li>
                 <li>
-                    <a href="settings.php"><i class="fa fa-fw fa-cogs">&nbsp;</i> Settings</a>
+                    <a href="settings"><i class="fa fa-fw fa-cogs">&nbsp;</i>Settings</a>
                 </li>
                 <li>
                     <hr>
