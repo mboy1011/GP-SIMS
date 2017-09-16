@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 16, 2017 at 12:59 PM
+-- Generation Time: Sep 16, 2017 at 01:11 PM
 -- Server version: 5.6.36
 -- PHP Version: 7.0.16
 
@@ -344,7 +344,7 @@ CREATE TABLE IF NOT EXISTS `tbl_products` (
   `quantity` int(11) DEFAULT NULL,
   `packing` varchar(45) DEFAULT NULL,
   `lot_no` varchar(45) DEFAULT NULL,
-  `status` varchar(15) NOT NULL DEFAULT 'ACTIVE',
+  `status` varchar(15) NOT NULL DEFAULT 'STOCKS ON HAND',
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

@@ -10,10 +10,11 @@ $oop = new CRUD();
 	<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/style.css">
     <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
-    <!-- DataTables Bootstrap -->
+        <!-- DataTables Bootstrap -->
     <link rel="stylesheet" type="text/css" href="../css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/fixedColumns.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/buttons.bootstrap.min.css">
         <!-- DatePicker -->
     <link rel="stylesheet" type="text/css" href="../css/bootstrap-datepicker3.min.css">
     <link rel="stylesheet" type="text/css" href="../css/style_css.css">
@@ -68,7 +69,7 @@ $oop = new CRUD();
                     <a href="index"><i class="fa fa-fw fa-tachometer">&nbsp;</i>Dashboard</a>
             </li>
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fa fa-fw fa-user-md"></b><?php echo $name;?><b class="fa fa-angle-down"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fa fa-fw fa-user-md"></b><input type="hidden" id="user" value="<?php echo $name;?>"><?php echo $name;?><b class="fa fa-angle-down"></b></a>
                 <ul class="dropdown-menu">
                     <li><a href="#"><i class="fa fa-fw fa-user"></i> Edit Profile</a></li>
                     <li class="divider"></li>
@@ -188,6 +189,7 @@ $oop = new CRUD();
             </div>
         </div>   
         <div class="row">
+        <form method="POST" action="">
           <div class="col-sm-4">
             
           </div>
@@ -200,12 +202,17 @@ $oop = new CRUD();
                 }
               ?>
             </select>
-            <button class="btn btn-primary form-control cus"  style="display: none;">Submit</button>
+            <button class="btn btn-primary form-control cus" name="soa" style="display: none;">Submit</button>
           </div>
           <div class="col-sm-4">
             
           </div>
+          </form>
         </div>
+        <?php 
+        if (isset($_POST['soa'])) {
+         $cus = mysqli_real_escape_string($db,$_POST['cust']);   
+        ?>
         <div class="row">
             <div class="col-sm-3">
               <div class="input-group date min">
@@ -231,12 +238,13 @@ $oop = new CRUD();
         <div class="row">
           <div class="col-sm-12">
             <div class="table-responsive">
-                <table class="table table-striped table-bordered nowrap" width="100%" id="datatables">
+                <table class="table" width="100%" id="datatables">
                     <thead class="thead-inverse">
                         <tr>
                             <th>ID</th>
+                            <th>Customer Name</th>
                             <th>Date</th>
-                            <th>Sales Invoice No.</th>
+                            <th>S.I No.</th>
                             <th>Terms</th> 
                             <th>Due Date</th> 
                             <th>DEBIT</th> 
@@ -247,7 +255,7 @@ $oop = new CRUD();
                         </tr>
                     </thead>
                     <?php
-                      $result = mysqli_query($db, "SELECT * FROM tbl_SOA") or die(mysql_error());
+                      $result = mysqli_query($db, "SELECT * FROM tbl_SOA INNER JOIN tbl_customers ON tbl_customers.cus_id=tbl_SOA.cus_id WHERE tbl_SOA.cus_id='$cus'") or die(mysql_error());
                       $i=1;
                     ?>
                     <tbody>
@@ -259,13 +267,14 @@ $oop = new CRUD();
                         ?>
                           <tr>
                             <td><?php echo $i++; ?></td>
+                            <td><?php echo $row['full_name']; ?></td>
                             <td><?php echo $row['dates']; ?></td>
                             <td><?php echo sprintf('%04d',$row['sales_no']); ?></td>
                             <td><?php echo $row['terms'];?></td>
                             <td><?php echo $row['due_date'];?></td>
-                            <td><?php echo number_format($row['DEBIT'],2);?></td>
-                            <td><?php echo number_format($row['CREDIT'],2);?></td>
-                            <td><?php echo number_format($row['BALANCE'],2); ?></td>
+                            <td><?php echo $row['DEBIT'];?></td>
+                            <td><?php echo $row['CREDIT'];?></td>
+                            <td><?php echo $row['BALANCE']; ?></td>
                             <td>
                                <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
                             </td>      
@@ -294,6 +303,7 @@ $oop = new CRUD();
             </div>
           </div>
         </div>
+        <?php } ?>
     </div>
             <!-- /.row -->
         <!-- /.container-fluid -->
@@ -321,6 +331,7 @@ $oop = new CRUD();
 <script type="text/javascript" src="../js/buttons.print.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
+    var user = $("#user").val();
     var table = $('#datatables').dataTable({
         "footerCallback": function ( row, data, start, end, display ) {
             var api = this.api(), data;
@@ -338,7 +349,7 @@ $(document).ready(function(){
 
             // Total over this page
             pageTotal2 = api
-                .column( 7, { page: 'current'} )
+                .column( 8, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
@@ -350,10 +361,10 @@ $(document).ready(function(){
             $(api.column(2).footer()).html(
                 'Date To: '+max
             );
-            $( api.column( 6 ).footer() ).html(
+            $( api.column( 7 ).footer() ).html(
                 'Accounts Receivable:'
             );    
-            $( api.column( 7 ).footer() ).html(
+            $( api.column( 8 ).footer() ).html(
                 '₱'+pageTotal2.toFixed(2)
             );      
         },
@@ -373,13 +384,30 @@ $(document).ready(function(){
         dom: 'lBfrtip',
         buttons: [
             {
-              "extend":'copy', "text":'<span class="fa fa-copy fa-lg">&nbsp;</span>Copy',"className": 'btn btn-primary btn-xs' 
+              extend:'colvis', "text":'<span class="fa fa-eye fa-lg">&nbsp;Column Visibility</span>',"className": 'btn btn-default btn-xs',
+              collectionLayout: 'fixed two-column'
+            },
+            {
+              "extend":'copyHtml5', "text":'<span class="fa fa-copy fa-lg">&nbsp;</span>Copy',"className": 'btn btn-primary btn-xs',footer: true,
+              exportOptions: {
+                    columns: ':visible'
+                }
             },{
-              "extend":'excel', "text":'<span class="fa fa-file-excel-o fa-lg">&nbsp;</span>Excel',"className": 'btn btn-primary btn-xs' 
+              "extend":'excelHtml5', "text":'<span class="fa fa-file-excel-o fa-lg">&nbsp;</span>Excel',"className": 'btn btn-primary btn-xs',footer: true, 
+              exportOptions: {
+                    columns: ':visible'
+                }
             },{
-              "extend":'pdf', "text":'<span class="fa fa-file-pdf-o fa-lg">&nbsp;</span>PDF',"className": 'btn btn-primary btn-xs' 
+              "extend":'pdfHtml5', "text":'<span class="fa fa-file-pdf-o fa-lg">&nbsp;</span>PDF',"className": 'btn btn-primary btn-xs',footer: true, 
+              exportOptions: {
+                                  columns: ':visible'
+                              }                    
             },{
-              "extend":'print', "text":'<span class="fa fa-print fa-lg">&nbsp;</span>Print',"className": 'btn btn-primary btn-xs' 
+              "extend":'print', "text":'<span class="fa fa-print fa-lg">&nbsp;</span>Print',"className": 'btn btn-primary btn-xs',footer: true, 
+              exportOptions: {
+                    columns: ':visible'
+                },
+                message:"<b style='font-size:20px;'>Statement of Accounts</b> <br>"+"Printed By: "+user
             }
         ]
     });
@@ -390,7 +418,7 @@ $(document).ready(function(){
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
       var min = $('.min').datepicker('getDate');
       var max = $('.max').datepicker('getDate');
-      var startDate = new Date(data[1]);
+      var startDate = new Date(data[2]);
       if (min == null && max == null) { return true; }
       if (min == null && startDate <= max) { return true;}
       if(max == null && startDate >= min) {return true;}

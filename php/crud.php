@@ -131,7 +131,7 @@ class CRUD
 		if ((int)$qty==0) {
 			$stat = 'OUT OF STOCKS'	;
 		}else{
-			$stat = 'ACTIVE';
+			$stat = 'STOCKS ON HAND';
 		}
 		$sql = mysqli_query($db,"UPDATE tbl_products SET name='$proname', description='$desc', price='$price', expiry_date='$exp',quantity='$qty',packing='$pack',lot_no='$lot', status='$stat' WHERE prod_id='$id'");
 		if (!$sql) {
