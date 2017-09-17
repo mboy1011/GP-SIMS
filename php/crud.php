@@ -89,23 +89,22 @@ class CRUD
 		}
 
 	}
-	// public function upStat($si)
-	// {
-	// 	require 'config.php';
-	// 	$sql = mysqli_query($db,"SELECT tbl_sales.total_amount-IFNULL(SUM(tbl_CRdetails.amount),0) as total,tbl_sales.total_amount FROM tbl_sales INNER JOIN tbl_CRdetails ON tbl_sales.sales_no=tbl_CRdetails.sales_no WHERE tbl_CRdetails.sales_no='$si'");
-	// 	$row = mysqli_fetch_assoc($sql);
-	// 	$amount = $row['total'];
-	//     if($amount==$row['total_amount']){
-	//       mysqli_query($db,"UPDATE tbl_sales SET status='UNPAID' WHERE sales_no='$si'");
-	//       return true;
-	//     }else if ($amount!=0) {
-	//       mysqli_query($db,"UPDATE tbl_sales SET status='PARTIALLY PAID' WHERE sales_no='$si'");
-	//       return true;
-	//     }else{
-	//       mysqli_query($db,"UPDATE tbl_sales SET status='PAID' WHERE sales_no='$si'");
-	//       return true;
-	//     }
-	// }
+	public function upStat($si)
+	{
+		require 'config.php';
+		$sql = mysqli_query($db,"SELECT * FROM tbl_SOA WHERE sales_no='$si'");
+		$row = mysqli_fetch_assoc($sql);
+	    if($row['total']==$row['BALANCE']){
+	      mysqli_query($db,"UPDATE tbl_sales SET status='UNPAID' WHERE sales_no='$si'");
+	      return true;
+	    }else if ($row['total']!=$row['BALANCE']) {
+	      mysqli_query($db,"UPDATE tbl_sales SET status='PARTIALLY PAID' WHERE sales_no='$si'");
+	      return true;
+	    }else if($row['BALANCE']==0){
+	      mysqli_query($db,"UPDATE tbl_sales SET status='PAID' WHERE sales_no='$si'");
+	      return true;
+	    }
+	}
 	public function upProd($si_no)
 	{
 		require 'config.php';
@@ -116,7 +115,7 @@ class CRUD
 		}
 		$result;
 		for ($i=0; $i < count($arr); $i++) { 
-		   $sql = "UPDATE tbl_products SET quantity=quantity+".$arr[$i][quantity]." WHERE prod_id=".$arr[$i][prod_id]."";
+		   $sql = "UPDATE tbl_products SET quantity=quantity+".$arr[$i][quantity].",status='STOCKS ON HAND' WHERE prod_id=".$arr[$i][prod_id]."";
 		   $my = mysqli_query($db,$sql);
 		   $result = $my;
 		}

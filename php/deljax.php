@@ -42,12 +42,12 @@
 		if (!$sql) {
 			return false;
 		}else{
-			// $sql1 = $oop->upStat($si);
-			// if (!$sql1) {
-			// 	return false;
-			// }else{
+			$sql1 = $oop->upStat($si);
+			if (!$sql1) {
+				return false;
+			}else{
 				return true;
-			// }
+			}
 		}
 	}else if ($_REQUEST['removeCM']) {
 		$id = mysqli_real_escape_string($db,$_POST['id']);

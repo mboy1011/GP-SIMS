@@ -249,21 +249,19 @@ $oop = new CRUD();
                             <th>Due Date</th> 
                             <th>DEBIT</th> 
                             <th>CREDIT</th> 
-                            <th>Balance</th> 
+                            <th>Balance</th>
+                            <th>Status</th> 
                             <th>Edit</th> 
                             <th>Delete</th>
                         </tr>
                     </thead>
                     <?php
-                      $result = mysqli_query($db, "SELECT * FROM tbl_SOA INNER JOIN tbl_customers ON tbl_customers.cus_id=tbl_SOA.cus_id WHERE tbl_SOA.cus_id='$cus'") or die(mysql_error());
+                      $result = mysqli_query($db, "SELECT * FROM tbl_SOA INNER JOIN tbl_customers ON tbl_customers.cus_id=tbl_SOA.cus_id WHERE tbl_SOA.cus_id='$cus' AND tbl_SOA.BALANCE!=0") or die(mysql_error());
                       $i=1;
                     ?>
                     <tbody>
                       <?php
                     while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
-                        // if ($row['total']==$row['CREDIT']) {
-                                
-                        // }else{    
                         ?>
                           <tr>
                             <td><?php echo $i++; ?></td>
@@ -275,6 +273,27 @@ $oop = new CRUD();
                             <td><?php echo $row['DEBIT'];?></td>
                             <td><?php echo $row['CREDIT'];?></td>
                             <td><?php echo $row['BALANCE']; ?></td>
+                            <td>
+                            <?php
+                              if ($row['status']=='UNPAID') {
+                                ?>
+                                <span class="label label-warning"><?php echo $row['status'];?></span>
+                                <?php
+                              }else if ($row['status']=='PARTIALLY PAID') {
+                                ?>
+                                <span class="label label-info"><?php echo $row['status'];?></span>
+                                <?php
+                              }else if($row['status']=='PAID'){
+                                ?>
+                                <span class="label label-success"><?php echo $row['status'];?></span>
+                                <?php
+                              }else{
+                                ?>
+                                <span class="label label-danger"><?php echo $row['status'];?></span>
+                                <?php
+                              }
+                             ?>
+                            </td>
                             <td>
                                <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
                             </td>      
@@ -291,6 +310,7 @@ $oop = new CRUD();
                         <th></th>
                         <th></th>
                         <th></th>
+                        <th></th> 
                         <th></th> 
                         <th></th> 
                         <th></th> 

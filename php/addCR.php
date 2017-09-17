@@ -397,7 +397,7 @@ $oop = new CRUD();
       var am = parseFloat($("#amt").val());
       var si = parseInt($("#sales_no").val());
       if (total<min) {
-        $("#texthere").text("Invalid C.R No, Try Again!");
+        $("#texthere").text("Invalid C.R No. or Already Registered, Try Again!");
         $("#myModal").modal();
       }else{
         if (am>tad) {
