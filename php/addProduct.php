@@ -173,7 +173,8 @@ include 'session.php';
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
             <?php
             include 'crud.php';
             $oop = new CRUD();
@@ -187,7 +188,7 @@ include 'session.php';
                 $pk = mysqli_real_escape_string($db,$_POST['pack']);
                 $pk1 = mysqli_real_escape_string($db,$_POST['pack1']);
                 $pack = $pk.$pk1;
-                $sql=$oop->insertPro($pn,$pd,$ex,$lo,$pr,$pack,$qt);
+                $sql=$oop->insertPro(strtoupper($pn),$pd,$ex,$lo,$pr,$pack,$qt);
                 if(!$sql){
                    ?>
                       <div class="alert alert-warning alert-dismissable">
@@ -207,6 +208,7 @@ include 'session.php';
             ?>                 
                 <center><p><li class="fa fa-cart-plus fa-2x">&nbsp;</li><b style="font-size: 18px;">New Products</b></p></center>
             </div>
+            <div class="col-sm-4"></div>
         </div>
         <div class="row">
             <div class="col-sm-3">
@@ -250,7 +252,7 @@ include 'session.php';
           </div>   
           <div class="col-sm-4" id="new" style="display: none;">         
             <form method="POST" action="" class="form-horizontal">
-                <input type="text" name="pname" placeholder="Product Name" class="form-control" required="" id="product_name">
+                <input type="text" name="pname" placeholder="Product Name" class="form-control" required="" id="product_name" style="text-transform:uppercase" >
                 <div class="input-group">
                   <label for="comment"></label>
                   <textarea class="form-control" rows="8" cols="60" name="pdesc" placeholder="Product Description" id="product_desc"></textarea>
@@ -263,10 +265,10 @@ include 'session.php';
                 <input type="number" name="quantity" placeholder="Quantity / BOX" class="form-control" required="">
                 <div class="form-inline">
                     <div class="input-group">
-                        <input type="number" name="pack" placeholder="Packing" class="form-control" required="" id="product_pack">
+                        <input type="text" name="pack" placeholder="Packing" class="form-control" required="" id="product_pack">
                     </div>
                     <div class="input-group">
-                        <select id="memoryType" name="pack1" class="form-control">
+                        <select id="memoryType" name="pack1" id="product_pack1" class="form-control">
                             <option value="mg" selected="selected">mg</option>
                             <option value="g">g</option>
                             <option value="mL">mL</option>
@@ -326,7 +328,10 @@ $(document).ready(function() {
     $("#newP").click(function(event) {
        $("#batch").hide();
        $("#new").slideToggle('300', function() {
-
+            $("#product_name").val('');
+            $("#product_desc").text('');
+            $("#product_pack").val('');
+            $("#product_pack1").val('');
        });
     });
     $("#prod_batch").change(function(event) {
@@ -345,7 +350,15 @@ $(document).ready(function() {
                 }
                 $("#product_name").val(name);
                 $("#product_desc").text(desc);
-                $("#product_pack").val(pack);
+                // Split 100mg pack array into multi-dimensional array arr[["100","mg"]]
+                var newpack = pack.toString();
+                var arr = [];
+                var json = newpack.split(' ');
+                json.forEach(function (item) {
+                    arr.push(item.replace(/\'/g, '').split(/(\d+)/).filter(Boolean));
+                });               
+                $("#product_pack1").val(arr[0][1]);
+                $("#product_pack").val(arr[0][0]);
             }
        });
     });
