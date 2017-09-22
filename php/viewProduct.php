@@ -260,7 +260,7 @@ $oop = new CRUD();
                             <td><?php echo $row['packing']; ?></td>    
                             <td><?php echo $row['quantity']; ?></td>
                             <td><?php
-                             if ($row['status']=='ACTIVE') {
+                             if ($row['status']=='STOCKS ON HAND') {
                               ?>
                                <span class="label label-success"><?php echo $row['status'];?></span>
                               <?php

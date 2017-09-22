@@ -346,10 +346,11 @@ $oop = new CRUD();
         <h4 class="modal-title">Delete Inventory Out</h4>
       </div>
       <div class="modal-body">
-        
+        <b><strong>Are you sure you want to delete this sales invoice?</strong></b>
       </div>
       <div class="modal-footer">
-         
+         <button class="btn btn-danger">Yes</button>
+         <button class="btn btn-default" data-dismiss="modal">No</button>
       </div>
     </div>
 

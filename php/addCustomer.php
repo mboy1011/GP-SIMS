@@ -220,8 +220,8 @@ require 'session.php';
                 <input type="text" name="bstyle" placeholder="Business Style" class="form-control">
                 <input type="text" name="terms" placeholder="Terms" class="form-control" required="">
                 <input type="text" name="opidno" placeholder="OSCA/PWD ID No." class="form-control">
-                <input type="number" step="any" name="dis1" placeholder="Discount 1 (%)" class="form-control" value="0">
-                <input type="number" step="any" name="dis2" placeholder="Discount 2 (%)" class="form-control" value="0">
+                <input type="number" step="any" name="dis1" placeholder="Discount 1 (%)" class="form-control" value="">
+                <input type="number" step="any" name="dis2" placeholder="Discount 2 (%)" class="form-control" value="">
                 <input type="submit" name="Submit" class="btn btn-primary form-control">
             </form>
           </div>

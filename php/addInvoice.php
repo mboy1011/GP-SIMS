@@ -209,7 +209,7 @@ include 'session.php';
                           ?>
                  </select> 
                      <span class="input-group-btn">
-                       <button class="btn btn-default" type="submit" name="go">Submit!</button>
+                       <button class="btn btn-primary" type="submit" name="go">Submit!</button>
                      </span>
                  </div>
             </form> 
