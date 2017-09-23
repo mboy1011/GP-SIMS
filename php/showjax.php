@@ -1,20 +1,16 @@
 <?php
 	include 'config.php';
-	if ($_REQUEST['sales_no']) {
+	include 'session.php';
+	if ($_POST['sales_no']) {
 	$si_no = mysqli_real_escape_string($db,$_POST['sales_no']);	
-	// $sales = mysqli_query($db,"SELECT * FROM tbl_salesdetails");
 	$total = mysqli_query($db,"SELECT SUM(amount) as total FROM tbl_salesdetails WHERE sales_no='$si_no'");
 	$rows = mysqli_fetch_array($total,MYSQLI_ASSOC); 
 	$tad = (float)$rows['total'];
-// 	$query = mysqli_query($db,"SELECT tbl_products.name,tbl_products.lot_no,tbl_products.expiry_date,tbl_salesdetails.quantity, tbl_products.price, tbl_salesdetails.amount
-// FROM tbl_salesdetails
-// INNER JOIN tbl_products
-// ON tbl_salesdetails.prod_id=tbl_products.prod_id");
-
 	$query = mysqli_query($db,"SELECT tbl_products.name,tbl_products.packing,tbl_salesdetails.id,tbl_salesdetails.sales_no,tbl_products.lot_no,tbl_products.expiry_date,tbl_salesdetails.price,tbl_salesdetails.quantity, tbl_salesdetails.amount
 FROM tbl_salesdetails, tbl_products WHERE
 tbl_salesdetails.prod_id=tbl_products.prod_id AND tbl_salesdetails.sales_no='$si_no'");
 	$i = 1;
+	$l = 1;
 		while ($row = mysqli_fetch_array($query,MYSQLI_ASSOC)) {
 ?>
 	<tr>
@@ -35,7 +31,7 @@ tbl_salesdetails.prod_id=tbl_products.prod_id AND tbl_salesdetails.sales_no='$si
 	</tr>
 <?php
 		}
-	}else if ($_REQUEST['cr_no']) {
+	}else if ($_POST['cr_no']) {
 		$si = mysqli_real_escape_string($db,$_POST['cr_si']);	
 		$cr = mysqli_real_escape_string($db,$_POST['cr_no']);
 		$sql = mysqli_query($db,"SELECT SUM(amount) as total FROM tbl_CRdetails WHERE cr_no='$cr'");
@@ -57,7 +53,7 @@ tbl_salesdetails.prod_id=tbl_products.prod_id AND tbl_salesdetails.sales_no='$si
 	</tr>
 <?php
 		}
-	}else if($_REQUEST['cr_d']){
+	}else if($_POST['cr_d']){
 		$cr = mysqli_real_escape_string($db,$_POST['cr_d']);
 		$sql = mysqli_query($db,"SELECT * FROM tbl_CRdetails WHERE cr_no='$cr'");
 		$i=1;
@@ -76,7 +72,7 @@ tbl_salesdetails.prod_id=tbl_products.prod_id AND tbl_salesdetails.sales_no='$si
 	</tr>
 <?php
 		}
-	}elseif ($_REQUEST['cm_no']) {
+	}elseif ($_POST['cm_no']) {
 		$cm = mysqli_real_escape_string($db,$_POST['cm_no']);
 		$pi = mysqli_real_escape_string($db,$_POST['pid']);
 		$si = mysqli_real_escape_string($db,$_POST['si']);
@@ -104,7 +100,7 @@ tbl_salesdetails.prod_id=tbl_products.prod_id AND tbl_salesdetails.sales_no='$si
 <?php			
 		}
 		
-	}else if ($_REQUEST['cm_d']) {
+	}else if ($_POST['cm_d']) {
 		$cm = mysqli_real_escape_string($db,$_POST['cm_d']);
 		$sql = mysqli_query($db,"SELECT * FROM tbl_CMdetails INNER JOIN tbl_products ON tbl_CMdetails.prod_id=tbl_products.prod_id WHERE tbl_CMdetails.cm_no='$cm'");
 		$i=1;
@@ -125,7 +121,7 @@ tbl_salesdetails.prod_id=tbl_products.prod_id AND tbl_salesdetails.sales_no='$si
 	</tr>
 <?php			
 		}
-	}elseif ($_REQUEST['po']) {
+	}elseif ($_POST['po']) {
 		$po = mysqli_real_escape_string($db,$_POST['po']);
 		$query = mysqli_query($db,"SELECT SUM(prod_amount) as total FROM tbl_POdetails WHERE po_no='$po'");
 		$rows = mysqli_fetch_assoc($query);

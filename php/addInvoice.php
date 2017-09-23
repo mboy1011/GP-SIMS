@@ -198,7 +198,7 @@ $oop = new CRUD();
             $tad = mysqli_real_escape_string($db,$_POST['tad']);
             $dis1 = mysqli_real_escape_string($db,$_POST['dis1']);
             $dis2 = mysqli_real_escape_string($db,$_POST['dis2']);
-            $today = mysqli_real_escape_string($db,$_POST['date']);
+            $today = mysqli_real_escape_string($db,$_POST['today']);
             $prepare = mysqli_real_escape_string($db,$_POST['prepareby']);
             $check = mysqli_real_escape_string($db,$_POST['checkby']);
             $vat = mysqli_real_escape_string($db,$_POST['vat']);
@@ -235,7 +235,7 @@ $oop = new CRUD();
             <!-- <form method="POST" action="">  -->
                 <div class="input-group">
                 <span class="input-group-addon">Choose Customer:</span>
-                 <select name="userid" class="form-control" id="sel_cust">
+                 <select name="cust_id" class="form-control" id="sel_cust">
                     <option value="0">-- Select Customer Here --</option>
                           <?php
                             $result =mysqli_query($db, "SELECT cus_id,full_name FROM tbl_customers");
@@ -262,7 +262,7 @@ $oop = new CRUD();
             <div class="col-sm-8">
                 <div class="input-group">
                     <span class="input-group-addon">SOLD to</span>
-                    <input type="hidden" id="custid" value="" name="c">
+                    <input type="hidden" id="custid" value="" name="cust_id">
                     <input type="text"  name="sold" class="form-control" value="" id="si_sold" required="">
                 </div>
             </div>
@@ -351,7 +351,7 @@ $oop = new CRUD();
                     <div class="col-sm-6">
                         <div class="input-group">
                         <span class="input-group-addon">Choose Products:</span>
-                         <select name="userid" class="form-control" id="cprod">
+                         <select name="" class="form-control" id="cprod">
 				            <option value="0">--Select Products Here--</option>
                                   <?php
                                     $result =mysqli_query($db, "SELECT * FROM tbl_products WHERE status!='OUT OF STOCKS' ORDER BY name");
@@ -368,7 +368,7 @@ $oop = new CRUD();
                         <input type="text" readonly="" class="form-control" placeholder="Boxes" id="boxes">
                     </div>
                     <div class="col-sm-2">
-                        <input type="number" class="form-control" id="qty" name="qty" placeholder="Quantity">
+                        <input type="number" class="form-control" id="qty" min="0" name="qty" placeholder="Quantity">
                     </div>
                     <div class="col-sm-2">
                          <button class="btn btn-default form-control" type="button" name="addprod" id="addprod"><b class="fa fa-plus fa-bg">&nbsp;</b>Add</button>
@@ -377,7 +377,7 @@ $oop = new CRUD();
             </div><!-- /panel-heading -->
             <div class="panel-body" style="height: 200px;overflow-y: auto;">
                 <div class="table-responsive">             
-                    <table class="table table-hover table-fixed table-striped">
+                    <table class="table table-hover table-fixed table-striped" id="add_product_list">
                         <thead class="thead-inverse">
                             <tr>
                                 <th>ID</th>
@@ -426,7 +426,7 @@ $oop = new CRUD();
             <div class="col-sm-3">
                 <div class="input-group">
                     <span class="input-group-addon">Less: VAT %</span>
-                    <input type="number" id="vat" step="any" name="vat" value="12" min="0" max="100" class="form-control" disabled="">
+                    <input type="number" id="vat" step="any" name="vat" value="12" min="0" max="100" class="form-control" readonly>
                     <span class="input-group-addon"><b id="editVAT" class="label label-success"><i id="chVat" class="fa fa-check"></i></b></span> 
                 </div>
             </div>
@@ -448,12 +448,6 @@ $oop = new CRUD();
                 <button type="submit" name="save" class="btn btn-success form-control"><b class="fa fa-save fa-bg">&nbsp;</b>Save</button>
             </div>
             </form>
-            <!-- <form method="POST" action="print.php">
-            <div class="col-sm-3">
-                <input type="hidden" name="sales_no" id="printed">
-                <button type="submit" id="print" name="print" class="btn btn-default form-control"><b class="fa fa-print fa-bg">&nbsp;</b>Print</button>
-            </div>
-            </form> -->
 <!-- Modal -->
 <div id="myModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -562,16 +556,18 @@ $(document).ready(function() {
         }
     });
     $("#editVAT").click(function(event) {
-        if($("#vat").attr('disabled')){
-            $("#vat").removeAttr('disabled')
+        console.log('ok');
+        if($("#vat").attr('readonly')){
+            $("#vat").removeAttr('readonly');
             $("#editVAT").attr('class', 'label label-warning');
             $("#chVat").attr('class', 'fa fa-pencil');
         }else{
-            $("#vat").attr('disabled', true);
+            $("#vat").attr('readonly', true);
             $("#editVAT").attr('class', 'label label-success');
             $("#chVat").attr('class','fa fa-check');
         }
     });
+    var item=0;
     function calc(){
         var a = parseFloat($("#totalamounts").val()) || 0;
         var b = parseFloat($("#vat").val())/100 || 0;
@@ -583,6 +579,8 @@ $(document).ready(function() {
         $("#net").val( Math.round((d/1.12*b)*100)/100 );
         var c = parseFloat($("#net").val());
         $("#tsales").val(Math.round((d-c)*100)/100);
+        var i = $("#item_no").val();
+        item = i;
     }
     $("#vat").bind('keyup click',function(event) {
        calc();
@@ -598,21 +596,37 @@ $(document).ready(function() {
         });
     }
     viewData();
+
     $("#addprod").click(function(event) {
-       var product = $("#cprod").val();
-       var quantity = $("#qty").val();
-       var salesno = $("#salesno").val();
-       var custid = $("#custid").val();
-       var qty = $("#qty").val();
-       var boxes = $("#boxes").val();
-       if (qty>boxes) {
-            $("#warning").modal();
-            $("#text").text("There's not enough quantity.");
+       var prod_len = $("#add_product_list").children('tbody').children('tr').length;
+       if(prod_len <= 1){       
+           var product = $("#cprod").val();
+           var quantity = $("#qty").val();
+           var salesno = $("#salesno").val();
+           var custid = $("#custid").val();
+           var qty = $("#qty").val();
+           var boxes = $("#boxes").val();
+           if (qty>boxes||qty<0) {
+                $("#warning").modal();
+                $("#text").text("There's not enough quantity.");
+           }else if(qty==0||qty==null){
+                $("#warning").modal();
+                $("#text").text("Quantity is invalid.");
+           }else{
+                if(item>4) {
+                    $("#warning").modal();
+                    $("#text").text("Number of Item exceeds on Sales Invoice.");
+                }else{
+                    $.post('addjax.php', {product: product, quantity: quantity, custid: custid, salesno: salesno},function (data,textStatus,xhr) {
+                       calc();
+                       viewData();
+                    });  
+                    console.log(item);
+                }   
+           }
        }else{
-           $.post('addjax.php', {product: product, quantity: quantity, custid: custid, salesno: salesno},function (data,textStatus,xhr) {
-               calc();
-               viewData();
-           });     
+            $("#warning").modal();
+            $("#text").text("Item's exceeds on Sales Invoice.");
        }
     });
     $(document).on('click', '#btn-delete', function(event) {

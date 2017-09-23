@@ -1,8 +1,9 @@
 <?php
-	include 'config.php';
+	require 'config.php';
+	require 'session.php';
 	require 'crud.php';
 	$oop = new CRUD();
-	if ($_REQUEST['product']) {	
+	if ($_POST['product']) {	
 		$prod = mysqli_real_escape_string($db,$_POST['product']);
 		$qty = mysqli_real_escape_string($db,$_POST['quantity']);
 		if ($prod=='--Select Products Here--'||empty($qty)) {
@@ -29,26 +30,26 @@
 			}
 		}	
 		mysqli_close($db);
-	}else if($_REQUEST['prodin']){
+	}else if($_POST['prodin']){
 		$prod = mysqli_real_escape_string($db,$_POST['prodin']);
 		$query = mysqli_query($db,"SELECT prod_id,quantity FROM tbl_products WHERE prod_id='$prod'");
 		$row = mysqli_fetch_assoc($query);
 		echo $row['quantity']." box/boxes";	
 		mysqli_close($db);
-	}else if($_REQUEST['cust']){
+	}else if($_POST['cust']){
 		$cust = mysqli_real_escape_string($db,$_POST['cust']);
 		$query = mysqli_query($db,"SELECT sales_no FROM tbl_sales WHERE cus_id='$cust' AND status!='CANCELLED' AND status!='PAID'");
 		while($row = mysqli_fetch_assoc($query)){
 			echo "<option value='".$row['sales_no']."'>".$row['sales_no']."</option>";
 		}
 		mysqli_close($db);
-	}else if ($_REQUEST['tad']) {
+	}else if ($_POST['tad']) {
 		$tad = mysqli_real_escape_string($db,$_POST['tad']);
 		$query = mysqli_query($db,"SELECT tbl_sales.total_amount-IFNULL(SUM(tbl_CRdetails.amount),0) as total_amount,tbl_sales.sales_no FROM tbl_sales INNER JOIN tbl_CRdetails ON tbl_sales.sales_no=tbl_CRdetails.sales_no WHERE tbl_sales.sales_no='$tad'");
 		$row = mysqli_fetch_assoc($query);
 		echo number_format($row['total_amount'],2,'.','');
 		mysqli_close($db);
-	}else if ($_REQUEST['cr_si']) {
+	}else if ($_POST['cr_si']) {
 		$si = mysqli_real_escape_string($db,$_POST['cr_si']);
 		$cr = mysqli_real_escape_string($db,$_POST['cr_no']);
 		$am = mysqli_real_escape_string($db,$_POST['amount']);
@@ -73,21 +74,21 @@
 			}
 		}
 		mysqli_close($db);
-	}else if ($_REQUEST['products']) {
+	}else if ($_POST['products']) {
 		$si =  mysqli_real_escape_string($db,$_POST['products']);
 		$sql = mysqli_query($db,"SELECT * FROM tbl_salesdetails INNER JOIN tbl_products ON tbl_salesdetails.prod_id=tbl_products.prod_id WHERE tbl_salesdetails.sales_no='$si'");
 		while($row = mysqli_fetch_assoc($sql)){
 			echo "<option value='".$row['prod_id']."'>".$row['name']."</option>";
 		}	
 		mysqli_close($db);
-	}else if ($_REQUEST['quantity']) {
+	}else if ($_POST['quantity']) {
 		$pid = mysqli_real_escape_string($db,$_POST['quantity']);
 		$si = mysqli_real_escape_string($db,$_POST['sales']);
 		$sql = mysqli_query($db,"SELECT quantity FROM tbl_salesdetails WHERE sales_no='$si' AND prod_id='$pid'");
 		$row = mysqli_fetch_assoc($sql);
 		echo intval($row['quantity']);
 		mysqli_close($db);
-	}else if ($_REQUEST['addCM']) {
+	}else if ($_POST['addCM']) {
 		$pi = mysqli_real_escape_string($db,$_POST['prod_id']);
 		$qt = mysqli_real_escape_string($db,$_POST['qty']);
 		$si = mysqli_real_escape_string($db,$_POST['si_no']);
@@ -112,7 +113,7 @@
 			}
 		}
 		mysqli_close($db);
-	}else if($_REQUEST['addPO']){
+	}else if($_POST['addPO']){
 		$nm = mysqli_real_escape_string($db,$_POST['nm']);
 		$mk = mysqli_real_escape_string($db,$_POST['mk']);
 		$pr = mysqli_real_escape_string($db,$_POST['pr']);

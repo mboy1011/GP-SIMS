@@ -391,7 +391,6 @@ $oop = new CRUD();
 <script type="text/javascript" src="../js/buttons.bootstrap.min.js"></script>
 <script type="text/javascript" src="../js/buttons.flash.min.js"></script>
 <script type="text/javascript" src="../js/jszip.min.js"></script>
-<script type="text/javascript" src="../js/pdfmake.min.js"></script>
 <script type="text/javascript" src="../js/vfs_fonts.js"></script>
 <script type="text/javascript" src="../js/buttons.html5.min.js"></script>
 <script type="text/javascript" src="../js/buttons.print.min.js"></script>
@@ -491,19 +490,17 @@ $(document).ready(function(){
             },{
               "extend":'excelHtml5', "text":'<span class="fa fa-file-excel-o fa-lg">&nbsp;</span>Excel',"className": 'btn btn-primary btn-xs',footer: true, 
               exportOptions: {
-                    columns: ':visible'
+                    // columns: ':visible',
+                    columns: [ 0, 1,2,3,4,5,6,7,8,9,10,11,12],
                 }
             },{
-              "extend":'pdfHtml5', "text":'<span class="fa fa-file-pdf-o fa-lg">&nbsp;</span>PDF',"className": 'btn btn-primary btn-xs',footer: true, 
+              "extend":'print', "text":"<span class='fa fa-print fa-lg'>&nbsp;</span>Print",title:'',"className": 'btn btn-primary btn-xs',footer: true,autoPrint:true, 
               exportOptions: {
-                                  columns: ':visible'
-                              }                    
-            },{
-              "extend":'print', "text":'<span class="fa fa-print fa-lg">&nbsp;</span>Print',"className": 'btn btn-primary btn-xs',footer: true, 
-              exportOptions: {
-                    columns: ':visible'
+                    // columns: ':visible',
+                    columns: [ 0, 1,2,3,4,5,6,7,8,9,10,11,12],
+                    stripHtml: true
                 },
-                message:"<b style='font-size:20px;'>Book Sales Report</b> <br>"+"Printed By: "+user
+                message:"<img src='../img/bg.png' style='height:100px;width:400px;'>"+"<br><b style='font-size:20px;'>Book Sales Report</b> <br>"+"Printed By: "+user
             }
         ]
     });
