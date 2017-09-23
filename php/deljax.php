@@ -24,6 +24,7 @@
 					return true;
 				}
 			}
+		mysqli_close($db);
 	}else if($_REQUEST['updated'])	{
 		$price = mysqli_real_escape_string($db,$_POST['updated']);
 		$id = mysqli_real_escape_string($db,$_POST['id']);	
@@ -35,6 +36,7 @@
 		}else{
 			return true;
 		}
+		mysqli_close($db);
 	}else if ($_REQUEST['cr_del']) {
 		$id = mysqli_real_escape_string($db,$_POST['cr_del']);
 		$si = mysqli_real_escape_string($db,$_POST['si']);
@@ -49,6 +51,7 @@
 				return true;
 			}
 		}
+		mysqli_close($db);
 	}else if ($_REQUEST['removeCM']) {
 		$id = mysqli_real_escape_string($db,$_POST['id']);
 		$pi = mysqli_real_escape_string($db,$_POST['pi']);
@@ -67,6 +70,7 @@
 				return true;
 			}
 		}
+		mysqli_close($db);
 	}else if($_REQUEST['remPO']){
 		$pod = mysqli_real_escape_string($db,$_POST['pod']);
 		$sql = mysqli_query($db,"DELETE FROM tbl_POdetails WHERE pod_no='$pod'");
@@ -75,5 +79,6 @@
 		}else{
 			return true;
 		}
+		mysqli_close($db);
 	}
 ?>

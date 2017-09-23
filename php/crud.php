@@ -378,5 +378,20 @@ class CRUD
 			}
 		}	
 	}
+	public function insertSI($sales_no,$cust_id,$prod,$qty,$tad,$dis1,$dis2,$today,$prepare,$check,$vat,$net,$tsales,$term,$date,$due)
+	{
+		require 'config.php';
+		$sql = mysqli_query($db,"SELECT * FROM tbl_sales WHERE sales_no='$sales_no' AND cus_id='$cust_id'");
+        if ($sql->num_rows>0) {
+     		return false;       
+        }else{
+            $sql1 = mysqli_query($db,"INSERT INTO tbl_sales (sales_no,cus_id,dates,prepared_by,checked_by,VAT,total_amount,total_sales,amount_net,due_date,discount1,discount2) VALUES ('".$sales_no."','".$cust_id."','".$today."','".$prepare."','".$check."','".$vat."','".$tad."','".$net."','".$tsales."','".$due."','".$dis1."','".$dis2."')");
+            if (!$sql1) {
+            	return false;
+            }else{
+            	return true;
+            }
+        }
+	}
 }
 ?>

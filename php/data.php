@@ -33,5 +33,14 @@
 			}
 			print json_encode($data);
 			mysqli_close($db);
+		}elseif ($_REQUEST['cust_data']) {
+			$cid=mysqli_real_escape_string($db,$_POST['si_cust_id']);
+            $sql = mysqli_query($db,"SELECT * FROM tbl_customers WHERE cus_id=$cid");
+            $data = array();
+            foreach ($sql as $row) {
+            	$data[]=$row;
+            }
+            print json_encode($data);
+            mysqli_close($db);
 		}
 ?>

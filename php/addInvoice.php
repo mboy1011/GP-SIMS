@@ -1,5 +1,7 @@
 <?php
-include 'session.php';
+require 'session.php';
+require 'crud.php';
+$oop = new CRUD();
 ?>
 <!DOCTYPE html>
 <html lang="en-150">
@@ -187,18 +189,54 @@ include 'session.php';
         </div>
         <div class="row">
             <div class="col-sm-12">
-                <div class="result">
-                        
-                </div>
+                <?php  
+    if (isset($_POST['save'])) {
+            $sales_no = mysqli_real_escape_string($db,$_POST['sales_no']);
+            $cust_id = mysqli_real_escape_string($db,$_POST['cust_id']);
+            $prod = mysqli_real_escape_string($db,$_POST['product']);
+            $qty = mysqli_real_escape_string($db,$_POST['quantity']);
+            $tad = mysqli_real_escape_string($db,$_POST['tad']);
+            $dis1 = mysqli_real_escape_string($db,$_POST['dis1']);
+            $dis2 = mysqli_real_escape_string($db,$_POST['dis2']);
+            $today = mysqli_real_escape_string($db,$_POST['date']);
+            $prepare = mysqli_real_escape_string($db,$_POST['prepareby']);
+            $check = mysqli_real_escape_string($db,$_POST['checkby']);
+            $vat = mysqli_real_escape_string($db,$_POST['vat']);
+            $net = mysqli_real_escape_string($db,$_POST['net']);
+            $tsales = mysqli_real_escape_string($db,$_POST['tsales']);
+            $term = mysqli_real_escape_string($db,$_POST['terms']);
+            $date = date_create($today);
+            date_add($date,date_interval_create_from_date_string($term));
+            $due = date_format($date,"Y-m-d");
+            $insert = $oop->insertSI($sales_no,$cust_id,$prod,$qty,$tad,$dis1,$dis2,$today,$prepare,$check,$vat,$net,$tsales,$term,$date,$due);
+            if(!$insert) {
+                ?>
+                     <div class="alert alert-warning alert-dismissable">
+                              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                              <strong>Already Saved!</strong>Try Again.
+                     </div>
+                <?php
+            }else{
+                ?>
+                     <div class="alert alert-success alert-dismissable">
+                              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                              <strong>Successfully Saved!</strong>
+                     </div>
+                <?php
+            }
+    }
+                ?>
             </div>
         </div>
         <hr>
+        <form method="POST" action="">
         <div class="row">
             <div class="col-sm-5">
-            <form method="POST" action=""> 
+            <!-- <form method="POST" action="">  -->
                 <div class="input-group">
                 <span class="input-group-addon">Choose Customer:</span>
-                 <select name="userid" class="form-control" >
+                 <select name="userid" class="form-control" id="sel_cust">
+                    <option value="0">-- Select Customer Here --</option>
                           <?php
                             $result =mysqli_query($db, "SELECT cus_id,full_name FROM tbl_customers");
                             while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
@@ -208,31 +246,24 @@ include 'session.php';
                             }
                           ?>
                  </select> 
-                     <span class="input-group-btn">
+                     <!-- <span class="input-group-btn">
                        <button class="btn btn-primary" type="submit" name="go">Submit!</button>
-                     </span>
+                     </span> -->
                  </div>
-            </form> 
+            <!-- </form>  -->
             </div>
             <div class="col-sm-2">
                         
             </div>
             <div class="col-sm-5"></div>
         </div>
-        <hr>
-        <div id="hideme">
-        <?php 
-        if (isset($_POST['go'])) {
-            $cust_id=mysqli_real_escape_string($db,$_POST['userid']);
-            $result = mysqli_query($db,"SELECT * FROM tbl_customers WHERE cus_id=$cust_id");
-            $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
-        ?>
+        
         <div class="row">
             <div class="col-sm-8">
                 <div class="input-group">
                     <span class="input-group-addon">SOLD to</span>
-                    <input type="hidden" id="custid" value="<?php echo $row['cus_id'];?>" name="c">
-                    <input type="text"  name="sold" class="form-control" value="<?php echo $row['full_name'];?>">
+                    <input type="hidden" id="custid" value="" name="c">
+                    <input type="text"  name="sold" class="form-control" value="" id="si_sold" required="">
                 </div>
             </div>
             <div class="col-sm-4">
@@ -246,18 +277,18 @@ include 'session.php';
             <div class="col-sm-8">
                 <div class="input-group">
                     <span class="input-group-addon">TIN/SC-TIN</span>
-                    <input type="text" name="tin" value="<?php echo $row['tin'];?>" class="form-control">
+                    <input type="text" name="tin" value="" class="form-control" id="si_tin">
                 </div>             
             </div>
             <div class="col-sm-4">
                 <div class="input-group">
             <?php
-            $max =   mysqli_query($db,"SELECT MAX(sales_no) as max_id FROM tbl_sales");     
+            $max = mysqli_query($db,"SELECT MAX(sales_no) as max_id FROM tbl_sales");     
             $rowss = mysqli_fetch_assoc($max); 
             $max_id=$rowss['max_id']+1;      
             ?>
                     <span class="input-group-addon">Sales Invoice No.</span>
-                    <input type="number" step="any"  name="sold" value='<?php echo sprintf("%04d",$max_id);?>' id="salesno" class="form-control">
+                    <input type="number" step="any"  name="sales_no" min="<?php echo $max_id; ?>" value="<?php echo sprintf("%04d",$max_id);?>" id="salesno" class="form-control" required="">
                 </div>
             </div>
         </div>
@@ -265,13 +296,13 @@ include 'session.php';
             <div class="col-sm-8">
                 <div class="input-group">
                     <span class="input-group-addon">Address</span>
-                    <input type="text" step="any" name="address" value="<?php echo $row['address'];?>" class="form-control">
+                    <input type="text" step="any" name="address" value="" id="si_add" class="form-control" required="">
                 </div>
             </div>                
             <div class="col-sm-4">
                 <div class="input-group">
                     <span class="input-group-addon">Terms</span>
-                    <input type="text" id="terms1" step="any" value="<?php echo $row['terms'];?>" name="terms" class="form-control">
+                    <input type="text" id="terms1" step="any" value="" name="terms" class="form-control" required="">
                 </div>
             </div>                
         </div>
@@ -279,13 +310,13 @@ include 'session.php';
             <div class="col-sm-8">
                 <div class="input-group">
                     <span class="input-group-addon">Business Style</span>
-                    <input type="text" step="any" value="<?php echo $row['bstyle'];?>" name="bstyle" class="form-control">
+                    <input type="text" step="any" value="" name="bstyle" id="si_bstyle" class="form-control">
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="input-group">
                     <span class="input-group-addon">OSCA/PWD ID No.</span>
-                    <input type="text" step="any" name="oidno" value="<?php echo $row['opidno'];?>" class="form-control">
+                    <input type="text" step="any" name="oidno" value="" id="si_osca" class="form-control">
                 </div>
             </div>                
         </div>
@@ -296,7 +327,7 @@ include 'session.php';
             <div class="col-sm-4">
                  <div class="input-group">
                     <span class="input-group-addon">Discount 1:</span>
-                    <input type="number" id="discount1" step="any" name="discount" value="<?php echo $row['discount1']?>" class="element form-control">
+                    <input type="number" id="discount1" step="any" name="discount" value="" class="element form-control">
                 </div>
             </div>
         </div>
@@ -307,7 +338,7 @@ include 'session.php';
             <div class="col-sm-4">
                 <div class="input-group">
                     <span class="input-group-addon">Discount 2:</span>
-                    <input type="number" id="discount2" step="any" name="discount" value="<?php echo $row['discount2']?>" class="element form-control">
+                    <input type="number" id="discount2" step="any" name="discount" value="" class="element form-control">
                 </div>
             </div>
         </div>
@@ -321,7 +352,7 @@ include 'session.php';
                         <div class="input-group">
                         <span class="input-group-addon">Choose Products:</span>
                          <select name="userid" class="form-control" id="cprod">
-				            <option>--Select Products Here--</option>
+				            <option value="0">--Select Products Here--</option>
                                   <?php
                                     $result =mysqli_query($db, "SELECT * FROM tbl_products WHERE status!='OUT OF STOCKS' ORDER BY name");
                                     while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
@@ -337,10 +368,10 @@ include 'session.php';
                         <input type="text" readonly="" class="form-control" placeholder="Boxes" id="boxes">
                     </div>
                     <div class="col-sm-2">
-                        <input type="number" class="form-control" id="qty" name="qty" placeholder="Quantity" required="">
+                        <input type="number" class="form-control" id="qty" name="qty" placeholder="Quantity">
                     </div>
                     <div class="col-sm-2">
-                         <button class="btn btn-default form-control" type="submit" name="addprod" id="addprod"><b class="fa fa-plus fa-bg">&nbsp;</b>Add</button>
+                         <button class="btn btn-default form-control" type="button" name="addprod" id="addprod"><b class="fa fa-plus fa-bg">&nbsp;</b>Add</button>
                     </div>
                 </div><!-- /.row -->
             </div><!-- /panel-heading -->
@@ -370,9 +401,8 @@ include 'session.php';
             </div>
         </div>
         <?php
-        }
+        // }
         ?>
-        </div>
         <div class="row">
             <div class="col-sm-3">
                 <div class="input-group">
@@ -415,8 +445,9 @@ include 'session.php';
                 
             </div>
             <div class="col-sm-3">
-                <button type="submit" id="save" class="btn btn-success form-control"><b class="fa fa-save fa-bg">&nbsp;</b>Save</button>
+                <button type="submit" name="save" class="btn btn-success form-control"><b class="fa fa-save fa-bg">&nbsp;</b>Save</button>
             </div>
+            </form>
             <!-- <form method="POST" action="print.php">
             <div class="col-sm-3">
                 <input type="hidden" name="sales_no" id="printed">
@@ -449,6 +480,25 @@ include 'session.php';
 
   </div>
 </div>            
+<div id="warning" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Notification</h4>
+      </div>
+      <div class="modal-body">
+        <strong id="text"></strong>
+      </div>
+      <div class="modal-footer">
+        
+      </div>
+    </div>
+
+  </div>
+</div>   
         </div><!-- /.row -->
         <!-- /.container-fluid -->
      </div>
@@ -466,6 +516,51 @@ include 'session.php';
         /*DatePicker*/
 
 $(document).ready(function() {
+    $("#sel_cust").change(function(event) {
+        var val = $("#sel_cust").val();
+        if (val==0) {
+            $("#custid").val('');
+            $("#si_sold").val('');
+            $("#si_bstyle").val('');
+            $("#si_add").val('');
+            $("#si_tin").val('');
+            $("#si_osca").val('');
+            $("#terms1").val('');
+        }else{
+            $.post('data.php', {cust_data: 'cust_data',si_cust_id: val}, function(data, textStatus, xhr) {
+                var obj = JSON.parse(data);
+                var cus_id = [];
+                var full_name = [];
+                var tin = [];
+                var terms = [];
+                var bstyle = [];
+                var address = [];
+                var discount1 = [];
+                var discount2 = [];
+                var osca = [];
+                for (var i = 0; i < obj.length; i++) {
+                    cus_id.push(obj[i].cus_id);
+                    full_name.push(obj[i].full_name);
+                    tin.push(obj[i].tin);
+                    terms.push(obj[i].terms);
+                    bstyle.push(obj[i].bstyle);
+                    address.push(obj[i].address);
+                    discount1.push(obj[i].discount1);
+                    discount2.push(obj[i].discount2);
+                    osca.push(obj[i].opidno);
+                }
+                $("#custid").val(cus_id);
+                $("#si_sold").val(full_name);
+                $("#si_bstyle").val(bstyle);
+                $("#si_add").val(address);
+                $("#si_tin").val(tin);
+                $("#si_osca").val(osca);
+                $("#terms1").val(terms);
+                parseFloat($("#discount1").val(discount1));
+                parseFloat($("#discount2").val(discount2));
+            });
+        }
+    });
     $("#editVAT").click(function(event) {
         if($("#vat").attr('disabled')){
             $("#vat").removeAttr('disabled')
@@ -508,10 +603,17 @@ $(document).ready(function() {
        var quantity = $("#qty").val();
        var salesno = $("#salesno").val();
        var custid = $("#custid").val();
-       $.post('addjax.php', {product: product, quantity: quantity, custid: custid, salesno: salesno},function (data,textStatus,xhr) {
-           calc();
-           viewData();
-       });       
+       var qty = $("#qty").val();
+       var boxes = $("#boxes").val();
+       if (qty>boxes) {
+            $("#warning").modal();
+            $("#text").text("There's not enough quantity.");
+       }else{
+           $.post('addjax.php', {product: product, quantity: quantity, custid: custid, salesno: salesno},function (data,textStatus,xhr) {
+               calc();
+               viewData();
+           });     
+       }
     });
     $(document).on('click', '#btn-delete', function(event) {
         var deleted = $(this).data('dids');
@@ -538,33 +640,14 @@ $(document).ready(function() {
             viewData();
         });
     });
-    $("#save").click(function(event) {
-       var sales_no = $("#salesno").val();
-       var cust_id = $("#custid").val();
-       var date = $("#dateToday").val();
-       var prepare = $("#preby").val();
-       var check = $("#checkby").val();
-       var vat = $("#vat").val();
-       var tad = $("#totalamountDUE").val();
-       var net = $("#net").val();
-       var tsales = $("#tsales").val();
-       var terms = $("#terms1").val();
-       var product = $("#cprod").val();
-       var quantity = $("#qty").val();
-       var dis1 = parseFloat($("#discount1").val());
-       var dis2 = parseFloat($("#discount2").val());
-       $.post('save.php', {save: 'ok',terms: terms,sales_no: sales_no, cust_id: cust_id, date: date, prepare: prepare, check: check, vat: vat, tad: tad, net: net, tsales: tsales, product: product, quantity: quantity,dis1: dis1,dis2: dis2}, function(data, textStatus, xhr) {
-           $("#hideme").slideUp('slow/400/fast', function() {
-                $(".result").html(data);    
-           });
-       });
-    });
     $("#cprod").change(function(event) {
-       if ($("#cprod").val()!='--Select Products Here--') {
+       if ($("#cprod").val()!=0) {
         var prodin = $("#cprod").val();
         $.post('addjax.php', {prodin: prodin}, function(data, textStatus, xhr) {
             $("#boxes").val(data);
         });
+       }else{
+            $("#boxes").val('');
        }
     });
   var date = new Date();
@@ -592,3 +675,4 @@ $(document).ready(function() {
 </script>
 </body>
 </html>
+

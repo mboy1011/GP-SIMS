@@ -212,7 +212,7 @@ if(isset($_POST['backup'])){
         $folder = 'Backup_Database/';
         if (!is_dir($folder))
         mkdir($folder, 0777, true);
-        chmod($folder, 0777);
+        // chmod($folder, 0777);
         $date = date('m-d-Y'); 
         $filename = $folder."db_backup_".$date; 
         $handle = fopen($filename.'.sql','w+');
