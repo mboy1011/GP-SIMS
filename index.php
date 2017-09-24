@@ -22,11 +22,7 @@
       
     </div>
     <div class="col-sm-4">
-      <div>
-        <p class="com">GOLDEN PHARMACEUTICAL</p>
-        <p class="sys">Sales and Inventory Management System</p>
-      </div>  
-      <hr>
+        <img src="img/bg.png" style="height: 150px;width: 430px;" alt="">       
     </div>
     <div class="col-sm-4">
       

@@ -251,8 +251,6 @@ $oop = new CRUD();
                             <th>CREDIT</th> 
                             <th>Balance</th>
                             <th>Status</th> 
-                            <th>Edit</th> 
-                            <th>Delete</th>
                         </tr>
                     </thead>
                     <?php
@@ -293,12 +291,6 @@ $oop = new CRUD();
                                 <?php
                               }
                              ?>
-                            </td>
-                            <td>
-                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
-                            </td>      
-                            <td>
-                                <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['id']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
                             </td> 
                           </tr>
                       <?php 
@@ -316,8 +308,6 @@ $oop = new CRUD();
                         <th></th> 
                         <th></th> 
                         <th></th> 
-                        <th></th> 
-                        <th></th>
                     </tfoot>
                 </table>               
             </div>
@@ -345,7 +335,6 @@ $oop = new CRUD();
 <script type="text/javascript" src="../js/buttons.bootstrap.min.js"></script>
 <script type="text/javascript" src="../js/buttons.flash.min.js"></script>
 <script type="text/javascript" src="../js/jszip.min.js"></script>
-<script type="text/javascript" src="../js/pdfmake.min.js"></script>
 <script type="text/javascript" src="../js/vfs_fonts.js"></script>
 <script type="text/javascript" src="../js/buttons.html5.min.js"></script>
 <script type="text/javascript" src="../js/buttons.print.min.js"></script>
@@ -381,10 +370,10 @@ $(document).ready(function(){
             $(api.column(2).footer()).html(
                 'Date To: '+max
             );
-            $( api.column( 7 ).footer() ).html(
+            $( api.column( 6 ).footer() ).html(
                 'Accounts Receivable:'
             );    
-            $( api.column( 8 ).footer() ).html(
+            $( api.column( 7 ).footer() ).html(
                 '₱'+pageTotal2.toFixed(2)
             );      
         },
@@ -415,19 +404,17 @@ $(document).ready(function(){
             },{
               "extend":'excelHtml5', "text":'<span class="fa fa-file-excel-o fa-lg">&nbsp;</span>Excel',"className": 'btn btn-primary btn-xs',footer: true, 
               exportOptions: {
-                    columns: ':visible'
+                    // columns: ':visible',
+                    columns: [ 0, 1,2,3,4,5,6,7,8,9],
                 }
             },{
-              "extend":'pdfHtml5', "text":'<span class="fa fa-file-pdf-o fa-lg">&nbsp;</span>PDF',"className": 'btn btn-primary btn-xs',footer: true, 
+              "extend":'print', "text":"<span class='fa fa-print fa-lg'>&nbsp;</span>Print",title:'',"className": 'btn btn-primary btn-xs',footer: true,autoPrint:true, 
               exportOptions: {
-                                  columns: ':visible'
-                              }                    
-            },{
-              "extend":'print', "text":'<span class="fa fa-print fa-lg">&nbsp;</span>Print',"className": 'btn btn-primary btn-xs',footer: true, 
-              exportOptions: {
-                    columns: ':visible'
+                    // columns: ':visible',
+                    columns: [ 0, 1,2,3,4,5,6,7,8,9],
+                    stripHtml: true
                 },
-                message:"<b style='font-size:20px;'>Statement of Accounts</b> <br>"+"Printed By: "+user
+                message:"<img src='../img/bg.png' style='height:100px;width:400px;'>"+"<br><b style='font-size:20px;'>Statement of Accounts</b> <br>"+"Printed By: "+user
             }
         ]
     });
