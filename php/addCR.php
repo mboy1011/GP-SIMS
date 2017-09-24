@@ -270,7 +270,7 @@ $oop = new CRUD();
                     </div>
                     <div class="col-sm-3">
                         <input type="hidden" step="any" class="form-control" name="tad" id="tad" placeholder="Total Amount Due" >
-                        <input type="number" step="any" class="form-control" id="amt" name="amt" placeholder="Amount" required="">
+                        <input type="number" step="any" class="form-control" id="amt" min="0" name="amt" placeholder="Amount" required="">
                     </div>
                     <div class="col-sm-4">
                          <button class="btn btn-default form-control" type="button" id="add" name="addprod" id="addprod"><b class="fa fa-plus fa-bg">&nbsp;</b>Add</button>
@@ -356,13 +356,13 @@ $oop = new CRUD();
       if (c!='-- Select Customer Here --') {
         $.post('addjax.php', {cust: c}, function(data, textStatus, xhr) {
           $("#sales_no option").remove();
-          $("#sales_no").append("<option value='--Select Sales Invoice--'>--Select Sales Invoice--</option>");
+          $("#sales_no").append("<option value='0'>--Select Sales Invoice--</option>");
           $("#sales_no").append(data);
         });
       }else{
         $("#sales_no option").remove();
-        $("#amt").val(0);
-        $("#tad").val(0);
+        $("#amt").val('');
+        $("#tad").val('');
       }
     });
     $("#sales_no").change(function(event) {
@@ -374,8 +374,8 @@ $oop = new CRUD();
           $("#tad").val(data);
         });
       }else{
-          $("#amt").val(0);
-          $("#tad").val(0);
+          $("#amt").val('');
+          $("#tad").val('');
       }
     });
     $("#pay").change(function(event) {
@@ -402,6 +402,12 @@ $oop = new CRUD();
       }else{
         if (am>tad) {
           $("#texthere").text("The Amount Value is more than the Total Amount Due, Try Again!");
+          $("#myModal").modal();
+        }else if(am==0||am<0||am==null){
+          $("#texthere").text("Please input a right amount, Try Again!");
+          $("#myModal").modal();
+        }else if(si==null||si==0){
+          $("#texthere").text("Select Sales Invoice No., Try Again!");
           $("#myModal").modal();
         }else{
           $.post('addjax', {cr_si: si,cr_no: total, amount: am}, function(data, textStatus, xhr) {
