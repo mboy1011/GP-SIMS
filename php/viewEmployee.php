@@ -238,7 +238,7 @@ $oop = new CRUD();
                     </thead>
                     <?php
                       $i=1;
-                      $result = mysqli_query($db, "SELECT * FROM tbl_employee") or die(mysql_error());
+                      $result = mysqli_query($db, "SELECT * FROM tbl_employee WHERE emp_id!=0") or die(mysql_error());
                     ?>
                     <tbody>
                       <?php while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){?>

@@ -140,11 +140,7 @@ require 'session.php';
                 if ($user_type=='admin') {
                 ?>
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-5"><i class="fa fa-fw fa-user"></i> Users <i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-5" class="collapse">
-                        <li><a href="addUser"><i class="fa fa-user-plus">&nbsp;</i>Add</a></li>
-                        <li><a href="viewUser"><i class="fa fa-users">&nbsp;</i>View</a></li>
-                    </ul>
+                    <a href="viewUser" ><i class="fa fa-fw fa-user">&nbsp;</i> Users</a>
                 </li>
                 <li>
                     <a href="settings"><i class="fa fa-fw fa-cogs">&nbsp;</i>Settings</a>

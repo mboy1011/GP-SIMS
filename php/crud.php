@@ -169,10 +169,11 @@ class CRUD
 			return true;
 		}
 	}
-	public function upUser($id,$ui,$pa)
+	public function upUser($id,$ui,$pa,$ut)
 	{
 		require 'config.php';
-		$sql = mysqli_query($db,"UPDATE tbl_useraccounts SET lname='$ui', password='$pa' WHERE uid='$id'");
+		$p = password_hash($pa,PASSWORD_BCRYPT);
+		$sql = mysqli_query($db,"UPDATE tbl_useraccounts SET username='$ui', password='$p',usertype='$ut' WHERE uid='$id'");
 		if (!$sql) {
 			return false;
 		}else{

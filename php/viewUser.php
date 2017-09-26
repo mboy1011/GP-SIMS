@@ -179,8 +179,9 @@ $oop = new CRUD();
     if (isset($_POST['update'])) {
         $id = mysqli_real_escape_string($db,$_POST['id']);
         $ui = mysqli_real_escape_string($db,$_POST['userid']);
+        $ut = mysqli_real_escape_string($db,$_POST['usertype']);
         $pa = mysqli_real_escape_string($db,$_POST['pass']);
-        $sql = $oop->upUser($id,$ui,$pa);
+        $sql = $oop->upUser($id,$ui,$pa,$ut);
         if (!$sql) {          
 ?>
               <div class="alert alert-warning alert-dismissable">
@@ -196,8 +197,7 @@ $oop = new CRUD();
               </div>
 <?php
         }
-    }
-    if (isset($_POST['delete'])) {
+    }else if (isset($_POST['delete'])) {
         $delid = mysqli_real_escape_string($db,$_POST['delid']);
         $sql = $oop->delUser($delid);
         if (!$sql) {          
@@ -215,8 +215,61 @@ $oop = new CRUD();
               </div>
 <?php
         }        
+    }else if(isset($_POST['add_user'])) {
+        $id = mysqli_real_escape_string($db,$_POST['userid']);
+        $user = mysqli_real_escape_string($db,$_POST['username']);
+        $type = mysqli_real_escape_string($db,$_POST['usertype']);
+        $pass = mysqli_real_escape_string($db,$_POST['password']);
+        $pass1 = mysqli_real_escape_string($db,$_POST['password1']);
+        $length = strlen($pass) >= 8;
+        if(!$length){
+            ?>
+                  <div class="alert alert-danger alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>At Least 8 size of password!</strong> Try Again.
+                  </div>
+            <?php
+        }else{
+            if($pass!=$pass1){
+            ?>
+                  <div class="alert alert-danger alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Password Does Not Match!</strong> Try Again.
+                  </div>
+            <?php
+            }else{
+                $sql=$oop->insertUser($id,$user,$pass,$type);
+                if(!$sql){
+                   ?>
+                      <div class="alert alert-warning alert-dismissable">
+                      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Already Registered!</strong> Try Again.
+                      </div>
+                  <?php
+                }else{
+                    ?>
+                      <div class="alert alert-success alert-dismissable">
+                      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Successfully Registered!</strong>
+                      </div>
+                  <?php
+                }     
+            } 
+        }
     }
 ?>          
+            <div class="row">
+                <div class="col-sm-5">
+                    
+                </div>
+                <div class="col-sm-5">
+                    
+                </div>
+                <div class="col-sm-2">
+                    <button class="btn btn-primary form-control" data-toggle="modal" data-target="#adduser"><i class="fa fa-plus">&nbsp;</i>Add User</button>
+                </div>
+            </div>
+            <br>
             <div class="table-responsive">
                 <table class="table table-striped table-bordered nowrap" width="100%" id="datatables">
                     <thead class="thead-inverse">
@@ -233,7 +286,7 @@ $oop = new CRUD();
                     </thead>
                     <?php
                       $i = 1;
-                      $result = mysqli_query($db, "SELECT * FROM tbl_useraccounts INNER JOIN tbl_employee ON tbl_employee.emp_id=tbl_useraccounts.emp_id") or die(mysql_error());
+                      $result = mysqli_query($db, "SELECT * FROM tbl_useraccounts INNER JOIN tbl_employee ON tbl_employee.emp_id=tbl_useraccounts.emp_id WHERE tbl_useraccounts.uid!=0") or die(mysql_error());
                     ?>
                     <tbody>
                       <?php while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){?>
@@ -241,11 +294,11 @@ $oop = new CRUD();
                             <td><?php echo $i++;?></td>
                             <td><?php echo $row['fname']." ".$row['lname']; ?></td>
                             <td><?php echo $row['username']; ?></td>
-                            <td><?php echo $row['password']; ?></td>            
+                            <td><input type="password" value="<?php echo $row['password']; ?>" disabled></td>            
                             <td><?php echo $row['usertype']; ?></td>
                             <td><?php echo $row['timestamp']; ?></td>    
                             <td>
-                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit" data-id="<?php echo $row['uid']; ?>"  data-us="<?php echo $row['lname']; ?>" data-pa="<?php echo $row['password']; ?>"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
+                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit" data-id="<?php echo $row['uid']; ?>"  data-us="<?php echo $row['username']; ?>" data-pa="" data-utype="<?php echo $row['usertype'] ?>"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
                             </td>      
                             <td>
                                 <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['uid']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
@@ -278,7 +331,11 @@ $oop = new CRUD();
                     }
                   ?>
                 </select>   
-                <input type="text" name="pass" id="pa" class="form-control">            
+                <select name="usertype" id="ut" class="form-control">
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <input type="password" name="pass" id="pa" class="form-control" placeholder="Password">            
       </div>
       <div class="modal-footer">
         <button class="btn btn-warning" type="submit" name="update"><b class="fa fa-pencil-square-o fa-bg">&nbsp;</b>Update</button>
@@ -311,7 +368,46 @@ $oop = new CRUD();
     </div>
 
   </div>
-</div>          
+</div>      
+<!-- Add User -->
+<div id="adduser" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Add User Account</h4>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="" class="form-horizontal">
+            <select name="userid" class="form-control">
+              <?php
+                $result =mysqli_query($db, "SELECT * FROM tbl_employee WHERE emp_id!=0");
+                while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
+                  echo"<option value='$row[emp_id]'>";
+                  echo $row['fname']." ".$row['lname'];
+                  echo"</option>";
+                }
+              ?>
+            </select> 
+            <input type="username" name="username" class="form-control" required="" placeholder="Username">
+            <select name="usertype" class="form-control">
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+            </select>
+            <input type="password" name="password" placeholder="Password" class="form-control" required="" size="8">
+            <input type="password" name="password1" placeholder="Retype Password" class="form-control" required="" size="8">
+      </div>
+      <div class="modal-footer">
+            <button class="btn btn-primary" type="submit" name="add_user"><b class="fa fa-plus fa-bg">&nbsp;</b>Add User</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>      
         </div>
             <!-- /.row -->
         <!-- /.container-fluid -->
@@ -344,9 +440,11 @@ $(document).ready(function(){
         var id = $(this).data("id");
         var us = $(this).data("us");
         var pa = $(this).data("pa");
+        var ut = $(this).data("utype");
         $("#us").val(us);
         $("#pa").val(pa);
         $("#id").val(id);
+        $("#ut").val(ut);
     });
     $('.btn-deletes').click(function(event) {
        var did = $(this).data("did");
