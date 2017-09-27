@@ -298,7 +298,7 @@ $oop = new CRUD();
                             <td><?php echo $row['usertype']; ?></td>
                             <td><?php echo $row['timestamp']; ?></td>    
                             <td>
-                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit" data-id="<?php echo $row['emp_id']; ?>"  data-us="<?php echo $row['username']; ?>" data-pa="" data-utype="<?php echo $row['usertype'] ?>"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
+                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit" data-id="<?php echo $row['uid']; ?>"  data-us="<?php echo $row['username']; ?>" data-pa="" data-utype="<?php echo $row['usertype'] ?>"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
                             </td>      
                             <td>
                                 <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['uid']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
@@ -320,13 +320,13 @@ $oop = new CRUD();
       </div>
       <div class="modal-body">
         <form method="POST" action="">
-                <input type="hidden" name="id" id="id" class="form-control">  
-                <input type="text" name="userid" class="form-control" readonly="" id="us"> 
+                <input type="number" name="id" id="id" class="form-control" hidden="">  
+                <input type="text" name="userid" class="form-control" id="us"> 
                 <select name="usertype" id="ut" class="form-control">
                     <option value="user">User</option>
                     <option value="admin">Admin</option>
                 </select>
-                <input type="password" name="pass" id="pa" class="form-control" placeholder="Password">            
+                <input type="password" name="pass" id="pa" class="form-control" placeholder="Password">
       </div>
       <div class="modal-footer">
         <button class="btn btn-warning" type="submit" name="update"><b class="fa fa-pencil-square-o fa-bg">&nbsp;</b>Update</button>
