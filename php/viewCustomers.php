@@ -235,7 +235,7 @@ if(isset($_POST['importSubmit'])){
                 <button type="button" id="import" class="btn btn-default form-control"><b class="fa fa-upload">&nbsp;</b>Import CSV</button>
             </div>
             <div class="col-sm-8"></div>
-            <div class="col-sm-2"><button class="btn btn-primary form-control"><i class="fa fa-user-plus">&nbsp;</i>Add Customer</button></div>
+            <div class="col-sm-2"><button class="btn btn-primary form-control" data-toggle="modal" data-target="#addcust"><i class="fa fa-user-plus">&nbsp;</i>Add Customer</button></div>
         </div>
         <div class="row">
             <div class="col-sm-4">
@@ -274,10 +274,7 @@ if(isset($_POST['importSubmit'])){
                       </div>
                   <?php
                 }
-            }
-            ?>
-            <?php
-            if (isset($_POST['delete'])) {
+            }elseif (isset($_POST['delete'])) {
                 $id = mysqli_real_escape_string($db,$_POST['delid']);
                 $sql = $oop->deleteCust($id);
                 if(!$sql){
@@ -292,6 +289,31 @@ if(isset($_POST['importSubmit'])){
                       <div class="alert alert-success alert-dismissable">
                           <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                         <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Deleted!</strong>
+                      </div>
+                  <?php
+                }
+            }elseif (isset($_POST['addCust'])) {
+                $fn = mysqli_real_escape_string($db,$_POST['name']);
+                $tin = mysqli_real_escape_string($db,$_POST['tin']);
+                $add = mysqli_real_escape_string($db,$_POST['add']);
+                $bstyle = mysqli_real_escape_string($db,$_POST['bstyle']);
+                $terms = mysqli_real_escape_string($db,$_POST['terms']);
+                $opidno = mysqli_real_escape_string($db,$_POST['opidno']);
+                $d1 = mysqli_real_escape_string($db,$_POST['dis1']);
+                $d2 = mysqli_real_escape_string($db,$_POST['dis2']);
+                $sql=$oop->insertCust($fn,$add,$tin,$bstyle,$terms,$opidno,$d1,$d2);
+                if(!$sql){
+                   ?>
+                        <div class="alert alert-warning alert-dismissable">
+                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                          <strong>Already Registered!</strong>Try Again.
+                        </div>
+                  <?php
+                }else{
+                    ?>
+                      <div class="alert alert-success alert-dismissable">
+                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Successfully Registered!</strong>
                       </div>
                   <?php
                 }
@@ -372,26 +394,50 @@ if(isset($_POST['importSubmit'])){
 </div>
 <div id="delete" class="modal fade" role="dialog">
   <div class="modal-dialog">
-
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Delete Customer</h4>
       </div>
+      <form method="POST" action="">
       <div class="modal-body">
-        <form method="POST" action="">
                 <input type="hidden" name="delid" id="delid">
-                <b><strong>Are you sure do you want to delete this customer?</strong></b>
-            
+                <b><strong>Are you sure do you want to delete this customer?</strong></b>       
       </div>
       <div class="modal-footer">
             <button class="btn btn-danger" type="submit" name="delete"><b class="fa fa-trash fa-bg">&nbsp;</b>Delete</button>
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        </form>
       </div>
+      </form>
     </div>
-
+  </div>
+</div>
+<div id="addcust" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Add Customer</h4>
+      </div>
+      <form method="POST" action="">
+      <div class="modal-body">
+            <input type="text" name="name" placeholder="Customers Name" class="form-control" required="">
+            <input type="number" name="tin" placeholder="TIN/SC-TIN" class="form-control">
+            <input type="text" name="add" placeholder="Address" class="form-control" required="">
+            <input type="text" name="bstyle" placeholder="Business Style" class="form-control">
+            <input type="text" name="terms" placeholder="Terms" class="form-control" required="">
+            <input type="text" name="opidno" placeholder="OSCA/PWD ID No." class="form-control">
+            <input type="number" step="any" name="dis1" placeholder="Discount 1 (%)" class="form-control" value="">
+            <input type="number" step="any" name="dis2" placeholder="Discount 2 (%)" class="form-control" value="">
+      </div>
+      <div class="modal-footer">
+            <button class="btn btn-primary" type="submit" name="addCust">Add</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+      </form>
+    </div>
   </div>
 </div>
             <!-- /.row -->
