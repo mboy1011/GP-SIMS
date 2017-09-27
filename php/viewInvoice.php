@@ -69,7 +69,7 @@ $oop = new CRUD();
                     <a href="index"><i class="fa fa-fw fa-tachometer">&nbsp;</i>Dashboard</a>
             </li>
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fa fa-fw fa-user-md"></b><?php echo $name;?><b class="fa fa-angle-down"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fa fa-fw fa-user-md"></b><input type="hidden" id="user" value="<?php echo $name;?>"><?php echo $name;?><b class="fa fa-angle-down"></b></a>
                 <ul class="dropdown-menu">
                     <li><a href="#"><i class="fa fa-fw fa-user"></i> Edit Profile</a></li>
                     <li class="divider"></li>

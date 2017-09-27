@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 16, 2017 at 01:11 PM
+-- Generation Time: Sep 27, 2017 at 09:40 AM
 -- Server version: 5.6.36
 -- PHP Version: 7.0.16
 
@@ -142,14 +142,16 @@ CREATE TABLE IF NOT EXISTS `tbl_employee` (
   `mname` varchar(45) DEFAULT NULL,
   `position` varchar(45) DEFAULT NULL,
   `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tbl_employee`
 --
 
 INSERT INTO `tbl_employee` (`emp_id`, `lname`, `fname`, `mname`, `position`, `timestamp`) VALUES
+(0, 'Admin', '', NULL, NULL, '2017-09-26 13:01:00'),
 (18, 'Bacus', 'Jellie Rose', 'Quta', 'Staff', '2017-07-10 05:25:02'),
+(19, 'Barro', 'Lyjieme', 'Tomaquin', 'Member', '2017-09-27 08:17:30'),
 (17, 'Barro Jr.', 'Napoleon', 'Cominguez', 'Staff', '2017-06-06 14:29:19'),
 (16, 'Omelda', 'Dario', 'Q.', 'Manager', '2017-05-30 08:40:23');
 
@@ -367,7 +369,7 @@ CREATE TABLE IF NOT EXISTS `tbl_sales` (
   `amount_net` float(11,2) DEFAULT NULL,
   `discount1` float(11,2) NOT NULL,
   `discount2` float(11,2) NOT NULL,
-  `status` varchar(45) NOT NULL,
+  `status` varchar(45) NOT NULL DEFAULT 'UNPAID',
   `due_date` date NOT NULL,
   `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -395,12 +397,14 @@ CREATE TABLE IF NOT EXISTS `tbl_salesdetails` (
 --
 CREATE TABLE IF NOT EXISTS `tbl_SOA` (
 `sales_no` int(11)
+,`cus_id` int(11)
 ,`dates` varchar(10)
 ,`due_date` date
 ,`terms` varchar(45)
 ,`total` float(11,2)
 ,`DEBIT` double(19,2)
 ,`CREDIT` double
+,`status` varchar(45)
 ,`BALANCE` varchar(63)
 );
 
@@ -425,7 +429,7 @@ CREATE TABLE IF NOT EXISTS `tbl_supplier` (
   `sup_name` varchar(45) DEFAULT NULL,
   `sup_address` varchar(45) DEFAULT NULL,
   `sup_compName` varchar(45) DEFAULT NULL,
-  `sup_telNo` int(13) DEFAULT NULL,
+  `sup_telNo` varchar(13) DEFAULT NULL,
   `sup_email` varchar(45) DEFAULT NULL,
   `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -443,15 +447,16 @@ CREATE TABLE IF NOT EXISTS `tbl_useraccounts` (
   `usertype` varchar(10) NOT NULL,
   `password` varchar(255) DEFAULT NULL,
   `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tbl_useraccounts`
 --
 
 INSERT INTO `tbl_useraccounts` (`uid`, `emp_id`, `username`, `usertype`, `password`, `timestamp`) VALUES
+(0, 0, 'root', 'admin', '$2y$10$CtRjar6CkH0rRBYi3qndm.qtSUYQOglnrYMd7Bjm7dE3ZuVHVfsRO', '2017-09-26 12:59:21'),
 (1, 16, 'admin', 'admin', '$2y$10$REQwAUbSjQKTtPNGpc.IZO0hW2UsbFGDh.03VkknzRsX7asMA7c1e', '2017-09-15 09:55:21'),
-(2, 18, 'user', 'user', '$2y$10$Wm1cfzWoTikAYOSd.oKu1.1TWJJhag9Qx3VeN7x8E8yLpoKoGLZZi', '2017-09-15 10:20:33');
+(5, 19, 'mboy', 'user', '$2y$10$qKm0ZY/KMd/WWlvf/f8eyeriH/dAjnhu68kh53oC4qiDbwwC9wkZS', '2017-09-27 08:24:20');
 
 -- --------------------------------------------------------
 
@@ -462,6 +467,13 @@ INSERT INTO `tbl_useraccounts` (`uid`, `emp_id`, `username`, `usertype`, `passwo
 CREATE TABLE IF NOT EXISTS `tbl_year` (
   `year` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tbl_year`
+--
+
+INSERT INTO `tbl_year` (`year`) VALUES
+(2017);
 
 -- --------------------------------------------------------
 
@@ -551,7 +563,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `tbl_SOA`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tbl_SOA` AS select `tbl_sales`.`sales_no` AS `sales_no`,date_format(`tbl_sales`.`dates`,'%m-%d-%Y') AS `dates`,`tbl_sales`.`due_date` AS `due_date`,`tbl_customers`.`terms` AS `terms`,`tbl_sales`.`total_amount` AS `total`,(select ifnull(sum(`tbl_CM`.`cm_totalAmount`),0) from `tbl_CM` where (`tbl_CM`.`sales_no` = `tbl_sales`.`sales_no`)) AS `DEBIT`,(select ifnull(sum(`tbl_CRdetails`.`amount`),0) from `tbl_CRdetails` where (`tbl_CRdetails`.`sales_no` = `tbl_sales`.`sales_no`)) AS `CREDIT`,format(((`tbl_sales`.`total_amount` - (select ifnull(sum(`tbl_CM`.`cm_totalAmount`),0) from `tbl_CM` where (`tbl_CM`.`sales_no` = `tbl_sales`.`sales_no`))) - (select ifnull(sum(`tbl_CRdetails`.`amount`),0) from `tbl_CRdetails` where (`tbl_CRdetails`.`sales_no` = `tbl_sales`.`sales_no`))),2) AS `BALANCE` from (`tbl_sales` join `tbl_customers` on((`tbl_customers`.`cus_id` = `tbl_sales`.`cus_id`)));
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tbl_SOA` AS select `tbl_sales`.`sales_no` AS `sales_no`,`tbl_sales`.`cus_id` AS `cus_id`,date_format(`tbl_sales`.`dates`,'%m-%d-%Y') AS `dates`,`tbl_sales`.`due_date` AS `due_date`,`tbl_customers`.`terms` AS `terms`,`tbl_sales`.`total_amount` AS `total`,(select ifnull(sum(`tbl_CM`.`cm_totalAmount`),0) from `tbl_CM` where (`tbl_CM`.`sales_no` = `tbl_sales`.`sales_no`)) AS `DEBIT`,(select ifnull(sum(`tbl_CRdetails`.`amount`),0) from `tbl_CRdetails` where (`tbl_CRdetails`.`sales_no` = `tbl_sales`.`sales_no`)) AS `CREDIT`,`tbl_sales`.`status` AS `status`,format(((`tbl_sales`.`total_amount` - (select ifnull(sum(`tbl_CM`.`cm_totalAmount`),0) from `tbl_CM` where (`tbl_CM`.`sales_no` = `tbl_sales`.`sales_no`))) - (select ifnull(sum(`tbl_CRdetails`.`amount`),0) from `tbl_CRdetails` where (`tbl_CRdetails`.`sales_no` = `tbl_sales`.`sales_no`))),2) AS `BALANCE` from (`tbl_sales` join `tbl_customers` on((`tbl_customers`.`cus_id` = `tbl_sales`.`cus_id`)));
 
 -- --------------------------------------------------------
 
@@ -715,7 +727,7 @@ ALTER TABLE `tbl_customers`
 -- AUTO_INCREMENT for table `tbl_employee`
 --
 ALTER TABLE `tbl_employee`
-  MODIFY `emp_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=19;
+  MODIFY `emp_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=20;
 --
 -- AUTO_INCREMENT for table `tbl_expenses`
 --
@@ -755,7 +767,7 @@ ALTER TABLE `tbl_supplier`
 -- AUTO_INCREMENT for table `tbl_useraccounts`
 --
 ALTER TABLE `tbl_useraccounts`
-  MODIFY `uid` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+  MODIFY `uid` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
 -- Constraints for dumped tables
 --
