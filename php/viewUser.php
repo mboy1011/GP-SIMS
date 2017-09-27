@@ -266,7 +266,7 @@ $oop = new CRUD();
                     
                 </div>
                 <div class="col-sm-2">
-                    <button class="btn btn-primary form-control" data-toggle="modal" data-target="#adduser"><i class="fa fa-plus">&nbsp;</i>Add User</button>
+                    <button class="btn btn-primary form-control" data-toggle="modal" data-target="#adduser"><i class="fa fa-user-plus">&nbsp;</i>Add User</button>
                 </div>
             </div>
             <br>

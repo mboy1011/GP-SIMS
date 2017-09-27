@@ -234,6 +234,8 @@ if(isset($_POST['importSubmit'])){
             <div class="col-sm-2">
                 <button type="button" id="import" class="btn btn-default form-control"><b class="fa fa-upload">&nbsp;</b>Import CSV</button>
             </div>
+            <div class="col-sm-8"></div>
+            <div class="col-sm-2"><button class="btn btn-primary form-control"><i class="fa fa-user-plus">&nbsp;</i>Add Customer</button></div>
         </div>
         <div class="row">
             <div class="col-sm-4">

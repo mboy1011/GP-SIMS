@@ -179,7 +179,7 @@ $oop = new CRUD();
         <div class="row">
             <div class="col-sm-5"></div>
             <div class="col-sm-5"></div>
-            <div class="col-sm-2"><button class="btn btn-primary form-control" data-toggle="modal"  data-target="#addemp"><i class="fa fa-plus">&nbsp;</i>Add Employee</button></div>
+            <div class="col-sm-2"><button class="btn btn-primary form-control" data-toggle="modal"  data-target="#addemp"><i class="fa fa-user-plus">&nbsp;</i>Add Employee</button></div>
         </div>
         <div class="row">
           <div class="col-sm-12">
