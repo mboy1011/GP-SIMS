@@ -394,5 +394,15 @@ class CRUD
             }
         }
 	}
+	public function upSup($id,$nm,$tel,$ad)
+	{
+		require 'config.php';
+		$sql = mysqli_query($db,"UPDATE tbl_supplier SET sup_name='$nm', sup_address='$ad', sup_telNo='$tel' WHERE sup_id='$id'");
+		if (!$sql) {
+			return false;
+		}else{
+			return true;
+		}
+	}
 }
 ?>

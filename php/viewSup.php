@@ -177,7 +177,64 @@ $oop = new CRUD();
             </div>
         </div> 
         <div class="row">
+            <div class="col-sm-5"></div>
+            <div class="col-sm-5"></div>
+            <div class="col-sm-2"><button class="btn btn-primary form-control" data-toggle="modal"  data-target="#addsup"><i class="fa fa-plus">&nbsp;</i>Add Supplier</button></div>
+        </div>
+        <div class="row">
           <div class="col-sm-12">
+          <?php 
+          if (isset($_POST['update'])) {
+              $id = mysqli_real_escape_string($db,$_POST['sup_id']);
+              $nm = mysqli_real_escape_string($db,$_POST['sup_name']);
+              $tel = mysqli_real_escape_string($db,$_POST['sup_tel']);
+              $ad = mysqli_real_escape_string($db,$_POST['sup_add']);
+              $sql = $oop->upSup($id,$nm,$tel,$ad);
+              if (!$sql) {
+                  ?>
+                      <div class="alert alert-danger alert-dismissable">
+                      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Failed to Update!</strong> Try Again.
+                      </div>
+                  <?php
+              }else{
+                    ?>
+                      <div class="alert alert-success alert-dismissable">
+                      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Successfully Updated!</strong>
+                      </div>
+                  <?php
+              }
+          }else if (isset($_POST['delete'])) {
+              $id = mysqli_real_escape_string($db,$_POST['sup_did']);
+              $sql = $oop->delSup($id);
+              if (!$sql) {
+                  
+              }else{
+
+              }
+          }else if(isset($_POST['addSup'])){
+                    $nm = mysqli_real_escape_string($db,$_POST['name']);
+                    $ad = mysqli_real_escape_string($db,$_POST['address']);
+                    $co = mysqli_real_escape_string($db,$_POST['contact']);
+                    $sql=$oop->insertSup($nm,$ad,$co);
+                    if(!$sql){
+                       ?>
+                          <div class="alert alert-warning alert-dismissable">
+                              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>Already Added!</strong> Try Again.
+                          </div>
+                      <?php
+                    }else{
+                        ?>
+                          <div class="alert alert-success alert-dismissable">
+                              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>Successfully Added!</strong>
+                          </div>
+                      <?php
+                    }
+          }
+          ?>            
             <div class="table-responsive">
                 <table class="table table-striped table-bordered nowrap" width="100%" id="datatables">
                     <thead class="thead-inverse">
@@ -202,10 +259,10 @@ $oop = new CRUD();
                             <td><?php echo $row['sup_address']; ?></td>
                             <td><?php echo $row['sup_telNo'];?></td>
                             <td>
-                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
+                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit"  data-toggle="modal" data-target="#edit" data-id="<?php echo $row['sup_id'] ?>" data-nm="<?php echo $row['sup_name']; ?>" data-ad="<?php echo $row['sup_address'] ?>" data-tel="<?php echo $row['sup_telNo']; ?>"><span class="glyphicon glyphicon-pencil"></span></button></b> 
                             </td>      
                             <td>
-                                <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['id']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
+                                <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['sup_id']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
                             </td> 
                           </tr>
                       <?php } ?>
@@ -222,16 +279,21 @@ $oop = new CRUD();
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Edit Inventory Out</h4>
+        <h4 class="modal-title">Edit Supplier Info</h4>
       </div>
+      <form method="POST" action="">
       <div class="modal-body">
-
+        <input type="number" name="sup_id" id="sup_id" hidden="">
+        <input type="text" name="sup_name" class="form-control" id="sup_nm">
+        <input type="text" name="sup_add" class="form-control" id="sup_ad">
+        <input type="number" step="any" name="sup_tel" class="form-control" id="sup_tel">
       </div>
       <div class="modal-footer">
-
+        <button class="btn btn-warning" type="submit" name="update">Update</button>
+        <button class="btn btn-default" type="button" data-dismiss="modal">Cancel</button>
       </div>
+      </form>
     </div>
-
   </div>
 </div>  
 <!-- Delete -->
@@ -249,6 +311,39 @@ $oop = new CRUD();
       <div class="modal-footer">
          
       </div>
+    </div>
+
+  </div>
+</div>
+<!-- AddSup -->
+<div id="addsup" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Add New Supplier</h4>
+      </div>
+      <form method="POST" action="">
+      <div class="modal-body">
+          <div class="input-group">
+            <span class="input-group-addon">Name:</span>
+            <input type="text" class="form-control" name="name" placeholder="Supplier's Name">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon">Address:</span>
+            <input type="text" class="form-control" name="address" placeholder="Supplier's Address">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon">Contact No.:</span>
+            <input type="number" class="form-control" max="99999999999" name="contact" placeholder="Ex. 09123456789">
+          </div>
+      </div>
+      <div class="modal-footer">
+         <button type="submit" name="addSup" class="btn btn-primary">Add</button>
+         <button class="btn btn-default" type="button" data-dismiss="modal">Cancel</button>
+      </div>
+      </form>
     </div>
 
   </div>
@@ -303,7 +398,14 @@ $(document).ready(function(){
         ]
     });
     $('.btn-edits').click(function(event) {
-        
+        var id = $(this).data('id');
+        var nm = $(this).data('nm');
+        var ad = $(this).data('ad');
+        var tel = $(this).data('tel');
+        $("#sup_id").val(id);
+        $("#sup_nm").val(nm);
+        $("#sup_ad").val(ad);
+        $("#sup_tel").val(tel);
     });
     $('.btn-deletes').click(function(event) {
        
