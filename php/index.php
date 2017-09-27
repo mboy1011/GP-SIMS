@@ -123,22 +123,14 @@ require 'session.php';
                     </ul>
                 </li>
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-4"><i class="fa fa-fw fa-id-card"></i> Employee <i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-4" class="collapse">
-                        <li><a href="addEmployee"><i class="fa fa-user-plus">&nbsp;</i>Add </a></li>
-                        <li><a href="viewEmployee"><i class="fa fa-users">&nbsp;</i>View </a></li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-10"><i class="fa fa-fw fa-truck"></i> Suppliers <i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-10" class="collapse">
-                        <li><a href="addSup.php"><i class="fa fa-user-plus">&nbsp;</i>Add </a></li>
-                        <li><a href="viewSup.php"><i class="fa fa-users">&nbsp;</i>View </a></li>
-                    </ul>
+                    <a href="viewSup"><i class="fa fa-fw fa-truck"></i> Suppliers</a>
                 </li>
                 <?php 
                 if ($user_type=='admin') {
                 ?>
+                <li>
+                    <a href="viewEmployee"><i class="fa fa-fw fa-id-card"></i> Employee</a>
+                </li>
                 <li>
                     <a href="viewUser" ><i class="fa fa-fw fa-user">&nbsp;</i> Users</a>
                 </li>
