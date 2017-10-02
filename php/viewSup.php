@@ -78,25 +78,13 @@ $oop = new CRUD();
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav side-nav">
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-6"><i class="fa fa-fw fa-inbox"></i> Collections Receipt <i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-6" class="collapse">
-                        <li><a href="addCR"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
-                        <li><a href="viewCR"><i class="fa fa-list">&nbsp;</i>View</a></li>
-                    </ul>
+                    <a href="viewCR"><i class="fa fa-fw fa-inbox"></i> Collections Receipt</a>
                 </li>
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-7"><i class="fa fa-fw  fa-credit-card"></i> Credit/Debit Memo <i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-7" class="collapse">
-                        <li><a href="addCM"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
-                        <li><a href="viewCM"><i class="fa fa-list">&nbsp;</i>View</a></li>
-                    </ul>
+                    <a href="viewCM"><i class="fa fa-fw  fa-credit-card"></i> Credit/Debit Memo </a>
                 </li>
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-8"><i class="fa fa-fw  fa-shopping-cart"></i> Purchase Orders<i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-8" class="collapse">
-                        <li><a href="addPO"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
-                        <li><a href="viewPO"><i class="fa fa-list">&nbsp;</i>View</a></li>
-                    </ul>
+                    <a href="viewPO"><i class="fa fa-fw  fa-shopping-cart"></i> Purchase Orders</a>
                 </li>
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-9"><i class="fa fa-fw  fa-ruble"></i> Expenses<i class="fa fa-fw fa-angle-down pull-right"></i></a>
@@ -106,16 +94,11 @@ $oop = new CRUD();
                     </ul>
                 </li>
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-1"><i class="fa fa-fw fa-tags"></i> Sales <i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-1" class="collapse">
-                        <li><a href="addInvoice"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
-                        <li><a href="viewInvoice"><i class="fa fa-list">&nbsp;</i>View</a></li>
-                    </ul>
+                    <a href="viewInvoice"><i class="fa fa-fw fa-tags"></i> Sales</i></a>
                 </li>
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-2"><i class="fa fa-fw fa-archive">&nbsp;</i>Inventory<i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-2" class="collapse">
-                        <li><a href="addProduct"><i class="fa fa-plus">&nbsp;</i>Inventory In</a></li>
                         <li><a href="viewProduct"><i class="fa fa-list">&nbsp;</i>View</a></li>
                         <li><a href="viewInvOut"><i class="fa fa-minus">&nbsp;</i>Inventory Out</a></li>
                     </ul>

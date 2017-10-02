@@ -1,6 +1,6 @@
 <?php
-include 'session.php';
-include 'crud.php';
+require 'session.php';
+require 'crud.php';
 $oop = new CRUD();
 ?>
 <!DOCTYPE html>
@@ -81,25 +81,13 @@ $oop = new CRUD();
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav side-nav">
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-6"><i class="fa fa-fw fa-inbox"></i> Collections Receipt <i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-6" class="collapse">
-                        <li><a href="addCR"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
-                        <li><a href="viewCR"><i class="fa fa-list">&nbsp;</i>View</a></li>
-                    </ul>
+                    <a href="viewCR"><i class="fa fa-fw fa-inbox"></i> Collections Receipt</a>
                 </li>
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-7"><i class="fa fa-fw  fa-credit-card"></i> Credit/Debit Memo <i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-7" class="collapse">
-                        <li><a href="addCM"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
-                        <li><a href="viewCM"><i class="fa fa-list">&nbsp;</i>View</a></li>
-                    </ul>
+                    <a href="viewCM"><i class="fa fa-fw  fa-credit-card"></i> Credit/Debit Memo </a>
                 </li>
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-8"><i class="fa fa-fw  fa-shopping-cart"></i> Purchase Orders<i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-8" class="collapse">
-                        <li><a href="addPO"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
-                        <li><a href="viewPO"><i class="fa fa-list">&nbsp;</i>View</a></li>
-                    </ul>
+                    <a href="viewPO"><i class="fa fa-fw  fa-shopping-cart"></i> Purchase Orders</a>
                 </li>
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-9"><i class="fa fa-fw  fa-ruble"></i> Expenses<i class="fa fa-fw fa-angle-down pull-right"></i></a>
@@ -109,16 +97,11 @@ $oop = new CRUD();
                     </ul>
                 </li>
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-1"><i class="fa fa-fw fa-tags"></i> Sales <i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-1" class="collapse">
-                        <li><a href="addInvoice"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
-                        <li><a href="viewInvoice"><i class="fa fa-list">&nbsp;</i>View</a></li>
-                    </ul>
+                    <a href="viewInvoice"><i class="fa fa-fw fa-tags"></i> Sales</i></a>
                 </li>
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-2"><i class="fa fa-fw fa-archive">&nbsp;</i>Inventory<i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-2" class="collapse">
-                        <li><a href="addProduct"><i class="fa fa-plus">&nbsp;</i>Inventory In</a></li>
                         <li><a href="viewProduct"><i class="fa fa-list">&nbsp;</i>View</a></li>
                         <li><a href="viewInvOut"><i class="fa fa-minus">&nbsp;</i>Inventory Out</a></li>
                     </ul>
@@ -187,12 +170,10 @@ $oop = new CRUD();
                 <input type="hidden" id="dateTo">
               </div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3">
               
             </div>
-            <div class="col-sm-2">
-              
-            </div>
+            <div class="col-sm-3"><a href="addInvoice"><button class="btn btn-info form-control"> <i class="fa fa-plus">&nbsp;</i>Add Invoice</button></a></div>
         </div>
         <div class="row">
 <?php
@@ -214,6 +195,44 @@ $oop = new CRUD();
               </div>
           <?php
         }
+      }else if(isset($_POST['delete'])){
+        $si_no = mysqli_real_escape_string($db,$_POST['del_si']);
+        $sql = $oop->upProd($si_no);
+        if (!$sql) {
+            $sql2 = $oop->delSI($si_no);
+            if (!$sql2) {
+                ?>
+                  <div class="alert alert-warning alert-dismissable">
+                      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Delete Sales Invoice!</strong> Try Again.
+                  </div>
+              <?php
+            }else{
+                ?>
+                  <div class="alert alert-success alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Deleted!</strong>
+              </div>
+              <?php
+            }
+        }else{
+            $sql3 = $oop->delSI($si_no);
+            if (!$sql3) {
+                ?>
+                  <div class="alert alert-warning alert-dismissable">
+                      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Delete Sales Invoice!</strong> Try Again.
+                  </div>
+              <?php
+            }else{
+                ?>
+                  <div class="alert alert-success alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Deleted!</strong>
+              </div>
+              <?php
+            }
+        }
       }
 ?>
           <div class="col-sm-12">
@@ -234,13 +253,14 @@ $oop = new CRUD();
                             <th>Total Discount</th>
                             <th>Due Date</th>
                             <th>Status</th>
-                            <th>Print</th> 
+                            <th>Print Action(s)</th> 
+                            <th>Edit</th> 
                             <th>Delete</th>
                             <th>Cancel</th>
                         </tr>
                     </thead>
                     <?php
-                     $result = mysqli_query($db,"SELECT ((tbl_sales.discount1+tbl_sales.discount2)/100)*tbl_sales.total_amount as total_discount,tbl_customers.full_name,tbl_sales.sales_id,LPAD(tbl_sales.sales_no,4,0) as sales_no,DATE_FORMAT(tbl_sales.dates,'%m-%d-%Y') as dates,tbl_sales.VAT,tbl_sales.total_amount,tbl_sales.total_sales,tbl_sales.due_date,tbl_sales.amount_net,tbl_sales.status,tbl_customers.cus_id,tbl_sales.discount1,tbl_sales.discount2 FROM tbl_customers INNER JOIN tbl_sales ON tbl_sales.cus_id=tbl_customers.cus_id ORDER BY sales_no") or die(mysqli_error());
+                     $result = mysqli_query($db,"SELECT tbl_sales.total_discount,tbl_customers.full_name,tbl_sales.sales_id,LPAD(tbl_sales.sales_no,4,0) as sales_no,DATE_FORMAT(tbl_sales.dates,'%m-%d-%Y') as dates,tbl_sales.VAT,tbl_sales.total_amount,tbl_sales.total_sales,tbl_sales.due_date,tbl_sales.amount_net,tbl_sales.status,tbl_customers.cus_id,tbl_sales.discount1,tbl_sales.discount2 FROM tbl_customers INNER JOIN tbl_sales ON tbl_sales.cus_id=tbl_customers.cus_id ORDER BY sales_no") or die(mysqli_error());
                       // $result = mysqli_query($db, "SELECT * FROM tbl_sales") or die(mysql_error());
 
                     ?>
@@ -259,7 +279,7 @@ $oop = new CRUD();
                             <td><?php echo number_format($row['amount_net'],2); ?></td>  
                             <td><?php echo $row['discount1']?></td>
                             <td><?php echo $row['discount2']?></td>
-                            <td><?php echo number_format($row['total_discount'],2);?></td>
+                            <td><?php echo $row['total_discount']?></td>
                             <td><?php echo $row['due_date'];?></td>
                             <td>
                             <?php
@@ -289,8 +309,10 @@ $oop = new CRUD();
                                <form method="POST" action="print.php" target="_blank">
                                  <input type="hidden" name="sales_no" value="<?php echo $row['sales_no']?>">
                                  <input type="hidden" name="cus_id" value="<?php echo $row['cus_id']?>">
-                                 <button class="btn btn-info btn-sm" name="print"><b class="fa fa-print fa-bg">&nbsp;</b></button>
+                                 <button class="btn btn-info btn-sm" name="printSI" data-toggle="tooltip" data-placement="right" title="Sales Invoice"><b class="fa fa-print fa-bg">&nbsp;</b></button>
+                                 <button class="btn btn-default btn-sm" name="printDR" data-toggle="tooltip" data-placement="right" title="Delivery Receipt"><b class="fa fa-print fa-bg">&nbsp;</b></button>
                                </form>
+                               
                              <?php 
                               }else{
                              ?>
@@ -299,8 +321,18 @@ $oop = new CRUD();
                               }
                              ?>
                              </td>
-                             <td><button class="btn btn-danger btn-sm" name="delete"><b class="fa fa-trash fa-bg">&nbsp;
+                             <td><button class="btn btn-warning btn-sm btn-edits" name=""><b class="fa fa-pencil fa-bg">&nbsp;
                              </b></button></td>
+                             <td>
+                             <?php 
+                             if ($user_type=='admin') {
+                             ?>
+                             <button class="btn btn-danger btn-sm btn-deletes" name="" data-si="<?php echo $row['sales_no']?>" data-toggle="modal" data-target="#delete"><b class="fa fa-trash fa-bg">&nbsp;
+                             </b></button>
+                             <?php
+                             }
+                             ?>
+                             </td>
                              <td>
                              <?php
                              if ($row['status']=='PAID'||$row['status']=='CANCELLED') {
@@ -335,6 +367,7 @@ $oop = new CRUD();
                           <th></th>
                           <th></th>
                           <th></th>
+                          <th></th>
                       </tr>
                     </tfoot>
                 </table>            
@@ -347,7 +380,7 @@ $oop = new CRUD();
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Delete Customer</h4>
+        <h4 class="modal-title">Cancel Sales Invoice</h4>
       </div>
       <form method="POST" action="">
       <div class="modal-body">
@@ -362,7 +395,36 @@ $oop = new CRUD();
     </div>
 
   </div>
+</div>
+<!-- Delete -->
+<?php 
+if ($user_type=='admin') {
+?>
+<div id="delete" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Delete Sales Invoice</h4>
+      </div>
+      <form method="POST" action="">
+      <div class="modal-body">
+        <input type="number" step="any" id="del_si" name="del_si" hidden="">
+        <b><strong>Are you sure do you want to delete this sales invoice?</strong></b>
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-default" type="submit" name="delete"><b class="fa fa-check fa-bg">&nbsp;</b>Yes</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal"><b class="fa fa-close fa-bg">&nbsp;</b>No</button>
+      </div>
+      </form>
+    </div>
+
+  </div>
 </div>          
+<?php
+}
+?>
         </div>
             <!-- /.row -->
         <!-- /.container-fluid -->
@@ -517,6 +579,10 @@ $(document).ready(function(){
     });
     $("#not").click(function(event) {
         $("#notify").hide();
+    });
+    $(".btn-deletes").click(function(event) {
+       var si = $(this).data('si');
+       $("#del_si").val(si);
     });
     function check() {
         var val = $("#notify").text();

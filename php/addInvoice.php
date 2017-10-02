@@ -76,25 +76,13 @@ $oop = new CRUD();
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav side-nav">
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-6"><i class="fa fa-fw fa-inbox"></i> Collections Receipt <i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-6" class="collapse">
-                        <li><a href="addCR"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
-                        <li><a href="viewCR"><i class="fa fa-list">&nbsp;</i>View</a></li>
-                    </ul>
+                    <a href="viewCR"><i class="fa fa-fw fa-inbox"></i> Collections Receipt</a>
                 </li>
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-7"><i class="fa fa-fw  fa-credit-card"></i> Credit/Debit Memo <i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-7" class="collapse">
-                        <li><a href="addCM"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
-                        <li><a href="viewCM"><i class="fa fa-list">&nbsp;</i>View</a></li>
-                    </ul>
+                    <a href="viewCM"><i class="fa fa-fw  fa-credit-card"></i> Credit/Debit Memo </a>
                 </li>
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-8"><i class="fa fa-fw  fa-shopping-cart"></i> Purchase Orders<i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-8" class="collapse">
-                        <li><a href="addPO"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
-                        <li><a href="viewPO"><i class="fa fa-list">&nbsp;</i>View</a></li>
-                    </ul>
+                    <a href="viewPO"><i class="fa fa-fw  fa-shopping-cart"></i> Purchase Orders</a>
                 </li>
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-9"><i class="fa fa-fw  fa-ruble"></i> Expenses<i class="fa fa-fw fa-angle-down pull-right"></i></a>
@@ -104,16 +92,11 @@ $oop = new CRUD();
                     </ul>
                 </li>
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-1"><i class="fa fa-fw fa-tags"></i> Sales <i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-1" class="collapse">
-                        <li><a href="addInvoice"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
-                        <li><a href="viewInvoice"><i class="fa fa-list">&nbsp;</i>View</a></li>
-                    </ul>
+                    <a href="viewInvoice"><i class="fa fa-fw fa-tags"></i> Sales</i></a>
                 </li>
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-2"><i class="fa fa-fw fa-archive">&nbsp;</i>Inventory<i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-2" class="collapse">
-                        <li><a href="addProduct"><i class="fa fa-plus">&nbsp;</i>Inventory In</a></li>
                         <li><a href="viewProduct"><i class="fa fa-list">&nbsp;</i>View</a></li>
                         <li><a href="viewInvOut"><i class="fa fa-minus">&nbsp;</i>Inventory Out</a></li>
                     </ul>
@@ -198,10 +181,11 @@ $oop = new CRUD();
             $net = mysqli_real_escape_string($db,$_POST['net']);
             $tsales = mysqli_real_escape_string($db,$_POST['tsales']);
             $term = mysqli_real_escape_string($db,$_POST['terms']);
+            $td = mysqli_real_escape_string($db,$_POST['total_discount']);
             $date = date_create($today);
             date_add($date,date_interval_create_from_date_string($term));
             $due = date_format($date,"Y-m-d");
-            $insert = $oop->insertSI($sales_no,$cust_id,$prod,$qty,$tad,$dis1,$dis2,$today,$prepare,$check,$vat,$net,$tsales,$term,$date,$due);
+            $insert = $oop->insertSI($sales_no,$cust_id,$prod,$qty,$tad,$dis1,$dis2,$today,$prepare,$check,$vat,$net,$tsales,$term,$date,$due,$td);
             if(!$insert) {
                 ?>
                      <div class="alert alert-warning alert-dismissable">
@@ -281,7 +265,8 @@ $oop = new CRUD();
             $max_id=$rowss['max_id']+1;      
             ?>
                     <span class="input-group-addon">Sales Invoice No.</span>
-                    <input type="number" step="any"  name="sales_no" min="<?php echo $max_id; ?>" value="<?php echo sprintf("%04d",$max_id);?>" id="salesno" class="form-control" required="">
+                    <input type="number" step="any"  name="sales_no" min="<?php echo $max_id; ?>" value="<?php echo sprintf("%04d",$max_id);?>" id="salesno" class="form-control" required="" readonly>
+                     <span class="input-group-addon"><b id="editSI" class="label label-success"><i id="chSI" class="fa fa-check"></i></b></span> 
                 </div>
             </div>
         </div>
@@ -320,7 +305,7 @@ $oop = new CRUD();
             <div class="col-sm-4">
                  <div class="input-group">
                     <span class="input-group-addon">Discount 1:</span>
-                    <input type="number" id="discount1" step="any" name="discount" value="" class="element form-control">
+                    <input type="number" id="discount1" step="any" name="dis1" min="0" max="100" value="" class="element form-control">
                 </div>
             </div>
         </div>
@@ -331,7 +316,7 @@ $oop = new CRUD();
             <div class="col-sm-4">
                 <div class="input-group">
                     <span class="input-group-addon">Discount 2:</span>
-                    <input type="number" id="discount2" step="any" name="discount" value="" class="element form-control">
+                    <input type="number" id="discount2" step="any" name="dis2" min="0" max="100" value="" class="element form-control">
                 </div>
             </div>
         </div>
@@ -435,7 +420,7 @@ $oop = new CRUD();
                 <input type="text" style="border-top: 0;border-right: 0;border-left: 0;" value="<?php echo $name?>"  name="checkby" id="checkby" class="element form-control">
             </div>
             <div class="col-sm-3">
-                
+                <input type="number" step="any" name="total_discount" id="total_discount" hidden="">
             </div>
             <div class="col-sm-3">
                 <button type="submit" name="save" class="btn btn-success form-control"><b class="fa fa-save fa-bg">&nbsp;</b>Save</button>
@@ -549,7 +534,6 @@ $(document).ready(function() {
         }
     });
     $("#editVAT").click(function(event) {
-        console.log('ok');
         if($("#vat").attr('readonly')){
             $("#vat").removeAttr('readonly');
             $("#editVAT").attr('class', 'label label-warning');
@@ -560,20 +544,34 @@ $(document).ready(function() {
             $("#chVat").attr('class','fa fa-check');
         }
     });
+    $("#editSI").click(function(event) {
+       if ($("#salesno").attr('readonly')) {
+            $("#salesno").removeAttr('readonly');
+            $("#editSI").attr('class', 'label label-warning');
+            $("#chSI").attr('class', 'fa fa-pencil');
+       }else{
+            $("#salesno").attr('readonly',true);
+            $("#editSIit").attr('class', 'label label-success');
+            $("#chSI").attr('class', 'fa fa-check');
+       }
+    });
     var item=0;
     function calc(){
         var a = parseFloat($("#totalamounts").val()) || 0;
         var b = parseFloat($("#vat").val())/100 || 0;
         var dis1 = parseFloat($("#discount1").val())/100 || 0;
         var dis2 = parseFloat($("#discount2").val())/100 || 0;
-        var total = (dis1+dis2)*a;
-        var d = a-total;
+        var total1 = a-(a*dis1);
+        var total2 = total1-(total1*dis2);
+        var totaldis1 = a*dis1;
+        var totaldis2 = total1*dis2;
+        var totaldis = parseFloat(totaldis1) + parseFloat(totaldis2);
+        $("#total_discount").val(totaldis);
+        var d = total2;
         $("#totalamountDUE").val(d);
-        $("#net").val( Math.round((d/1.12*b)*100)/100 );
+        $("#net").val( Math.round((a/1.12*b)*100)/100 );
         var c = parseFloat($("#net").val());
-        $("#tsales").val(Math.round((d-c)*100)/100);
-        var i = $("#item_no").val();
-        item = i;
+        $("#tsales").val(Math.round((a-c)*100)/100);
     }
     $("#vat").bind('keyup click',function(event) {
        calc();
@@ -592,7 +590,7 @@ $(document).ready(function() {
 
     $("#addprod").click(function(event) {
        var prod_len = $("#add_product_list").children('tbody').children('tr').length;
-       if(prod_len <= 1){       
+       if(prod_len <= 19){       
            var product = $("#cprod").val();
            var quantity = $("#qty").val();
            var salesno = $("#salesno").val();
@@ -614,7 +612,6 @@ $(document).ready(function() {
                        calc();
                        viewData();
                     });  
-                    console.log(item);
                 }   
            }
        }else{

@@ -26,7 +26,7 @@
 			mysqli_close($db);
 		}else if ($_REQUEST['prod_det']) {
 			$id = mysqli_real_escape_string($db,$_POST['prod_det']);
-			$sql = mysqli_query($db,"SELECT name,description,packing FROM tbl_products WHERE prod_id='$id'");
+			$sql = mysqli_query($db,"SELECT name,description,packing,price,brand_type FROM tbl_products WHERE prod_id='$id'");
 			$data = array();
 			foreach ($sql as $row) {
 				$data[] = $row;

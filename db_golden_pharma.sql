@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 27, 2017 at 09:40 AM
+-- Generation Time: Oct 02, 2017 at 09:24 AM
 -- Server version: 5.6.36
 -- PHP Version: 7.0.16
 
@@ -149,11 +149,9 @@ CREATE TABLE IF NOT EXISTS `tbl_employee` (
 --
 
 INSERT INTO `tbl_employee` (`emp_id`, `lname`, `fname`, `mname`, `position`, `timestamp`) VALUES
-(0, 'Admin', '', NULL, NULL, '2017-09-26 13:01:00'),
-(18, 'Bacus', 'Jellie Rose', 'Quta', 'Staff', '2017-07-10 05:25:02'),
-(19, 'Barro', 'Lyjieme', 'Tomaquin', 'Member', '2017-09-27 08:17:30'),
-(17, 'Barro Jr.', 'Napoleon', 'Cominguez', 'Staff', '2017-06-06 14:29:19'),
-(16, 'Omelda', 'Dario', 'Q.', 'Manager', '2017-05-30 08:40:23');
+(0, 'Admin', '', NULL, 'Super Admin', '2017-09-26 13:01:00'),
+(16, 'Doe', 'John', 'A.', 'Manager', '2017-05-30 08:40:23'),
+(17, 'Doe', 'Jane', 'B.', 'Staff', '2017-06-06 14:29:19');
 
 -- --------------------------------------------------------
 
@@ -341,6 +339,7 @@ CREATE TABLE IF NOT EXISTS `tbl_products` (
   `prod_id` int(11) NOT NULL,
   `name` varchar(45) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
+  `brand_type` int(11) NOT NULL,
   `price` float(11,2) DEFAULT NULL,
   `expiry_date` date DEFAULT NULL,
   `quantity` int(11) DEFAULT NULL,
@@ -369,6 +368,7 @@ CREATE TABLE IF NOT EXISTS `tbl_sales` (
   `amount_net` float(11,2) DEFAULT NULL,
   `discount1` float(11,2) NOT NULL,
   `discount2` float(11,2) NOT NULL,
+  `total_discount` float(11,2) NOT NULL,
   `status` varchar(45) NOT NULL DEFAULT 'UNPAID',
   `due_date` date NOT NULL,
   `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP
@@ -455,8 +455,7 @@ CREATE TABLE IF NOT EXISTS `tbl_useraccounts` (
 
 INSERT INTO `tbl_useraccounts` (`uid`, `emp_id`, `username`, `usertype`, `password`, `timestamp`) VALUES
 (0, 0, 'root', 'admin', '$2y$10$CtRjar6CkH0rRBYi3qndm.qtSUYQOglnrYMd7Bjm7dE3ZuVHVfsRO', '2017-09-26 12:59:21'),
-(1, 16, 'admin', 'admin', '$2y$10$REQwAUbSjQKTtPNGpc.IZO0hW2UsbFGDh.03VkknzRsX7asMA7c1e', '2017-09-15 09:55:21'),
-(5, 19, 'mboy', 'user', '$2y$10$qKm0ZY/KMd/WWlvf/f8eyeriH/dAjnhu68kh53oC4qiDbwwC9wkZS', '2017-09-27 08:24:20');
+(1, 16, 'admin', 'admin', '$2y$10$REQwAUbSjQKTtPNGpc.IZO0hW2UsbFGDh.03VkknzRsX7asMA7c1e', '2017-09-15 09:55:21');
 
 -- --------------------------------------------------------
 
@@ -630,9 +629,10 @@ ALTER TABLE `tbl_customers`
 -- Indexes for table `tbl_employee`
 --
 ALTER TABLE `tbl_employee`
-  ADD PRIMARY KEY (`lname`),
+  ADD PRIMARY KEY (`emp_id`),
   ADD KEY `emp_id` (`emp_id`),
-  ADD KEY `emp_id_2` (`emp_id`);
+  ADD KEY `emp_id_2` (`emp_id`),
+  ADD KEY `emp_id_3` (`emp_id`);
 
 --
 -- Indexes for table `tbl_expenses`

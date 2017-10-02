@@ -78,25 +78,13 @@ $oop = new CRUD();
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav side-nav">
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-6"><i class="fa fa-fw fa-inbox"></i> Collections Receipt <i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-6" class="collapse">
-                        <li><a href="addCR"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
-                        <li><a href="viewCR"><i class="fa fa-list">&nbsp;</i>View</a></li>
-                    </ul>
+                    <a href="viewCR"><i class="fa fa-fw fa-inbox"></i> Collections Receipt</a>
                 </li>
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-7"><i class="fa fa-fw  fa-credit-card"></i> Credit/Debit Memo <i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-7" class="collapse">
-                        <li><a href="addCM"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
-                        <li><a href="viewCM"><i class="fa fa-list">&nbsp;</i>View</a></li>
-                    </ul>
+                    <a href="viewCM"><i class="fa fa-fw  fa-credit-card"></i> Credit/Debit Memo </a>
                 </li>
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-8"><i class="fa fa-fw  fa-shopping-cart"></i> Purchase Orders<i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-8" class="collapse">
-                        <li><a href="addPO"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
-                        <li><a href="viewPO"><i class="fa fa-list">&nbsp;</i>View</a></li>
-                    </ul>
+                    <a href="viewPO"><i class="fa fa-fw  fa-shopping-cart"></i> Purchase Orders</a>
                 </li>
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-9"><i class="fa fa-fw  fa-ruble"></i> Expenses<i class="fa fa-fw fa-angle-down pull-right"></i></a>
@@ -106,16 +94,11 @@ $oop = new CRUD();
                     </ul>
                 </li>
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-1"><i class="fa fa-fw fa-tags"></i> Sales <i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-1" class="collapse">
-                        <li><a href="addInvoice"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
-                        <li><a href="viewInvoice"><i class="fa fa-list">&nbsp;</i>View</a></li>
-                    </ul>
+                    <a href="viewInvoice"><i class="fa fa-fw fa-tags"></i> Sales</i></a>
                 </li>
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-2"><i class="fa fa-fw fa-archive">&nbsp;</i>Inventory<i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-2" class="collapse">
-                        <li><a href="addProduct"><i class="fa fa-plus">&nbsp;</i>Inventory In</a></li>
                         <li><a href="viewProduct"><i class="fa fa-list">&nbsp;</i>View</a></li>
                         <li><a href="viewInvOut"><i class="fa fa-minus">&nbsp;</i>Inventory Out</a></li>
                     </ul>
@@ -178,12 +161,11 @@ $oop = new CRUD();
                             <th>ID</th>
                             <th>Product Name</th>
                             <th>Quantity</th>
-                            <th>Edit</th> 
-                            <th>Delete</th> 
+                            <th>Date</th>
                         </tr>
                     </thead>
                     <?php
-                      $result = mysqli_query($db, "SELECT tbl_salesdetails.id,tbl_products.name,tbl_products.description,tbl_products.lot_no,SUM(tbl_salesdetails.quantity) AS total FROM tbl_salesdetails INNER JOIN tbl_products ON tbl_salesdetails.prod_id=tbl_products.prod_id GROUP BY tbl_salesdetails.prod_id ORDER BY tbl_products.description DESC") or die(mysql_error());
+                      $result = mysqli_query($db, "SELECT tbl_salesdetails.quantity,tbl_products.name,tbl_products.description,tbl_products.lot_no,DATE_FORMAT(tbl_salesdetails.timestamp,'%m-%d-%Y') as cur_date FROM tbl_salesdetails INNER JOIN tbl_products ON tbl_products.prod_id=tbl_salesdetails.prod_id WHERE tbl_salesdetails.quantity!=0 ORDER BY tbl_salesdetails.timestamp ASC") or die(mysql_error());
                       $i=1;
                     ?>
                     <tbody>
@@ -191,16 +173,17 @@ $oop = new CRUD();
                           <tr>
                             <td><?php echo $i++; ?></td>
                             <td><?php echo $row['name']." ".$row['description']." (".$row['lot_no'].")"; ?></td>
-                            <td><?php echo $row['total']; ?></td>
-                            <td>
-                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
-                            </td>      
-                            <td>
-                                <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['id']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
-                            </td> 
+                            <td><?php echo $row['quantity']; ?></td>
+                            <td><?php echo $row['cur_date']; ?></td>
                           </tr>
                       <?php } ?>
                     </tbody>
+                    <tfoot>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tfoot>
                 </table>            
                 </div>
           </div>
@@ -267,6 +250,27 @@ $oop = new CRUD();
 <script type="text/javascript">
 $(document).ready(function(){
     $('#datatables').dataTable({
+        "footerCallback": function ( row, data, start, end, display ) {
+            var api = this.api(), data;
+ 
+            // Remove the formatting to get integer data for summation
+            var intVal = function ( i ) {
+                return typeof i === 'string' ?
+                    i.replace(/[\$,]/g, '')*1 :
+                    typeof i === 'number' ?
+                        i : 0;
+            };
+            // Total over this page
+            pageTotal = api
+                .column( 2, { page: 'current'} )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
+            $( api.column( 2 ).footer() ).html(
+                'Total: '+pageTotal.toFixed(2)
+            );
+        },
        "pageLength": -1,
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
         scrollY:        "500px",

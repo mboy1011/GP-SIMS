@@ -135,5 +135,16 @@
 			}
 		}
 		mysqli_close($db);
+	}else if($_POST['selBrand']){
+        $br = mysqli_real_escape_string($db,$_POST['selBrand']);
+        intval($br);
+        echo "<option>-- Select OK Here --</option>";     
+        $result =mysqli_query($db, "SELECT prod_id,name,packing FROM tbl_products WHERE brand_type='$br'");
+        while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
+          echo"<option value='$row[prod_id]'>";
+          echo $row['name'].' '.$row['packing'];
+          echo"</option>";
+        }      
+
 	}
 ?>

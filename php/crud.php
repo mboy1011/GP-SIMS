@@ -73,14 +73,14 @@ class CRUD
 			}
 		}
 	}
-	public function insertPro($pn,$pd,$ex,$lo,$pr,$pk,$qt)
+	public function insertPro($pn,$pd,$ex,$lo,$pr,$pk,$qt,$br)
 	{
 		require 'config.php';
 		$sql = mysqli_query($db,"SELECT * FROM tbl_products WHERE name='$pn' AND lot_no='$lo'");
 		if ($sql->num_rows>0) {
 			return false;
 		}else{
-			$result = mysqli_query($db,"INSERT INTO tbl_products(name,description,price,expiry_date,lot_no,packing,quantity)VALUES('".$pn."','".$pd."','".$pr."','".$ex."','".$lo."','".$pk."','".$qt."')");
+			$result = mysqli_query($db,"INSERT INTO tbl_products(name,description,price,expiry_date,lot_no,packing,quantity,brand_type)VALUES('".$pn."','".$pd."','".$pr."','".$ex."','".$lo."','".$pk."','".$qt."','".$br."')");
 			if (!$result) {
 				return false;
 			}else{
@@ -379,14 +379,14 @@ class CRUD
 			}
 		}	
 	}
-	public function insertSI($sales_no,$cust_id,$prod,$qty,$tad,$dis1,$dis2,$today,$prepare,$check,$vat,$net,$tsales,$term,$date,$due)
+	public function insertSI($sales_no,$cust_id,$prod,$qty,$tad,$dis1,$dis2,$today,$prepare,$check,$vat,$net,$tsales,$term,$date,$due,$td)
 	{
 		require 'config.php';
 		$sql = mysqli_query($db,"SELECT * FROM tbl_sales WHERE sales_no='$sales_no' AND cus_id='$cust_id'");
         if ($sql->num_rows>0) {
      		return false;       
         }else{
-            $sql1 = mysqli_query($db,"INSERT INTO tbl_sales (sales_no,cus_id,dates,prepared_by,checked_by,VAT,total_amount,total_sales,amount_net,due_date,discount1,discount2) VALUES ('".$sales_no."','".$cust_id."','".$today."','".$prepare."','".$check."','".$vat."','".$tad."','".$net."','".$tsales."','".$due."','".$dis1."','".$dis2."')");
+            $sql1 = mysqli_query($db,"INSERT INTO tbl_sales (sales_no,cus_id,dates,prepared_by,checked_by,VAT,total_amount,total_sales,amount_net,due_date,discount1,discount2,total_discount) VALUES ('".$sales_no."','".$cust_id."','".$today."','".$prepare."','".$check."','".$vat."','".$tad."','".$net."','".$tsales."','".$due."','".$dis1."','".$dis2."','".$td."')");
             if (!$sql1) {
             	return false;
             }else{
@@ -398,6 +398,16 @@ class CRUD
 	{
 		require 'config.php';
 		$sql = mysqli_query($db,"UPDATE tbl_supplier SET sup_name='$nm', sup_address='$ad', sup_telNo='$tel' WHERE sup_id='$id'");
+		if (!$sql) {
+			return false;
+		}else{
+			return true;
+		}
+	}
+	public function delSI($si_no)
+	{
+		require 'config.php';
+		$sql = mysqli_query($db,"DELETE FROM tbl_sales WHERE sales_no='$si_no'");
 		if (!$sql) {
 			return false;
 		}else{

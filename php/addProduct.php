@@ -74,25 +74,13 @@ include 'session.php';
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav side-nav">
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-6"><i class="fa fa-fw fa-inbox"></i> Collections Receipt <i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-6" class="collapse">
-                        <li><a href="addCR"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
-                        <li><a href="viewCR"><i class="fa fa-list">&nbsp;</i>View</a></li>
-                    </ul>
+                    <a href="viewCR"><i class="fa fa-fw fa-inbox"></i> Collections Receipt</a>
                 </li>
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-7"><i class="fa fa-fw  fa-credit-card"></i> Credit/Debit Memo <i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-7" class="collapse">
-                        <li><a href="addCM"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
-                        <li><a href="viewCM"><i class="fa fa-list">&nbsp;</i>View</a></li>
-                    </ul>
+                    <a href="viewCM"><i class="fa fa-fw  fa-credit-card"></i> Credit/Debit Memo </a>
                 </li>
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-8"><i class="fa fa-fw  fa-shopping-cart"></i> Purchase Orders<i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-8" class="collapse">
-                        <li><a href="addPO"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
-                        <li><a href="viewPO"><i class="fa fa-list">&nbsp;</i>View</a></li>
-                    </ul>
+                    <a href="viewPO"><i class="fa fa-fw  fa-shopping-cart"></i> Purchase Orders</a>
                 </li>
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-9"><i class="fa fa-fw  fa-ruble"></i> Expenses<i class="fa fa-fw fa-angle-down pull-right"></i></a>
@@ -102,16 +90,11 @@ include 'session.php';
                     </ul>
                 </li>
                 <li>
-                    <a href="#" data-toggle="collapse" data-target="#submenu-1"><i class="fa fa-fw fa-tags"></i> Sales <i class="fa fa-fw fa-angle-down pull-right"></i></a>
-                    <ul id="submenu-1" class="collapse">
-                        <li><a href="addInvoice"><i class="fa fa-plus">&nbsp;</i>Add</a></li>
-                        <li><a href="viewInvoice"><i class="fa fa-list">&nbsp;</i>View</a></li>
-                    </ul>
+                    <a href="viewInvoice"><i class="fa fa-fw fa-tags"></i> Sales</i></a>
                 </li>
                 <li>
                     <a href="#" data-toggle="collapse" data-target="#submenu-2"><i class="fa fa-fw fa-archive">&nbsp;</i>Inventory<i class="fa fa-fw fa-angle-down pull-right"></i></a>
                     <ul id="submenu-2" class="collapse">
-                        <li><a href="addProduct"><i class="fa fa-plus">&nbsp;</i>Inventory In</a></li>
                         <li><a href="viewProduct"><i class="fa fa-list">&nbsp;</i>View</a></li>
                         <li><a href="viewInvOut"><i class="fa fa-minus">&nbsp;</i>Inventory Out</a></li>
                     </ul>
@@ -178,10 +161,9 @@ include 'session.php';
                 $ex = mysqli_real_escape_string($db,$_POST['expdate']);
                 $lo = mysqli_real_escape_string($db,$_POST['lotno']);
                 $pr = mysqli_real_escape_string($db,$_POST['price']);
-                $pk = mysqli_real_escape_string($db,$_POST['pack']);
-                $pk1 = mysqli_real_escape_string($db,$_POST['pack1']);
-                $pack = $pk.$pk1;
-                $sql=$oop->insertPro(strtoupper($pn),$pd,$ex,$lo,$pr,$pack,$qt);
+                $pack = mysqli_real_escape_string($db,$_POST['pack']);
+                $br = mysqli_real_escape_string($db,$_POST['brand']);
+                $sql=$oop->insertPro(strtoupper($pn),$pd,$ex,$lo,$pr,$pack,$qt,$br);
                 if(!$sql){
                    ?>
                       <div class="alert alert-warning alert-dismissable">
@@ -208,42 +190,45 @@ include 'session.php';
                 
             </div>
             <div class="col-sm-3">
-                <button class="btn btn-primary form-control" id="newB"><b class="fa fa-plus">&nbsp;</b>New batch</button>
+                <button class="btn btn-primary form-control" id="newB"><b class="fa fa-plus">&nbsp;</b>New Batch</button>
             </div>
             <div class="col-sm-3">
                 <button class="btn btn-primary form-control" id="newP"><b class="fa fa-plus">&nbsp;</b>New Product</button>
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-3">
                 
             </div>
         </div>
         <div class="row">
-         <div class="col-sm-4">
+         <div class="col-sm-3">
              
          </div>
-         <div class="col-sm-4">
-            <div class="input-group" id="batch" style="display: none;">
-              <span class="input-group-addon">Product:</span>
-              <select name="customer" class="form-control" id="prod_batch">
-                <option>-- Select Product Here --</option>
-                      <?php
-                        $result =mysqli_query($db, "SELECT prod_id,name,packing FROM tbl_products");
-                        while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
-                          echo"<option value='$row[prod_id]'>";
-                          echo $row['name'].' '.$row['packing'];
-                          echo"</option>";
-                        }
-                      ?>
+         <div class="col-sm-6">
+           <div class="input-group" id="brand" style="display: none;">
+              <span class="input-group-addon">Brand Type:</span>
+              <select name="" class="form-control" id="prod_brand">
+                    <option value="a">-- Select Brand Type Here --</option>
+                    <option value="1">Branded</option>
+                    <option value="2">Generic</option>
              </select> 
             </div>
+            <div class="input-group" id="batch" style="display: none;">
+              <span class="input-group-addon">Product:</span>
+              <select name="" class="form-control" id="prod_batch">
+                
+              </select> 
+            </div>
+          </div>
+          <div class="col-sm-3">
+             
           </div>
         </div>
         <br>
         <div class="row"> 
-          <div class="col-sm-4">
+          <div class="col-sm-3">
               
           </div>   
-          <div class="col-sm-4" id="new" style="display: none;">         
+          <div class="col-sm-6" id="new" style="display: none;">         
             <form method="POST" action="" class="form-horizontal">
                 <input type="text" name="pname" placeholder="Product Name" class="form-control" required="" id="product_name" style="text-transform:uppercase" >
                 <div class="input-group">
@@ -256,26 +241,19 @@ include 'session.php';
                 </div>
                 <input type="text" name="lotno" placeholder="Lot No." class="form-control" required="">
                 <input type="number" name="quantity" placeholder="Quantity / BOX" class="form-control" required="">
-                <div class="form-inline">
-                    <div class="input-group">
-                        <input type="text" name="pack" placeholder="Packing" class="form-control" required="" id="product_pack">
-                    </div>
-                    <div class="input-group">
-                        <select id="memoryType" name="pack1" id="product_pack1" class="form-control">
-                            <option value="mg" selected="selected">mg</option>
-                            <option value="g">g</option>
-                            <option value="mL">mL</option>
-                        </select>
-                    </div>
-                </div>
+                <input type="text" name="pack" placeholder="Packing Ex. 100mg or Suspension" class="form-control" required="" id="product_pack">
+                <select name="brand" id="product_brand" class="form-control">
+                        <option value="1">Branded</option>
+                        <option value="2">Generic</option>
+                </select>
                 <div class="input-group">
                     <span class="input-group-addon">₱</span>
-                    <input type="number" step="any" name="price" placeholder="Unit Price" class="form-control">
+                    <input type="number" step="any" id="product_price" min="0" name="price" placeholder="Unit Price" class="form-control">
                 </div>
                 <input type="submit" name="Submit" class="btn btn-primary form-control">
             </form>
           </div>
-          <div class="col-sm-4">
+          <div class="col-sm-3">
             
           </div>
         </div>
@@ -314,46 +292,67 @@ $(document).ready(function() {
     check();  
     $("#newB").click(function(event) {
         $("#new").hide();
+        $("#brand").slideToggle('300', function() {
+            
+        });        
         $("#batch").slideToggle('300', function() {
             
-        });
+        });        
+    });
+    $("#prod_brand").change(function(event) {
+        var br = $("#prod_brand").val();
+        if (br!='a') {
+            $.post('addjax.php', {selBrand: br}, function(data, textStatus, xhr) {
+                $("#prod_batch").html(data);
+            });
+        }else{
+            $("#prod_batch").html('');             
+        }
     });
     $("#newP").click(function(event) {
        $("#batch").hide();
+       $("#brand").hide();
        $("#new").slideToggle('300', function() {
             $("#product_name").val('');
             $("#product_desc").text('');
             $("#product_pack").val('');
-            $("#product_pack1").val('');
        });
     });
     $("#prod_batch").change(function(event) {
         var prod =  $("#prod_batch").val();
-       $.post('data.php', {prod_det: prod}, function(data, textStatus, xhr) {
             if(prod!='-- Select Product Here --'){
-                $("#new").show();
-                var obj = JSON.parse(data);
-                var name = [];
-                var desc = [];
-                var pack = [];
-                for (var i = 0; i < obj.length; i++) {
-                    name.push(obj[i].name);
-                    desc.push(obj[i].description);
-                    pack.push(obj[i].packing);
-                }
-                $("#product_name").val(name);
-                $("#product_desc").text(desc);
-                // Split 100mg pack array into multi-dimensional array arr[["100","mg"]]
-                var newpack = pack.toString();
-                var arr = [];
-                var json = newpack.split(' ');
-                json.forEach(function (item) {
-                    arr.push(item.replace(/\'/g, '').split(/(\d+)/).filter(Boolean));
-                });               
-                $("#product_pack1").val(arr[0][1]);
-                $("#product_pack").val(arr[0][0]);
+               $.post('data.php', {prod_det: prod}, function(data, textStatus, xhr) {
+
+                        $("#new").show();
+                        var obj = JSON.parse(data);
+                        var name = [];
+                        var desc = [];
+                        var pack = [];
+                        var price = [];
+                        var brand = [];
+                        for (var i = 0; i < obj.length; i++) {
+                            name.push(obj[i].name);
+                            desc.push(obj[i].description);
+                            pack.push(obj[i].packing);
+                            price.push(obj[i].price);
+                            brand.push(obj[i].brand_type);
+                        }
+                        $("#product_name").val(name);
+                        $("#product_desc").text(desc);
+                        $("#product_pack").val(pack);
+                        $("#product_price").val(price);
+                        $("#product_brand").val(brand);
+                        // Split 100mg pack array into multi-dimensional array arr[["100","mg"]]
+                        // var newpack = pack.toString();
+                        // var arr = [];
+                        // var json = newpack.split(' ');
+                        // json.forEach(function (item) {
+                        //     arr.push(item.replace(/\'/g, '').split(/(\d+)/).filter(Boolean));
+                        // });               
+                        // $("#product_pack1").val(arr[0][1]);
+                        // $("#product_pack").val(arr[0][0]);
+               });
             }
-       });
     });
 });
 
