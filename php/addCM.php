@@ -410,16 +410,12 @@ $oop = new CRUD();
                 $("#notify-alert").modal();   
             }else{
                 if (si==undefined||si==null) {
-                        $.post('addjax.php', {addCM:'addCM',prod_id: p,qty: q1,si_no:s,cm_no:c}, function(data, textStatus, xhr) {
-                            // console.log(data);
-                            viewData();   
-                        });    
+                  $("#notify-alert").modal();  
                 }else{
                     if (s!=si) {
                         $("#notify-alert").modal();   
                     }else{
                         $.post('addjax.php', {addCM:'addCM',prod_id: p,qty: q1,si_no:s,cm_no:c}, function(data, textStatus, xhr) {
-                            // console.log(data);
                             viewData();
                         });
                     }

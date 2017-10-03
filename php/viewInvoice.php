@@ -233,6 +233,34 @@ $oop = new CRUD();
               <?php
             }
         }
+      }elseif (isset($_POST['update'])) {
+        $si = mysqli_real_escape_string($db,$_POST['edit_si']);
+        $cus = mysqli_real_escape_string($db,$_POST['edit_cus']);
+        $date = mysqli_real_escape_string($db,$_POST['edit_date']);
+        $less = mysqli_real_escape_string($db,$_POST['edit_less']);
+        $gross = mysqli_real_escape_string($db,$_POST['edit_gross']);
+        $net = mysqli_real_escape_string($db,$_POST['edit_net']);
+        $vat = mysqli_real_escape_string($db,$_POST['edit_vat']);
+        $dis1 = mysqli_real_escape_string($db,$_POST['edit_dis1']);
+        $dis2 = mysqli_real_escape_string($db,$_POST['edit_dis2']);
+        $tdis = mysqli_real_escape_string($db,$_POST['edit_tdis']);
+        $due = mysqli_real_escape_string($db,$_POST['edit_due']);
+        $up = $oop->upSI($si,$cus,$date,$less,$gross,$net,$vat,$dis1,$dis2,$tdis,$due);
+        if (!$up) {
+          ?>
+            <div class="alert alert-warning alert-dismissable">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Update Sales Invoice!</strong> Try Again.
+            </div>
+        <?php
+        }else{
+          ?>
+          <div class="alert alert-success alert-dismissable">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Updated!</strong>
+          </div>
+          <?php
+        }
       }
 ?>
           <div class="col-sm-12">
@@ -321,8 +349,16 @@ $oop = new CRUD();
                               }
                              ?>
                              </td>
-                             <td><button class="btn btn-warning btn-sm btn-edits" name=""><b class="fa fa-pencil fa-bg">&nbsp;
-                             </b></button></td>
+                             <td>
+                             <?php 
+                             if ($user_type=='admin') {
+                             ?>
+                              <button class="btn btn-warning btn-sm btn-edits" name="" data-toggle="modal" data-target="#edit" data-si="<?php echo $row['sales_no']; ?>" data-cus="<?php echo $row['cus_id']; ?>" data-date="<?php echo $row['dates']; ?>" data-less="<?php echo $row['VAT']; ?>" data-gross="<?php echo $row['total_amount']; ?>" data-net="<?php echo $row['total_sales']; ?>" data-vat="<?php echo $row['amount_net']; ?>" data-dis1="<?php echo $row['discount1']; ?>" data-dis2="<?php echo $row['discount2']; ?>" data-tdis="<?php echo $row['total_discount']; ?>" data-due="<?php echo $row['due_date']; ?>"><b class="fa fa-pencil fa-bg">&nbsp;
+                             </b></button>
+                             <?php
+                             }
+                             ?>
+                             </td>
                              <td>
                              <?php 
                              if ($user_type=='admin') {
@@ -422,6 +458,79 @@ if ($user_type=='admin') {
 
   </div>
 </div>          
+
+<div id="edit" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Edit Sales Invoice</h4>
+      </div>
+      <form method="POST" action="">
+      <div class="modal-body">
+        <div class="input-group">
+          <span class="input-group-addon">Sales Invoice No:</span>  
+          <input type="number" step="any" name="edit_si" id="edit_si" class="form-control" readonly="">
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon">Customers:</span>  
+          <select name="edit_cus" class="form-control">
+            <?php  
+            $cus = mysqli_query($db,"SELECT * FROM tbl_customers");
+            while ($rows = mysqli_fetch_assoc($cus)) {
+              echo "<option value=".$rows['cus_id'].">".$rows['full_name']."</option>";    
+            }
+            ?>
+          </select>
+        </div>
+        <div class="input-group date form_date">
+            <span class="input-group-addon" >Date:</span>
+            <input name="edit_date" id="edit_date" class="form-control" size="16" type="text" placeholder="">
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">Less: %</span>  
+            <input type="number" step="any" name="edit_less" id="edit_less" class="form-control" readonly="">    
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">Gross:</span>  
+            <input type="number" step="any" name="edit_gross" id="edit_gross" class="form-control">    
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">Net:</span>  
+            <input type="number" step="any" name="edit_net" id="edit_net" class="form-control">
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">VAT:</span>  
+            <input type="number" step="any" name="edit_vat" id="edit_vat" class="form-control">
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">Discount 1:</span>  
+            <input type="number" step="any" name="edit_dis1" id="edit_dis1" class="form-control">
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">Discount 2:</span>  
+            <input type="number" step="any" name="edit_dis2" id="edit_dis2" class="form-control">
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">Total Discount:</span>  
+            <input type="number" step="any" name="edit_tdis" id="edit_tdis" class="form-control">
+        </div>
+         <div class="input-group date form_date">
+            <span class="input-group-addon" >Due Date:</span>
+            <input name="edit_due" id="edit_due" class="form-control" size="16" type="text" placeholder="">
+        </div>
+        <!-- <input type="text" step="any" name="edit_due" id="edit_due" class="form-control"> -->
+      </div>
+      <div class="modal-footer">
+          <button class="btn btn-default" type="submit" name="update"><b class="fa fa-check fa-bg">&nbsp;</b>Yes</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal"><b class="fa fa-close fa-bg">&nbsp;</b>No</button>
+      </div>
+      </form>
+    </div>
+
+  </div>
+</div>
 <?php
 }
 ?>
@@ -584,6 +693,30 @@ $(document).ready(function(){
        var si = $(this).data('si');
        $("#del_si").val(si);
     });
+    $(".btn-edits").click(function(event) {
+      var si = $(this).data('si');
+      var cus = $(this).data('cus');
+      var date = $(this).data('date');
+      var less = $(this).data('less');
+      var gross = $(this).data('gross');
+      var net = $(this).data('net');
+      var vat = $(this).data('vat');
+      var dis1 = $(this).data('dis1');
+      var dis2 = $(this).data('dis2');
+      var tdis = $(this).data('tdis');
+      var due = $(this).data('due');
+      $("#edit_si").val(si);
+      $("#edit_cus").val(cus);
+      $("#edit_date").val(date);
+      $("#edit_less").val(less);
+      $("#edit_gross").val(gross);
+      $("#edit_net").val(net);
+      $("#edit_vat").val(vat);
+      $("#edit_dis1").val(dis1);
+      $("#edit_dis2").val(dis2);
+      $("#edit_tdis").val(tdis);
+      $("#edit_due").val(due);
+    });
     function check() {
         var val = $("#notify").text();
         if (val==0) {
@@ -591,6 +724,12 @@ $(document).ready(function(){
         }
     }
     check();    
+    $('.form_date').datepicker({
+    format: "yyyy/mm/dd",
+    language: 'en-AU',
+    todayHighlight: true,
+    autoclose: true
+    });
 });
 </script>
 </body>

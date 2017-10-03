@@ -414,5 +414,15 @@ class CRUD
 			return true;
 		}
 	}
+	public function upSI($si,$cus,$date,$less,$gross,$net,$vat,$dis1,$dis2,$tdis,$due)
+	{
+		require 'config.php';
+		$sql = mysqli_query($db,"UPDATE tbl_sales SET sales_no='$si',cus_id='$cus',dates='$date',VAT='$less',total_amount='$gross',total_sales='$net',amount_net='$vat',discount1='$dis1',discount2='$dis2',total_discount='$tdis',due_date='$due' WHERE sales_no='$si'");
+		if (!$sql) {
+			return false;
+		}else{
+			return true;
+		}
+	}
 }
 ?>

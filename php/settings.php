@@ -227,9 +227,10 @@ if(isset($_POST['backup'])){
         </div>        
         <div class="row">
             <div class="col-sm-4">
+            <label>Current Year to Display on Dashboard.</label>
             <form method="POST" action="">
               <div class="input-group">
-                <span class="input-group-addon">Current Year To Display</span>
+                <span class="input-group-addon">Year</span>
                 <select name="yr1" class="form-control" id='yr'>
                         <?php
                         $result =mysqli_query($db, "SELECT Year FROM tbl_monthly_sales_report GROUP BY Year");
@@ -251,12 +252,14 @@ if(isset($_POST['backup'])){
               </div>
             </div>
             <div class="col-sm-4">
+                <label>Database will be backed up.</label>
                     <div class="input-group">
-                        <span class="input-group-addon"><b class="fa fa-database">&nbsp;</b>Backup Database</span>
+                        <span class="input-group-addon"><b class="fa fa-database">&nbsp;</b></span>
                         <span class="input-group-btn"><button type="submit" name="backup" class="btn btn-primary">Backup</button></span>
                     </div>
             </div>
             <div class="col-sm-4">
+                <label>Change the status of out of stocks products.</label>
                 <div class="input-group">
                     <span class="input-group-addon">Out of Stocks</span>
                     <select name="os" class="form-control">
