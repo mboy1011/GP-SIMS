@@ -20,13 +20,13 @@ class PDF_AutoPrint extends PDF_JavaScript
     }
     function head(){
         $this->Image('../img/logos.png',30,6,30);
-        $this->SetFont('Arial','B',16);
+        $this->SetFont('Times','B',16);
         $this->SetXY(75,10);//Coordinates for Fixed Position
         $this->Cell(82,7,'GOLDEN PHARMACEUTICAL',0,0);
-        $this->SetFont('Arial','',12);
+        $this->SetFont('Times','',12);
         // $this->SetXY(75,15);
         // $this->Cell(82,7,'Tel No. (088) 857-3088 (Telefax)',0,0,'C');
-        $this->SetFont('Arial','',11);
+        $this->SetFont('Times','',11);
         $this->SetXY(75,15);
         $this->Cell(82,7,'Bolonsori Road, Camaman-an, Cagayan de Oro City',0,0,'C');
         $this->SetXY(75,20);
@@ -46,45 +46,45 @@ $query1 = mysqli_query($db,"SELECT SUM(tbl_salesdetails.amount) as totalamount,t
 $rows=mysqli_fetch_assoc($query1);
 $pdf->SetTitle("Print Sales Invoice",true);
 // $pdf->head();
-$pdf->SetFont('Arial','B',11);
+$pdf->SetFont('Times','B',11);
 $pdf->SetXY(150,10);//Coordinates for Fixed Position
 $pdf->Cell(30,7,'Invoice No.',0,0);
 $pdf->Cell(10,7,sprintf("%04d",$si_no),0,0,'R');
 $pdf->Ln(15);
 $pdf->Cell(20,7,'',0,0);
-$pdf->SetFont('Arial','',11);
+$pdf->SetFont('Times','B',11);
 $pdf->Cell(90,7,$rows['full_name'],0,0,'C');
-$pdf->SetFont('Arial','B',11);
+$pdf->SetFont('Times','B',11);
 $pdf->Cell(20,7,'',0,0);
-$pdf->SetFont('Arial','',11);
+$pdf->SetFont('Times','',11);
 $pdf->Cell(60,7,$rows['dates'],0,1,'C');
-$pdf->SetFont('Arial','B',11);
+$pdf->SetFont('Times','B',11);
 $pdf->Cell(20,7,'',0,0);
-$pdf->SetFont('Arial','',11);
+$pdf->SetFont('Times','',11);
 if($rows['tin']||null){
     $pdf->Cell(90,7,$rows['tin'],0,0,'C');    
 }else{
     $pdf->Cell(90,7,'',0,0,'C');    
 }
-$pdf->SetFont('Arial','B',11);
+$pdf->SetFont('Times','B',11);
 $pdf->Cell(20,7,'',0,0);
-$pdf->SetFont('Arial','',11);
+$pdf->SetFont('Times','',11);
 $pdf->Cell(60,7,$rows['terms'],0,1,'C');
-$pdf->SetFont('Arial','B',11);
+$pdf->SetFont('Times','B',11);
 $pdf->Cell(20,7,'',0,0);
-$pdf->SetFont('Arial','',11);
+$pdf->SetFont('Times','',11);
 $pdf->Cell(90,7,$rows['address'],0,0,'C');
-$pdf->SetFont('Arial','B',11);
+$pdf->SetFont('Times','B',11);
 $pdf->Cell(20,7,'',0,0);
-$pdf->SetFont('Arial','',11);
+$pdf->SetFont('Times','',11);
 $pdf->Cell(60,7,$rows['opidno'],0,1,'C');
-$pdf->SetFont('Arial','B',11);
+$pdf->SetFont('Times','B',11);
 $pdf->Cell(20,7,'',0,0);
-$pdf->SetFont('Arial','',11);
+$pdf->SetFont('Times','',11);
 $pdf->Cell(90,7,$rows['bstyle'],0,1,'C');
 $pdf->Ln(15);
 // 
-// $pdf->SetFont('Arial','B',11);
+// $pdf->SetFont('Times','B',11);
 // $pdf->Cell(10,10,'Code',0,0,'C');
 // $pdf->Cell(88,10,'Product Description',0,0,'C');
 // $pdf->Cell(18,10,'Lot No.',0,0,'C');
@@ -92,7 +92,7 @@ $pdf->Ln(15);
 // $pdf->Cell(18,10,'Quantity',0,0,'C');
 // $pdf->Cell(19,10,'Unit Price',0,0,'C');
 // $pdf->Cell(22,10,'AMOUNT',0,1,'C');
-$query = mysqli_query($db,"SELECT tbl_products.name,tbl_products.packing,tbl_products.description,tbl_salesdetails.id,tbl_salesdetails.sales_no,tbl_products.lot_no,DATE_FORMAT(tbl_products.expiry_date,'%m-%Y') AS expiry_date,tbl_salesdetails.quantity, tbl_salesdetails.price, tbl_salesdetails.amount
+$query = mysqli_query($db,"SELECT tbl_products.name,tbl_products.packing,tbl_products.description,tbl_salesdetails.id,tbl_salesdetails.sales_no,tbl_products.lot_no,DATE_FORMAT(tbl_products.expiry_date,'%b-%y') AS expiry_date,tbl_salesdetails.quantity, tbl_salesdetails.price, tbl_salesdetails.amount
 FROM tbl_salesdetails, tbl_products WHERE
 tbl_salesdetails.prod_id=tbl_products.prod_id AND tbl_salesdetails.sales_no='$si_no'");
 	$o = 1;
@@ -100,28 +100,28 @@ $arr = array();
 while ($row = mysqli_fetch_array($query,MYSQLI_ASSOC)) {
 	$arr[] = $row;
 }
-$pdf->SetFont('Arial','',11);
+$pdf->SetFont('Times','',11);
 for ($i=0; $i < count($arr); $i++) { 
-    $pdf->SetFont('Arial','',11);
+    $pdf->SetFont('Times','',11);
 	$pdf->Cell(10,5,$o++,0,0,'L');
-    $pdf->SetFont('Arial','',10);
-	$pdf->Cell(90,5,$arr[$i][name]." ".$arr[$i][packing],0,0,'L');
-    $pdf->SetFont('Arial','',11);
+    $pdf->SetFont('Times','',10);
+	$pdf->Cell(87,5,$arr[$i][name]." ".$arr[$i][packing],0,0,'L');
+    $pdf->SetFont('Times','',11);
 	$pdf->Cell(20,5,$arr[$i][lot_no],0,0,'C');
-    $pdf->SetFont('Arial','',11);
-	$pdf->Cell(16,5,$arr[$i][expiry_date],0,0,'C');
-    $pdf->SetFont('Arial','',11);
+    $pdf->SetFont('Times','',11);
+	$pdf->Cell(16,5,$arr[$i][expiry_date],0,0,'L');
+    $pdf->SetFont('Times','',11);
 	$pdf->Cell(15,5,$arr[$i][quantity],0,0,'C');
-    $pdf->SetFont('Arial','',11);
-	$pdf->Cell(17,5,number_format($arr[$i][price],2),0,0,'C');
-    $pdf->SetFont('Arial','',11);
-	$pdf->Cell(20,5,number_format($arr[$i][amount],2),0,1,'C');
+    $pdf->SetFont('Times','',11);
+	$pdf->Cell(17,5,number_format($arr[$i][price],2),0,0,'R');
+    $pdf->SetFont('Times','',11);
+	$pdf->Cell(26,5,number_format($arr[$i][amount],2),0,1,'R');
 }
 $pdf->SetXY(50,220);//Coordinates for Fixed Position
-$pdf->SetFont('Arial','B',11);
+$pdf->SetFont('Times','B',11);
 $pdf->Cell(30,5,'Total Sales',0,0);
 $pdf->Cell(20,5,number_format($rows['totalamount'],2),0,1,'R');
-$pdf->SetFont('Arial','',11);
+$pdf->SetFont('Times','',11);
 $pdf->SetXY(50,225);//Coordinates for Fixed Position
 $pdf->Cell(30,5,'Less Discount 1',0,0);
 $pdf->Cell(20,5,number_format($rows['discount1']).'%',0,1,'R');
@@ -134,16 +134,16 @@ $pdf->SetFont('','U');
 $pdf->Cell(20,5,number_format($rows['total_amount'],2),0,1,'R');
 $pdf->SetFont('','');
 $pdf->SetXY(120,220);//Coordinates for Fixed Position
-$pdf->SetFont('Arial','B',11);
+$pdf->SetFont('Times','B',11);
 $pdf->Cell(30,5,'',0,0);
 $pdf->Cell(50,5,number_format($rows['totalamount'],2),0,1,'R');
 $pdf->SetXY(120,225);//Coordinates for Fixed Position
 $pdf->Cell(30,5,'',0,0);
-$pdf->SetFont('Arial','',11);
+$pdf->SetFont('Times','',11);
 $pdf->Cell(50,5,"(".number_format($rows['total_sales'],2).")",0,1,'R');
 $pdf->SetXY(120,230);//Coordinates for Fixed Position
 $pdf->Cell(30,5,'',0,0);
-$pdf->SetFont('Arial','',11);
+$pdf->SetFont('Times','',11);
 $pdf->Cell(50,5,number_format($rows['amount_net'],2),0,1,'R');
 
 // $pdf->SetXY(120,235);//Coordinates for Fixed Position
@@ -153,7 +153,7 @@ $pdf->SetXY(120,235);//Coordinates for Fixed Position
 $pdf->Cell(50,5,'',0,0);
 $pdf->Cell(30,5,"(".number_format($rows['total_discount'],2).")",0,1,'R');
 $pdf->SetXY(120,240);//Coordinates for Fixed Position
-$pdf->SetFont('Arial','B',11);
+$pdf->SetFont('Times','B',11);
 $pdf->Cell(30,5,'',0,0);
 $pdf->Cell(50,5,number_format($rows['total_amount'],2),0,1,'R');
 
@@ -167,13 +167,13 @@ $pdf->Output();
     $pdf->AddPage();
     $pdf->SetTitle("Print Purchase Order",true);
     $pdf->head();
-    $pdf->SetFont('Arial','B',13);
+    $pdf->SetFont('Times','B',13);
     $pdf->SetXY(75,35);
     $pdf->Cell(82,7,'Purhase Order',0,0,'C');
     $pdf->SetXY(130,40);
     $pdf->Cell(25,7,'Date: ',0,0,'R');
     $pdf->SetXY(175,40);
-    $pdf->SetFont('Arial','U',13);
+    $pdf->SetFont('Times','U',13);
     $pdf->Cell(25,7,$row['po_date'],0,1,'R');
     $sql2 = mysqli_query($db,"SELECT * FROM tbl_POdetails WHERE po_no='$po'");
     $arr = array();
@@ -182,7 +182,7 @@ $pdf->Output();
         $arr[] = $rows;
     }
     $pdf->Cell(10,5,'',0,1,'C');
-    $pdf->SetFont('Arial','B',12);
+    $pdf->SetFont('Times','B',12);
     $pdf->Cell(10,5,'ID',1,0,'C');
     $pdf->Cell(80,5,'Product',1,0,'C');
     $pdf->Cell(40,5,'Maker',1,0,'C');
@@ -190,7 +190,7 @@ $pdf->Output();
     $pdf->Cell(20,5,'Price',1,0,'C');
     $pdf->Cell(25,5,'Amount',1,1,'C');
     // 
-    $pdf->SetFont('Arial','',11);
+    $pdf->SetFont('Times','',11);
     for ($i=0; $i < count($arr); $i++) { 
         $pdf->Cell(10,5,$o++,1,0,'C');
         $pdf->Cell(80,5,$arr[$i][prod_name],1,0,'C');
@@ -203,7 +203,7 @@ $pdf->Output();
     $pdf->Cell(80,5,'',1,0,'C');
     $pdf->Cell(40,5,'',1,0,'C');
     $pdf->Cell(20,5,'',1,0,'C');
-    $pdf->SetFont('Arial','B',11);
+    $pdf->SetFont('Times','B',11);
     $pdf->Cell(20,5,'Total:',1,0,'C');
     $pdf->Cell(25,5,number_format($row['prod_amount'],2),1,1,'R');
     // 
@@ -223,53 +223,53 @@ $pdf->Output();
     $rows=mysqli_fetch_assoc($query1);
     $pdf->SetTitle("Print Sales Invoice",true);
     $pdf->head();
-    $pdf->SetFont('Arial','B',11);
+    $pdf->SetFont('Times','B',11);
     $pdf->SetXY(150,30);//Coordinates for Fixed Position
     $pdf->Cell(30,7,'Invoice No.',0,0);
     $pdf->Cell(20,7,sprintf("%04d",$si_no),0,0,'R');
     $pdf->Ln(30);
     $pdf->Cell(20,7,'SOLD to',0,0);
-    $pdf->SetFont('Arial','',11);
+    $pdf->SetFont('Times','',11);
     $pdf->Cell(90,7,$rows['full_name'],0,0,'C');
-    $pdf->SetFont('Arial','B',11);
+    $pdf->SetFont('Times','B',11);
     $pdf->Cell(20,7,'Date',0,0);
-    $pdf->SetFont('Arial','',11);
+    $pdf->SetFont('Times','',11);
     $pdf->Cell(60,7,$rows['dates'],0,1,'C');
-    $pdf->SetFont('Arial','B',11);
+    $pdf->SetFont('Times','B',11);
     $pdf->Cell(20,7,'TIN/SC-TIN',0,0);
-    $pdf->SetFont('Arial','',11);
+    $pdf->SetFont('Times','',11);
     if($rows['tin']||null){
         $pdf->Cell(90,7,$rows['tin'],0,0,'C');    
     }else{
         $pdf->Cell(90,7,'',0,0,'C');    
     }
-    $pdf->SetFont('Arial','B',11);
+    $pdf->SetFont('Times','B',11);
     $pdf->Cell(20,7,'Terms',0,0);
-    $pdf->SetFont('Arial','',11);
+    $pdf->SetFont('Times','',11);
     $pdf->Cell(60,7,$rows['terms'],0,1,'C');
-    $pdf->SetFont('Arial','B',11);
+    $pdf->SetFont('Times','B',11);
     $pdf->Cell(20,7,'Address',0,0);
-    $pdf->SetFont('Arial','',11);
+    $pdf->SetFont('Times','',11);
     $pdf->Cell(90,7,$rows['address'],0,0,'C');
-    $pdf->SetFont('Arial','B',11);
+    $pdf->SetFont('Times','B',11);
     $pdf->Cell(20,7,'OSCA/PWID ID No.',0,0);
-    $pdf->SetFont('Arial','',11);
+    $pdf->SetFont('Times','',11);
     $pdf->Cell(60,7,$rows['opidno'],0,1,'C');
-    $pdf->SetFont('Arial','B',11);
+    $pdf->SetFont('Times','B',11);
     $pdf->Cell(20,7,'Business Style',0,0);
-    $pdf->SetFont('Arial','',11);
+    $pdf->SetFont('Times','',11);
     $pdf->Cell(90,7,$rows['bstyle'],0,1,'C');
 
     // 
-    $pdf->SetFont('Arial','B',11);
-    $pdf->Cell(10,10,'Code',0,0,'C');
+    $pdf->SetFont('Times','B',11);
+    $pdf->Cell(10,10,'Code',0,0,'L');
     $pdf->Cell(88,10,'Product Description',0,0,'C');
-    $pdf->Cell(18,10,'Lot No.',0,0,'C');
-    $pdf->Cell(18,10,'Expiry',0,0,'C');
-    $pdf->Cell(18,10,'Quantity',0,0,'C');
-    $pdf->Cell(19,10,'Unit Price',0,0,'C');
-    $pdf->Cell(22,10,'AMOUNT',0,1,'C');
-    $query = mysqli_query($db,"SELECT tbl_products.name,tbl_products.packing,tbl_salesdetails.id,tbl_salesdetails.sales_no,tbl_products.lot_no,DATE_FORMAT(tbl_products.expiry_date,'%Y-%m') AS expiry_date,tbl_salesdetails.quantity, tbl_salesdetails.price, tbl_salesdetails.amount
+    $pdf->Cell(18,10,'Lot No.',0,0,'L');
+    $pdf->Cell(18,10,'Expiry',0,0,'L');
+    $pdf->Cell(18,10,'Quantity',0,0,'L');
+    $pdf->Cell(19,10,'Unit Price',0,0,'L');
+    $pdf->Cell(22,10,'AMOUNT',0,1,'L');
+    $query = mysqli_query($db,"SELECT tbl_products.name,tbl_products.packing,tbl_salesdetails.id,tbl_salesdetails.sales_no,tbl_products.lot_no,DATE_FORMAT(tbl_products.expiry_date,'%b-%y') AS expiry_date,tbl_salesdetails.quantity, tbl_salesdetails.price, tbl_salesdetails.amount
     FROM tbl_salesdetails, tbl_products WHERE
     tbl_salesdetails.prod_id=tbl_products.prod_id AND tbl_salesdetails.sales_no='$si_no'");
         $o = 1;
@@ -277,15 +277,15 @@ $pdf->Output();
     while ($row = mysqli_fetch_array($query,MYSQLI_ASSOC)) {
         $arr[] = $row;
     }
-    $pdf->SetFont('Arial','',10);
+    $pdf->SetFont('Times','',10);
     for ($i=0; $i < count($arr); $i++) { 
-        $pdf->Cell(20,5,$o++,0,0,'L');
-        $pdf->Cell(84,5,$arr[$i][name]." ".$arr[$i][packing],0,0,'L');
-        $pdf->Cell(16,5,$arr[$i][lot_no],0,0,'L');
-        $pdf->Cell(16,5,$arr[$i][expiry_date],0,0,'L');
-        $pdf->Cell(15,5,$arr[$i][quantity],0,0,'C');
-        $pdf->Cell(17,5,number_format($arr[$i][price],2),0,0,'C');
-        $pdf->Cell(20,5,number_format($arr[$i][amount],2),0,1,'C');
+        $pdf->Cell(10,5,$o++,1,0,'L');
+        $pdf->Cell(87,5,$arr[$i][name]." ".$arr[$i][packing],1,0,'L');
+        $pdf->Cell(20,5,$arr[$i][lot_no],1,0,'C');
+        $pdf->Cell(16,5,$arr[$i][expiry_date],1,0,'L');
+        $pdf->Cell(15,5,$arr[$i][quantity],1,0,'C');
+        $pdf->Cell(17,5,number_format($arr[$i][price],2),1,0,'R');
+        $pdf->Cell(26,5,number_format($arr[$i][amount],2),1,1,'R');
     }
     $pdf->SetXY(50,220);//Coordinates for Fixed Position
     $pdf->Cell(30,5,'Total Sales',0,0);
@@ -314,9 +314,9 @@ $pdf->Output();
     $pdf->Cell(50,5,'Less: SC/PWD Discount',0,0);
     $pdf->Cell(30,5,"(".number_format($rows['total_discount'],2).")",0,1,'R');
     $pdf->SetXY(120,240);//Coordinates for Fixed Position
-    $pdf->SetFont('Arial','B',11);
+    $pdf->SetFont('Times','B',11);
     $pdf->Cell(30,5,'Total Amount Due',0,0);
-    $pdf->SetFont('Arial','U',11);
+    $pdf->SetFont('Times','U',11);
     $pdf->Cell(50,5,number_format($rows['total_amount'],2),0,1,'R');
 
     $pdf->AutoPrint();

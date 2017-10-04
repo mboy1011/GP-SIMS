@@ -33,10 +33,10 @@ class CRUD
 		}
 	
 	}
-	public function updateCust($id,$fn,$add,$tin,$bstyle,$terms,$opidno)
+	public function updateCust($id,$fn,$add,$tin,$bstyle,$terms,$opidno,$d1,$d2)
 	{
 		require 'config.php';
-		$sql = mysqli_query($db,"UPDATE tbl_customers SET full_name='$fn', address='$add', tin = $tin, bstyle='$bstyle', terms='$terms', opidno='$opidno' WHERE cus_id='$id'");
+		$sql = mysqli_query($db,"UPDATE tbl_customers SET full_name='$fn', address='$add', tin = $tin, bstyle='$bstyle', terms='$terms', opidno='$opidno',discount1='$d1', discount2='$d2' WHERE cus_id='$id'");
 		if (!$sql) {
 			return false;
 		}else{

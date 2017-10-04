@@ -234,7 +234,9 @@ if(isset($_POST['importSubmit'])){
                 $bstyle = mysqli_real_escape_string($db,$_POST['bstyle']);
                 $terms = mysqli_real_escape_string($db,$_POST['terms']);
                 $opidno = mysqli_real_escape_string($db,$_POST['opidno']);
-                $sql=$oop->updateCust($id,$fn,$add,$tin,$bstyle,$terms,$opidno);
+                $d1 = mysqli_real_escape_string($db,$_POST['dis1']);
+                $d2 = mysqli_real_escape_string($db,$_POST['dis2']);
+                $sql=$oop->updateCust($id,$fn,$add,$tin,$bstyle,$terms,$opidno,$d1,$d2);
                 if(!$sql){
                    ?>
                       <div class="alert alert-warning alert-dismissable">
@@ -306,6 +308,8 @@ if(isset($_POST['importSubmit'])){
                             <th>Business Style</th>
                             <th>OSCA/PWD ID No.</th>
                             <th>Terms</th>
+                            <th>Discount 1</th>
+                            <th>Discount 2</th>
                             <th>Date Added</th>                       
                             <th>Edit</th> 
                             <th>Delete</th> 
@@ -325,9 +329,11 @@ if(isset($_POST['importSubmit'])){
                             <td><?php echo $row['bstyle']; ?></td> 
                             <td><?php echo $row['opidno']; ?></td> 
                             <td><?php echo $row['terms']; ?></td> 
+                            <td><?php echo $row['discount1']; ?></td> 
+                            <td><?php echo $row['discount2']; ?></td> 
                             <td><?php echo $row['timestamp']; ?></td>    
                             <td>
-                               <b data-placement="top"  title="Edit"><button class="btn-edit btn btn-warning btn-xs"  data-title="Edit" data-id="<?php echo $row['cus_id']; ?>"  data-fn="<?php echo $row['full_name']; ?>" data-ad="<?php echo $row['address']; ?>" data-tin="<?php echo $row['tin']; ?>" data-bstyle="<?php echo $row['bstyle']; ?>" data-opidno="<?php echo $row['opidno']; ?>" data-terms="<?php echo $row['terms']; ?>" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
+                               <b data-placement="top"  title="Edit"><button class="btn-edit btn btn-warning btn-xs"  data-title="Edit" data-id="<?php echo $row['cus_id']; ?>"  data-fn="<?php echo $row['full_name']; ?>" data-ad="<?php echo $row['address']; ?>" data-tin="<?php echo $row['tin']; ?>" data-bstyle="<?php echo $row['bstyle']; ?>" data-opidno="<?php echo $row['opidno']; ?>" data-terms="<?php echo $row['terms']; ?>" data-dis1="<?php echo $row['discount1']; ?>" data-dis2="<?php echo $row['discount2']; ?>" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
                             </td>      
                             <td>
                                 <b data-placement="top" title="Delete"><button class="btn-delete btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['cus_id']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
@@ -357,6 +363,8 @@ if(isset($_POST['importSubmit'])){
                 <input type="text" id="bstyle" name="bstyle" placeholder="Business Style" class="form-control">
                 <input type="text" id="terms" name="terms" placeholder="Terms" class="form-control">
                 <input type="text" id="opidno" name="opidno" placeholder="OSCA/PWD ID No." class="form-control">
+                <input type="number" step="any" name="dis1" id="edit_dis1" class="form-control" placeholder="Discount 1">
+                <input type="number" step="any" name="dis2" id="edit_dis2" class="form-control" placeholder="Discount 2">
                 
       </div>
       <div class="modal-footer">
@@ -473,6 +481,8 @@ $(document).ready(function(){
         var opidno = $(this).data("opidno");
         var tin = $(this).data("tin");
         var ad = $(this).data("ad");
+        var d1 = $(this).data("dis1");
+        var d2 = $(this).data("dis2");
         $("#cust_id").val(id);    
         $("#cust").val(fn);    
         $("#tin").val(tin);
@@ -480,6 +490,8 @@ $(document).ready(function(){
         $("#opidno").val(opidno);
         $("#bstyle").val(bstyle);
         $("#add").val(ad);
+        $("#edit_dis1").val(d1);
+        $("#edit_dis2").val(d2);
     });
     $(".btn-delete").click(function(){
         var did = $(this).data("did");
