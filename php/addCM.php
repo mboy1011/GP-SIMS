@@ -410,7 +410,9 @@ $oop = new CRUD();
                 $("#notify-alert").modal();   
             }else{
                 if (si==undefined||si==null) {
-                  $("#notify-alert").modal();  
+                   $.post('addjax.php', {addCM:'addCM',prod_id: p,qty: q1,si_no:s,cm_no:c}, function(data, textStatus, xhr) {
+                            viewData();
+                    });
                 }else{
                     if (s!=si) {
                         $("#notify-alert").modal();   

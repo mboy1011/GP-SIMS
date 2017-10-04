@@ -156,40 +156,36 @@ $oop = new CRUD();
             </div>
         </div>
 <?php
-    if (isset($_POST['update'])) {
-        $id = mysqli_real_escape_string($db,$_POST['id']);
-        $proname = mysqli_real_escape_string($db,$_POST['proname']);
-        $desc = mysqli_real_escape_string($db,$_POST['desc']);
-        $lot = mysqli_real_escape_string($db,$_POST['lot']);
-        $price = mysqli_real_escape_string($db,$_POST['price']);
-        $exp = mysqli_real_escape_string($db,$_POST['exp']);
-        $pack = mysqli_real_escape_string($db,$_POST['pack']);
-        $qty = mysqli_real_escape_string($db,$_POST['qty']);
-        $sql = $oop->upPro($id,$proname,$desc,$lot,$price,$exp,$pack,$qty);
-        if(!$sql){
-                   ?>
-                      <div class="alert alert-warning alert-dismissable">
-                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Update!</strong> Try Again.
-                      </div>
-                  <?php
-                }else{
-                    ?>
-                      <div class="alert alert-success alert-dismissable">
-                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Updated!</strong>
-                      </div>
-                  <?php
-                }
-    }
-    if (isset($_POST['delete'])) {
-        $did = mysqli_real_escape_string($db,$_POST['delid']);
-        $sql = $oop->delPro($did);
+    if (isset($_POST['upCR'])) {
+        $cr = mysqli_real_escape_string($db,$_POST['cr']);
+        $ts = mysqli_real_escape_string($db,$_POST['ts']);
+        $dates = mysqli_real_escape_string($db,$_POST['dates']);
+        $pt = mysqli_real_escape_string($db,$_POST['pt']);
+        $ch = mysqli_real_escape_string($db,$_POST['ch']);
+        $sql = $oop->upCR($cr,$ts,$dates,$pt,$ch);
         if(!$sql){
            ?>
               <div class="alert alert-warning alert-dismissable">
                   <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Delete Customer!</strong> Try Again.
+                <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Update!</strong> Try Again.
+              </div>
+          <?php
+        }else{
+            ?>
+              <div class="alert alert-success alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Updated!</strong>
+              </div>
+          <?php
+        }
+    }else if (isset($_POST['delete'])) {
+        $did = mysqli_real_escape_string($db,$_POST['d_cr']);
+        $sql = $oop->delCR($did);
+        if(!$sql){
+           ?>
+              <div class="alert alert-warning alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Delete Collection Receipt!</strong> Try Again.
               </div>
           <?php
         }else{
@@ -263,10 +259,10 @@ $oop = new CRUD();
                             <td><button class="b-infos btn btn-info btn-xs" id="infos" data-cr="<?php echo $row['cr_no'];?>"><span class="fa fa-question"></span></button>
                             </td>
                             <td>
-                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
+                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit" data-cr="<?php echo $row['cr_no'];?>" data-cus="<?php echo $row['full_name']; ?>" data-ts="<?php echo $row['cr_totalSales'];?>" data-date="<?php echo $row['cr_date'];?>" data-pt="<?php echo $row['pay_type'];?>" data-ch="<?php echo $row['check_no'];?>" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
                             </td>      
                             <td>
-                                <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['id']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
+                                <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['cr_no']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
                             </td> 
                           </tr>
                       <?php } ?>
@@ -298,14 +294,43 @@ $oop = new CRUD();
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Edit Inventory Out</h4>
+        <h4 class="modal-title">Edit Collection Receipt Details</h4>
       </div>
+      <form method="POST" action="">
       <div class="modal-body">
-
+          <div class="input-group">
+            <span class="input-group-addon">CR NO.:</span>    
+            <input type="number" step="any" name="cr" id="edits_cr" class="form-control" readonly="">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon">Customer:</span>  
+            <input type="text" name="" id="edits_cus" class="form-control">    
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon">Total Sales:</span>  
+            <input type="number" step="any" name="ts" id="edits_ts" class="form-control" >
+          </div>
+          <div class="input-group date form_date">
+            <span class="input-group-addon" >Date:</span>
+            <input name="dates" id="edits_dates" class="form-control" size="16" type="text" placeholder="">
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon">Payment Type:</span>  
+            <select name="pt" id="edits_pt" class="form-control">
+              <option value="Check">Check</option>
+              <option value="Cash">Cash</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon">Check No.:</span>  
+            <input type="number" step="any" name="ch" id="edits_ch" class="form-control">    
+          </div>
       </div>
       <div class="modal-footer">
-
+            <button type="submit" class="btn btn-warning" name="upCR">Update</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
       </div>
+      </form>
     </div>
 
   </div>
@@ -317,15 +342,18 @@ $oop = new CRUD();
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Delete Inventory Out</h4>
+        <h4 class="modal-title">Delete Collection Receipt</h4>
       </div>
+      <form method="POST" action="">
       <div class="modal-body">
-        <b><strong>Are you sure you want to delete this sales invoice?</strong></b>
+        <input type="number" name="d_cr" id="d_cr" hidden="">
+        <b><strong>Are you sure you want to delete this collection receipt?</strong></b>
       </div>
       <div class="modal-footer">
-         <button class="btn btn-danger">Yes</button>
+         <button class="btn btn-danger" type="submit" name="delete">Yes</button>
          <button class="btn btn-default" data-dismiss="modal">No</button>
       </div>
+      </form>
     </div>
 
   </div>
@@ -491,10 +519,23 @@ $(document).ready(function(){
       return false;
     }); 
     $('.btn-edits').click(function(event) {
-        
+        var cr = $(this).data('cr');
+        var cus = $(this).data('cus');
+        var ts = $(this).data('ts');
+        var date = $(this).data('date');
+        var pt = $(this).data('pt');
+        var ch = $(this).data('ch');
+        $("#edits_cr").val(cr);
+        $("#edits_cus").val(cus);
+        $("#edits_ts").val(ts);
+        $("#edits_dates").val(date);
+        $("#edits_pt").val(pt);
+        $("#edits_ch").val(ch);
+        // console.log(cr+cus+ts+date+pt+ch);
     });
     $('.btn-deletes').click(function(event) {
-       
+       var did = $(this).data('did');
+       $("#d_cr").val(did);
     });
     $('.b-infos').click(function(event) {
       var cr = parseInt($(this).data('cr'));
@@ -523,6 +564,12 @@ $(document).ready(function(){
     });
     $("#upNo").click(function(event) {
         $('#editAm').modal('toggle');
+    });
+    $('.form_date').datepicker({
+    format: "yyyy/mm/dd",
+    language: 'en-AU',
+    todayHighlight: true,
+    autoclose: true
     });
 });
 </script>

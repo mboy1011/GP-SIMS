@@ -157,32 +157,30 @@ $oop = new CRUD();
         </div>
 <?php
     if (isset($_POST['update'])) {
-        $id = mysqli_real_escape_string($db,$_POST['id']);
-        $proname = mysqli_real_escape_string($db,$_POST['proname']);
-        $desc = mysqli_real_escape_string($db,$_POST['desc']);
-        $lot = mysqli_real_escape_string($db,$_POST['lot']);
-        $price = mysqli_real_escape_string($db,$_POST['price']);
-        $exp = mysqli_real_escape_string($db,$_POST['exp']);
-        $pack = mysqli_real_escape_string($db,$_POST['pack']);
-        $qty = mysqli_real_escape_string($db,$_POST['qty']);
-        $sql = $oop->upPro($id,$proname,$desc,$lot,$price,$exp,$pack,$qty);
+        $cm = mysqli_real_escape_string($db,$_POST['cm']);
+        $si = mysqli_real_escape_string($db,$_POST['si']);
+        $cus = mysqli_real_escape_string($db,$_POST['cus']);
+        $res = mysqli_real_escape_string($db,$_POST['res']);
+        $ta = mysqli_real_escape_string($db,$_POST['ta']);
+        $sm = mysqli_real_escape_string($db,$_POST['sm']);
+        $date = mysqli_real_escape_string($db,$_POST['date']);
+        $sql = $oop->upCM($cm,$si,$cus,$res,$ta,$sm,$date);
         if(!$sql){
-                   ?>
-                      <div class="alert alert-warning alert-dismissable">
-                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Update!</strong> Try Again.
-                      </div>
-                  <?php
-                }else{
-                    ?>
-                      <div class="alert alert-success alert-dismissable">
-                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Updated!</strong>
-                      </div>
-                  <?php
-                }
-    }
-    if (isset($_POST['delete'])) {
+           ?>
+              <div class="alert alert-warning alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Update!</strong> Try Again.
+              </div>
+          <?php
+        }else{
+            ?>
+              <div class="alert alert-success alert-dismissable">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong><b class="fa fa-check fa-bg">&nbsp;</b>Successfully Updated!</strong>
+              </div>
+          <?php
+        }
+    }elseif (isset($_POST['delete'])) {
         $did = mysqli_real_escape_string($db,$_POST['delid']);
         $sql = $oop->delPro($did);
         if(!$sql){
@@ -259,7 +257,7 @@ $oop = new CRUD();
                             <td><button class="b-infos btn btn-info btn-xs" id="infos" data-cm="<?php echo $row['cm_no'];?>"><span class="fa fa-question"></span></button>
                             </td>
                             <td>
-                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
+                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs" data-cm="<?php echo $row['cm_no']; ?>" data-si="<?php echo $row['sales_no']; ?>" data-cus="<?php echo $row['full_name']; ?>" data-res="<?php echo $row['cm_reason']; ?>" data-ta="<?php echo $row['cm_totalAmount']; ?>" data-sm="<?php echo $row['salesman']; ?>" data-date="<?php echo $row['cm_date']; ?>"  data-title="Edit"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
                             </td>      
                             <td>
                                 <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['cm_id']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
@@ -294,14 +292,43 @@ $oop = new CRUD();
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Edit Inventory Out</h4>
+        <h4 class="modal-title">Edit Credit/Debit Memo</h4>
       </div>
+      <form method="POST" action="">
       <div class="modal-body">
-
+          <div class="input-group">
+            <span class="input-group-addon">CM No.:</span>  
+            <input type="text" name="cm" id="cm_edits" class="form-control" readonly="">    
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon">Sales No.:</span>  
+            <input type="text" name="si" id="si_edits" class="form-control" readonly="">    
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon">Customer:</span>  
+            <input type="text" name="cus" id="cus_edits" class="form-control" readonly="">    
+          </div>
+          <textarea name="res" class="form-control" id="res_edits">
+            
+          </textarea>
+          <div class="input-group">
+            <span class="input-group-addon">Total Amount:</span>  
+            <input type="text" name="ta" id="ta_edits" class="form-control">    
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon">Salesman:</span>  
+            <input type="text" name="sm" id="sm_edits" class="form-control">    
+          </div>
+          <div class="input-group date form_date">
+            <span class="input-group-addon">Date:</span>  
+            <input type="text" name="date" id="date_edits" class="form-control">    
+          </div>
       </div>
       <div class="modal-footer">
-
+          <button type="submit" class="btn btn-warning" name="update">Update</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
       </div>
+    </form>
     </div>
 
   </div>
@@ -495,7 +522,21 @@ $(document).ready(function(){
       });
     });
     $('.btn-edits').click(function(event) {
-        
+      var cm = $(this).data('cm');
+      var si = $(this).data('si');
+      var cus = $(this).data('cus');
+      var res = $(this).data('res');
+      var ta = $(this).data('ta');
+      var sm = $(this).data('sm');
+      var date = $(this).data('date');
+      $("#cm_edits").val(cm);
+      $("#si_edits").val(si);
+      $("#cus_edits").val(cus);
+      $("#res_edits").text(res);
+      $("#ta_edits").val(ta);
+      $("#sm_edits").val(sm);
+      $("#date_edits").val(date);
+      // console.log(cm+''+si+cus+res+ta+sm+dadate_editste);
     });
     $('.btn-deletes').click(function(event) {
        
@@ -510,6 +551,12 @@ $(document).ready(function(){
         }
     }
     check();    
+    $('.form_date').datepicker({
+    format: "yyyy/mm/dd",
+    language: 'en-AU',
+    todayHighlight: true,
+    autoclose: true
+    });
 });
 </script>
 </body>

@@ -37,7 +37,7 @@ tbl_salesdetails.prod_id=tbl_products.prod_id AND tbl_salesdetails.sales_no='$si
 		$sql = mysqli_query($db,"SELECT SUM(amount) as total FROM tbl_CRdetails WHERE cr_no='$cr'");
 		$rows = mysqli_fetch_assoc($sql);
 		$tad = $rows['total'];
-		$query = mysqli_query($db,"SELECT tbl_sales.total_amount,tbl_CRdetails.crd_id,tbl_CRdetails.amount,tbl_CRdetails.sales_no,tbl_CRdetails.sales_no FROM tbl_CRdetails INNER JOIN tbl_sales ON tbl_sales.sales_no=tbl_CRdetails.sales_no WHERE tbl_CRdetails.cr_no='$cr'");
+		$query = mysqli_query($db,"SELECT tbl_SOA.total,tbl_SOA.BALANCE,tbl_CRdetails.crd_id,tbl_CRdetails.amount,tbl_CRdetails.sales_no,tbl_CRdetails.sales_no FROM tbl_CRdetails INNER JOIN tbl_SOA ON tbl_SOA.sales_no=tbl_CRdetails.sales_no WHERE tbl_CRdetails.cr_no='$cr'");
 		$i=1;
 		while ($row = mysqli_fetch_array($query,MYSQLI_ASSOC)) {
 ?>
@@ -45,7 +45,7 @@ tbl_salesdetails.prod_id=tbl_products.prod_id AND tbl_salesdetails.sales_no='$si
 		<td><?php echo $i++;?></td>
 		<td><?php echo sprintf('%04d',$row['sales_no']);?></td>
 		<td><?php echo number_format($row['amount'],2);?></td>
-		<td><?php echo number_format($row['total_amount']-$tad,2);?></td>
+		<td><?php echo $row['BALANCE'];?></td>
 		<td>
 			<input type="number" step="any" id="total_amounts" value="<?php echo $tad;?>" hidden>
 			<button class="btn btn btn-danger btn-xs" id="btn-delete" name="btn-delete" data-dids=<?php echo $row['crd_id'];?> data-sids="<?php echo $row['sales_no']?>"><b class="fa fa-times">&nbsp;</b></button></b>   

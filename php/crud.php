@@ -92,15 +92,15 @@ class CRUD
 	public function upStat($si)
 	{
 		require 'config.php';
-		$sql = mysqli_query($db,"SELECT * FROM tbl_SOA WHERE sales_no='$si'");
+		$sql = mysqli_query($db,"SELECT IF(BALANCE=total,'true','false') as UNPAID, IF(BALANCE!=total,'true','false') as PARTIAL, IF(BALANCE=0,'true','false') as PAID FROM tbl_SOA WHERE sales_no='$si'");
 		$row = mysqli_fetch_assoc($sql);
-	    if($row['total']==$row['BALANCE']){
+	    if($row['UNPAID']=='true'&&$row['PARTIAL']=='false'&&$row['PAID']=='false'){
 	      mysqli_query($db,"UPDATE tbl_sales SET status='UNPAID' WHERE sales_no='$si'");
 	      return true;
-	    }else if ($row['total']!=$row['BALANCE']) {
+	    }else if ($row['UNPAID']=='false'&&$row['PARTIAL']=='true'&&$row['PAID']=='false') {
 	      mysqli_query($db,"UPDATE tbl_sales SET status='PARTIALLY PAID' WHERE sales_no='$si'");
 	      return true;
-	    }else if($row['BALANCE']==0){
+	    }else if($row['UNPAID']=='false'&&$row['PARTIAL']=='true'&&$row['PAID']=='true'){
 	      mysqli_query($db,"UPDATE tbl_sales SET status='PAID' WHERE sales_no='$si'");
 	      return true;
 	    }
@@ -422,6 +422,57 @@ class CRUD
 			return false;
 		}else{
 			return true;
+		}
+	}
+	public function upCR($cr,$ts,$dates,$pt,$ch)
+	{
+		require 'config.php';
+		$sql = mysqli_query($db,"UPDATE tbl_CR SET cr_totalSales='$ts',cr_date='$dates',pay_type='$pt',check_no='$ch' WHERE cr_no='$cr'");
+		if (!$sql) {
+			return false;
+		}else{
+			return true;
+		}
+	}
+	public function upCM($cm,$si,$cus,$res,$ta,$sm,$date)
+	{
+		require 'config.php';
+		$sql = mysqli_query($db,"UPDATE tbl_CM SET cm_reason='$res',cm_totalAmount='$ta',salesman='$sm',cm_date='$date' WHERE cm_no='$cm'");
+		if (!$sql) {
+			return false;
+		}else{
+			return true;
+		}
+	}
+	public function delCR($did)
+	{
+		require 'config.php';
+		$sql = mysqli_query($db,"SELECT sales_no FROM tbl_CRdetails WHERE cr_no='$did'");
+		$arr = array();
+		while($row = mysqli_fetch_array($sql,MYSQLI_ASSOC)){
+		    $arr[] = $row;
+		}
+		$result;
+		$sql4 = mysqli_query($db,"DELETE FROM tbl_CRdetails WHERE cr_no='$did'");
+		if (!$sql4) {
+			return false;	
+		}else{
+			for($i=0; $i < count($arr); $i++){
+			      // $up1 = mysqli_query($db,"UPDATE tbl_sales SET status='UNPAID' WHERE sales_no=".$arr[$i][sales_no]."");
+			      // $result = $up1;
+					$up = $this->upStat($arr[$i][sales_no]);
+					$result = $up;
+			}
+		}
+		if (!$result) {
+			return false;
+		}else{
+				$sql5 = mysqli_query($db,"DELETE FROM tbl_CR WHERE cr_no='$did'");
+				if (!$sql5) {
+					return false;
+				}else{
+					return true;
+				}
 		}
 	}
 }

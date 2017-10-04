@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 02, 2017 at 09:24 AM
+-- Generation Time: Oct 04, 2017 at 12:27 PM
 -- Server version: 5.6.36
 -- PHP Version: 7.0.16
 
@@ -64,19 +64,6 @@ CREATE TABLE IF NOT EXISTS `tbl_CMdetails` (
   `cmd_price` float(11,2) DEFAULT NULL,
   `cmd_amount` float(11,2) DEFAULT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tbl_collections`
---
-
-CREATE TABLE IF NOT EXISTS `tbl_collections` (
-  `col_id` int(11) NOT NULL,
-  `cus_id` int(11) DEFAULT NULL,
-  `amount` float(11,2) DEFAULT NULL,
-  `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -405,7 +392,7 @@ CREATE TABLE IF NOT EXISTS `tbl_SOA` (
 ,`DEBIT` double(19,2)
 ,`CREDIT` double
 ,`status` varchar(45)
-,`BALANCE` varchar(63)
+,`BALANCE` decimal(11,2)
 );
 
 -- --------------------------------------------------------
@@ -562,7 +549,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `tbl_SOA`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tbl_SOA` AS select `tbl_sales`.`sales_no` AS `sales_no`,`tbl_sales`.`cus_id` AS `cus_id`,date_format(`tbl_sales`.`dates`,'%m-%d-%Y') AS `dates`,`tbl_sales`.`due_date` AS `due_date`,`tbl_customers`.`terms` AS `terms`,`tbl_sales`.`total_amount` AS `total`,(select ifnull(sum(`tbl_CM`.`cm_totalAmount`),0) from `tbl_CM` where (`tbl_CM`.`sales_no` = `tbl_sales`.`sales_no`)) AS `DEBIT`,(select ifnull(sum(`tbl_CRdetails`.`amount`),0) from `tbl_CRdetails` where (`tbl_CRdetails`.`sales_no` = `tbl_sales`.`sales_no`)) AS `CREDIT`,`tbl_sales`.`status` AS `status`,format(((`tbl_sales`.`total_amount` - (select ifnull(sum(`tbl_CM`.`cm_totalAmount`),0) from `tbl_CM` where (`tbl_CM`.`sales_no` = `tbl_sales`.`sales_no`))) - (select ifnull(sum(`tbl_CRdetails`.`amount`),0) from `tbl_CRdetails` where (`tbl_CRdetails`.`sales_no` = `tbl_sales`.`sales_no`))),2) AS `BALANCE` from (`tbl_sales` join `tbl_customers` on((`tbl_customers`.`cus_id` = `tbl_sales`.`cus_id`)));
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tbl_SOA` AS select `tbl_sales`.`sales_no` AS `sales_no`,`tbl_sales`.`cus_id` AS `cus_id`,date_format(`tbl_sales`.`dates`,'%m-%d-%Y') AS `dates`,`tbl_sales`.`due_date` AS `due_date`,`tbl_customers`.`terms` AS `terms`,`tbl_sales`.`total_amount` AS `total`,(select ifnull(sum(`tbl_CM`.`cm_totalAmount`),0) from `tbl_CM` where (`tbl_CM`.`sales_no` = `tbl_sales`.`sales_no`)) AS `DEBIT`,(select ifnull(sum(`tbl_CRdetails`.`amount`),0) from `tbl_CRdetails` where (`tbl_CRdetails`.`sales_no` = `tbl_sales`.`sales_no`)) AS `CREDIT`,`tbl_sales`.`status` AS `status`,cast(((`tbl_sales`.`total_amount` - (select ifnull(sum(`tbl_CM`.`cm_totalAmount`),0) from `tbl_CM` where (`tbl_CM`.`sales_no` = `tbl_sales`.`sales_no`))) - (select ifnull(sum(`tbl_CRdetails`.`amount`),0) from `tbl_CRdetails` where (`tbl_CRdetails`.`sales_no` = `tbl_sales`.`sales_no`))) as decimal(11,2)) AS `BALANCE` from (`tbl_sales` join `tbl_customers` on((`tbl_customers`.`cus_id` = `tbl_sales`.`cus_id`)));
 
 -- --------------------------------------------------------
 
@@ -596,13 +583,6 @@ ALTER TABLE `tbl_CM`
 --
 ALTER TABLE `tbl_CMdetails`
   ADD PRIMARY KEY (`cmd_id`);
-
---
--- Indexes for table `tbl_collections`
---
-ALTER TABLE `tbl_collections`
-  ADD PRIMARY KEY (`col_id`),
-  ADD KEY `col_id` (`col_id`);
 
 --
 -- Indexes for table `tbl_CR`
@@ -703,11 +683,6 @@ ALTER TABLE `tbl_CM`
 --
 ALTER TABLE `tbl_CMdetails`
   MODIFY `cmd_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `tbl_collections`
---
-ALTER TABLE `tbl_collections`
-  MODIFY `col_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `tbl_CR`
 --
