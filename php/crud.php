@@ -458,8 +458,6 @@ class CRUD
 			return false;	
 		}else{
 			for($i=0; $i < count($arr); $i++){
-			      // $up1 = mysqli_query($db,"UPDATE tbl_sales SET status='UNPAID' WHERE sales_no=".$arr[$i][sales_no]."");
-			      // $result = $up1;
 					$up = $this->upStat($arr[$i][sales_no]);
 					$result = $up;
 			}
@@ -473,6 +471,31 @@ class CRUD
 				}else{
 					return true;
 				}
+		}
+	}
+	public function delCM($did,$si)
+	{
+		require 'config.php';
+		$result;
+		$sql = mysqli_query($db,"SELECT * FROM tbl_CMdetails WHERE cm_no='$did'");
+		$arr = array();
+		while ($row=mysqli_fetch_assoc($sql)) {
+		    $arr[] = $row;
+		}
+		for ($i = 0; $i < count($arr); $i++) {
+			$stat = $this->d_c_prod($si,$arr[$i][prod_id],$arr[$i][cmd_qty]);
+			$result = $stat;
+		}
+		if (!$result) {
+			return false;
+		}else{
+			$sql1 = mysqli_query($db,"DELETE FROM tbl_CMdetails WHERE cmd_id='$did'");
+			$sql2 = mysqli_query($db,"DELETE FROM tbl_CM WHERE cmd_id='$did'");
+			if (!$sql1||$sql2) {
+				return false;
+			}else{
+				return true;
+			}
 		}
 	}
 }

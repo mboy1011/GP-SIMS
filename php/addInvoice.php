@@ -596,7 +596,7 @@ $(document).ready(function() {
            var salesno = $("#salesno").val();
            var custid = $("#custid").val();
            var qty = $("#qty").val();
-           var boxes = $("#boxes").val();
+           var boxes = parseInt($("#boxes").val());
            if (qty>boxes||qty<0) {
                 $("#warning").modal();
                 $("#text").text("There's not enough quantity.");

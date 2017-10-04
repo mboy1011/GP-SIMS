@@ -181,13 +181,14 @@ $oop = new CRUD();
           <?php
         }
     }elseif (isset($_POST['delete'])) {
-        $did = mysqli_real_escape_string($db,$_POST['delid']);
-        $sql = $oop->delPro($did);
+        $did = mysqli_real_escape_string($db,$_POST['cm_did']);
+        $si = mysqli_real_escape_string($db,$_POST['cm_si']);
+        $sql = $oop->delCM($did,$si);
         if(!$sql){
            ?>
               <div class="alert alert-warning alert-dismissable">
                   <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Delete Customer!</strong> Try Again.
+                <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Delete C/D Memo!</strong> Try Again.
               </div>
           <?php
         }else{
@@ -260,7 +261,7 @@ $oop = new CRUD();
                                <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs" data-cm="<?php echo $row['cm_no']; ?>" data-si="<?php echo $row['sales_no']; ?>" data-cus="<?php echo $row['full_name']; ?>" data-res="<?php echo $row['cm_reason']; ?>" data-ta="<?php echo $row['cm_totalAmount']; ?>" data-sm="<?php echo $row['salesman']; ?>" data-date="<?php echo $row['cm_date']; ?>"  data-title="Edit"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
                             </td>      
                             <td>
-                                <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['cm_id']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
+                                <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-dsi="<?php echo $row['sales_no']; ?>" data data-did="<?php echo $row['cm_no']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
                             </td> 
                           </tr>
                       <?php } ?>
@@ -340,14 +341,19 @@ $oop = new CRUD();
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Delete Inventory Out</h4>
+        <h4 class="modal-title">Delete Credit/Debit Memo</h4>
       </div>
+      <form method="POST" action="">
       <div class="modal-body">
-        
+        <input type="number" name="cm_did" id="cm_did" hidden="">
+        <input type="number" name="cm_si" id="cm_si" hidden="">
+        <strong>Are you sure you want to delete this C/D Memo?</strong>
       </div>
       <div class="modal-footer">
-         
+        <button type="submit" class="btn btn-danger" name="delete">Delete</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
       </div>
+      </form>
     </div>
 
   </div>
@@ -539,7 +545,10 @@ $(document).ready(function(){
       // console.log(cm+''+si+cus+res+ta+sm+dadate_editste);
     });
     $('.btn-deletes').click(function(event) {
-       
+       var did = $(this).data('did');
+       var dsi = $(this).data('dsi');
+       $("#cm_did").val(did);
+       $("#cm_si").val(dsi);
     });
     $("#not").click(function(event) {
         $("#notify").hide();
