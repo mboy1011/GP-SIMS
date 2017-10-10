@@ -498,5 +498,26 @@ class CRUD
 			}
 		}
 	}
+	public function delSup($id)
+	{
+		require 'config.php';
+		$sql= mysqli_query($db,"DELETE FROM tbl_supplier WHERE sup_id='$id'");
+		if (!$sql) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	public function delPO($did)
+	{
+		require 'config.php';
+		$sql1 = mysqli_query($db,"DELETE FROM tbl_POdetails WHERE po_no='$did'");
+		$sql= mysqli_query($db,"DELETE FROM tbl_PO WHERE po_no='$did'");
+		if (!$sql||!$sql1) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 }
 ?>

@@ -172,7 +172,7 @@ $oop = new CRUD();
           <div class="col-sm-4">
             <select name="cust" class="cus form-control" style="display: none;">
               <?php
-                $sql = mysqli_query($db,"SELECT * FROM tbl_customers GROUP BY full_name ASC");
+                $sql = mysqli_query($db,"SELECT * FROM tbl_customers ");
                 while ($row = mysqli_fetch_array($sql)) {
                     echo "<option value='".$row['cus_id']."'>".$row['full_name']."</option>";
                 }

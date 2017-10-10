@@ -180,13 +180,13 @@ $oop = new CRUD();
                 }
     }
     if (isset($_POST['delete'])) {
-        $did = mysqli_real_escape_string($db,$_POST['delid']);
-        $sql = $oop->delPro($did);
+        $did = mysqli_real_escape_string($db,$_POST['del_id']);
+        $sql = $oop->delPO($did);
         if(!$sql){
            ?>
               <div class="alert alert-warning alert-dismissable">
                   <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Delete Customer!</strong> Try Again.
+                <strong><b class="fa fa-times fa-bg">&nbsp;</b>Failed to Delete P.O!</strong> Try Again.
               </div>
           <?php
         }else{
@@ -245,7 +245,8 @@ $oop = new CRUD();
                                </form>
                             </td>
                             <td>
-                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit" data-id="<?php echo $row['po_no'];?>"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
+                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit" data-id="<?php echo $row['po_no'];?>"
+                               data-sup="<?php echo $row['sup_id']; ?>" data-date="<?php echo $row['po_date']; ?>" data-am="<?php echo $row['po_totalAmount']; ?>" data-nb="<?php echo $row['noted_by']; ?>" data-pb="<?php echo $row['prepare_by']; ?>" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
                             </td>      
                             <td>
                                 <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['po_no']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
@@ -265,10 +266,20 @@ $oop = new CRUD();
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Edit Inventory Out</h4>
+        <h4 class="modal-title">Edit P.O Details</h4>
       </div>
       <div class="modal-body">
-
+        <div class="input-group">
+          <span class="input-group-addon">Supplier:</span>  
+          <select name="edit_cus" class="form-control">
+            <?php  
+            $cus = mysqli_query($db,"SELECT * FROM tbl_supplier");
+            while ($rows = mysqli_fetch_assoc($cus)) {
+              echo "<option value=".$rows['sup_id'].">".$rows['sup_name']."</option>";    
+            }
+            ?>
+          </select>
+        </div>
       </div>
       <div class="modal-footer">
 
@@ -284,14 +295,18 @@ $oop = new CRUD();
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Delete Inventory Out</h4>
+        <h4 class="modal-title">Delete Purchase Order</h4>
       </div>
+      <form method="POST" action="">
       <div class="modal-body">
-        
+        <input type="number" name="del_id" id="del_id" hidden="">
+        <strong>Are you sure you want to delete this PO?</strong>
       </div>
       <div class="modal-footer">
-         
+         <button class="btn btn-default" type="submit" name="delete"><b class="fa fa-check fa-bg">&nbsp;</b>Yes</button>
+         <button type="button" class="btn btn-default" data-dismiss="modal"><b class="fa fa-close fa-bg">&nbsp;</b>No</button>
       </div>
+    </form>
     </div>
 
   </div>
@@ -346,10 +361,16 @@ $(document).ready(function(){
         ]
     });
     $('.btn-edits').click(function(event) {
-        
+        var id = $(this).data('id');
+        var sup = $(this).data('sup');
+        var date = $(this).data('date');
+        var am = $(this).data('am');
+        var nb = $(this).data('nb');
+        var pb = $(this).data('pb');
     });
     $('.btn-deletes').click(function(event) {
-       
+       var del_id = $(this).data('did');
+       $("#del_id").val(del_id);
     });
     $("#not").click(function(event) {
         $("#notify").hide();

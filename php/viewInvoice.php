@@ -15,10 +15,10 @@ $oop = new CRUD();
     <link rel="stylesheet" type="text/css" href="../css/fixedColumns.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/buttons.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="../css/buttons.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/style_css.css">
     <!-- DatePicker -->
     <link rel="stylesheet" type="text/css" href="../css/bootstrap-datepicker3.min.css">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../css/style_css.css">
  </head>
 <body>
 <div id="wrapper">

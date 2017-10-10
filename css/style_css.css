@@ -9,11 +9,11 @@
 	 color: #fff;
 }
 .modal-header{
-  background-color: #4dffb8;
+  background-color: #0f846d;
   color: #fff;
 }
 .modal-footer{
-    background-color: #333333;
+    background-color:white;
 }    
 #datatables_filter
 {

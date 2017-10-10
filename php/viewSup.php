@@ -182,12 +182,22 @@ $oop = new CRUD();
                   <?php
               }
           }else if (isset($_POST['delete'])) {
-              $id = mysqli_real_escape_string($db,$_POST['sup_did']);
+              $id = mysqli_real_escape_string($db,$_POST['del_id']);
               $sql = $oop->delSup($id);
               if (!$sql) {
-                  
+                  ?>
+                      <div class="alert alert-warning alert-dismissable">
+                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Already Added!</strong> Try Again.
+                      </div>
+                  <?php
               }else{
-
+                  ?>
+                      <div class="alert alert-success alert-dismissable">
+                          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Successfully Deleted!</strong>
+                      </div>
+                  <?php
               }
           }else if(isset($_POST['addSup'])){
                     $nm = mysqli_real_escape_string($db,$_POST['name']);
@@ -260,9 +270,18 @@ $oop = new CRUD();
       <form method="POST" action="">
       <div class="modal-body">
         <input type="number" name="sup_id" id="sup_id" hidden="">
-        <input type="text" name="sup_name" class="form-control" id="sup_nm">
+        <div class="input-group">
+            <span class="input-group-addon">Supplier's Name:</span>
+            <input type="text" name="sup_name" class="form-control" id="sup_nm">   
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">Address:</span>
         <input type="text" name="sup_add" class="form-control" id="sup_ad">
+      </div>
+        <div class="input-group">
+            <span class="input-group-addon">Telephone:</span>
         <input type="number" step="any" name="sup_tel" class="form-control" id="sup_tel">
+      </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-warning" type="submit" name="update">Update</button>
@@ -279,14 +298,18 @@ $oop = new CRUD();
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Delete Inventory Out</h4>
+        <h4 class="modal-title">Delete Supplier</h4>
       </div>
+      <form method="POST" action="">
       <div class="modal-body">
-        
+        <input type="number" name="del_id" id="did" value="" placeholder="" hidden="">
+        <strong>Are you sure you want to delete this supplier?</strong>
       </div>
       <div class="modal-footer">
-         
+        <button class="btn btn-danger" type="submit" name="delete">Delete</button>
+        <button class="btn btn-default" type="button" data-dismiss="modal">Cancel</button>
       </div>
+      </form>
     </div>
 
   </div>
@@ -384,7 +407,9 @@ $(document).ready(function(){
         $("#sup_tel").val(tel);
     });
     $('.btn-deletes').click(function(event) {
-       
+       var id = $(this).data('did');
+       $("#did").val(id);
+
     });
     $("#not").click(function(event) {
         $("#notify").hide();
