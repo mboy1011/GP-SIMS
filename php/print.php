@@ -128,13 +128,24 @@ while ($row = mysqli_fetch_array($query,MYSQLI_ASSOC)) {
 	$arr[] = $row;
 }
 $pdf->SetFont('Calibri','',11);
+// 
+$fontSize=11;
+$tempFontSize=$fontSize;
 for ($i=0; $i < count($arr); $i++) { 
     $pdf->SetFont('Calibri','',11);
 	$pdf->Cell(10,5,$o++,0,0,'L');
     $pdf->SetFont('Calibri','',10);
 	$pdf->Cell(82,5,$arr[$i][name]." ".$arr[$i][packing],0,0,'L');
-    $pdf->SetFont('Calibri','',11);
-	$pdf->Cell(20,5,$arr[$i][lot_no],0,0,'C');
+    // Shrink Font Size until it fits the cell width
+    $cellWidth = 20;
+    while ($pdf->GetStringWidth($arr[$i][lot_no])> $cellWidth) {
+        $pdf->SetFontSize($tempFontSize -= 0.5);
+    }
+    $pdf->Cell($cellWidth,5,$arr[$i][lot_no],0,0,'C');
+    // reset font size to standard
+    $tempFontSize=$fontSize;
+    $pdf->SetFontSize($fontSize);
+    // 
     $pdf->SetFont('Calibri','',11);
 	$pdf->Cell(16,5,$arr[$i][expiry_date],0,0,'L');
     $pdf->SetFont('Calibri','',11);
