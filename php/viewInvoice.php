@@ -288,7 +288,7 @@ $oop = new CRUD();
                         </tr>
                     </thead>
                     <?php
-                     $result = mysqli_query($db,"SELECT tbl_sales.total_discount,tbl_customers.full_name,tbl_sales.sales_id,LPAD(tbl_sales.sales_no,4,0) as sales_no,DATE_FORMAT(tbl_sales.dates,'%m-%d-%Y') as dates,tbl_sales.VAT,tbl_sales.total_amount,tbl_sales.total_sales,tbl_sales.due_date,tbl_sales.amount_net,tbl_sales.status,tbl_customers.cus_id,tbl_sales.discount1,tbl_sales.discount2 FROM tbl_customers INNER JOIN tbl_sales ON tbl_sales.cus_id=tbl_customers.cus_id ORDER BY sales_no") or die(mysqli_error());
+                     $result = mysqli_query($db,"SELECT tbl_sales.total_discount,tbl_customers.full_name,tbl_sales.sales_id,LPAD(tbl_sales.sales_no,4,0) as sales_no,DATE_FORMAT(tbl_sales.dates,'%m/%d/%Y') as dates,DATE_FORMAT(tbl_sales.dates,'%Y/%m/%d') as dates1,tbl_sales.VAT,tbl_sales.total_amount,tbl_sales.total_sales,tbl_sales.due_date,tbl_sales.amount_net,tbl_sales.status,tbl_customers.cus_id,tbl_sales.discount1,tbl_sales.discount2 FROM tbl_customers INNER JOIN tbl_sales ON tbl_sales.cus_id=tbl_customers.cus_id ORDER BY sales_no") or die(mysqli_error());
                       // $result = mysqli_query($db, "SELECT * FROM tbl_sales") or die(mysql_error());
 
                     ?>
@@ -353,7 +353,7 @@ $oop = new CRUD();
                              <?php 
                              if ($user_type=='admin') {
                              ?>
-                              <button class="btn btn-warning btn-sm btn-edits" name="" data-toggle="modal" data-target="#edit" data-si="<?php echo $row['sales_no']; ?>" data-cus="<?php echo $row['cus_id']; ?>" data-date="<?php echo $row['dates']; ?>" data-less="<?php echo $row['VAT']; ?>" data-gross="<?php echo $row['total_amount']; ?>" data-net="<?php echo $row['total_sales']; ?>" data-vat="<?php echo $row['amount_net']; ?>" data-dis1="<?php echo $row['discount1']; ?>" data-dis2="<?php echo $row['discount2']; ?>" data-tdis="<?php echo $row['total_discount']; ?>" data-due="<?php echo $row['due_date']; ?>"><b class="fa fa-pencil fa-bg">&nbsp;
+                              <button class="btn btn-warning btn-sm btn-edits" name="" data-toggle="modal" data-target="#edit" data-si="<?php echo $row['sales_no']; ?>" data-cus="<?php echo $row['cus_id']; ?>" data-date="<?php echo $row['dates1']?>" data-less="<?php echo $row['VAT']; ?>" data-gross="<?php echo $row['total_amount']; ?>" data-net="<?php echo $row['total_sales']; ?>" data-vat="<?php echo $row['amount_net']; ?>" data-dis1="<?php echo $row['discount1']; ?>" data-dis2="<?php echo $row['discount2']; ?>" data-tdis="<?php echo $row['total_discount']; ?>" data-due="<?php echo $row['due_date']; ?>"><b class="fa fa-pencil fa-bg">&nbsp;
                              </b></button>
                              <?php
                              }

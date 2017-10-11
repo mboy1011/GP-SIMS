@@ -318,18 +318,18 @@ $pdf->Output();
     // Shrink Font Size until it fits the cell width
         $cellWidth = 17;
         while ($pdf->GetStringWidth($arr[$i][lot_no])> $cellWidth) {
-            $pdf->SetFontSize($tempFontSize -= 0.2);
+            $pdf->SetFontSize($tempFontSize -= 0.5);
         }
-        $pdf->Cell($cellWidth,5,$arr[$i][lot_no],0,0,'L');
+        $pdf->Cell($cellWidth,5,$arr[$i][lot_no],0,0);
     // reset font size to standard
         $tempFontSize=$fontSize;
         $pdf->SetFontSize($fontSize);
     // 
         $pdf->SetFont('Calibri','',11);
-        $pdf->Cell(16,5,$arr[$i][expiry_date],0,0,'C');
-        $pdf->Cell(15,5,$arr[$i][quantity],0,0,'C');
-        $pdf->Cell(17,5,number_format($arr[$i][price],2),0,0,'R');
-        $pdf->Cell(26,5,number_format($arr[$i][amount],2),0,1,'R');
+        $pdf->Cell(19.5,5,$arr[$i][expiry_date],0,0,'R');
+        $pdf->Cell(18,5,$arr[$i][quantity],0,0,'R');
+        $pdf->Cell(19,5,number_format($arr[$i][price],2),0,0,'R');
+        $pdf->Cell(22,5,number_format($arr[$i][amount],2),0,1,'R');
     }
     $pdf->setXY(10 ,85);
     $pdf->Cell(10,133,'',1,0,'L');
@@ -361,22 +361,22 @@ $pdf->Output();
     $pdf->Cell(20,5,number_format($rows['total_amount'],2),0,1,'R');
     $pdf->SetFont('','');
     $pdf->SetXY(115,220);//Coordinates for Fixed Position
-    $pdf->Cell(30,5,'Total Sales (VAT Inclusive)',0,0);
-    $pdf->Cell(53,5,number_format($rows['totalamount'],2),0,1,'R');
+    $pdf->Cell(58,5,'Total Sales (VAT Inclusive)',0,0);
+    $pdf->Cell(30,5,number_format($rows['totalamount'],2),0,1,'R');
     $pdf->SetXY(115,230);//Coordinates for Fixed Position
     $pdf->Cell(30,5,'Amount Net of VAT',0,0);
-    $pdf->Cell(53,5,number_format($rows['amount_net'],2),0,1,'R');
+    $pdf->Cell(58,5,number_format($rows['amount_net'],2),0,1,'R');
     $pdf->SetXY(115,225);//Coordinates for Fixed Position
-    $pdf->Cell(53,5,'Less: VAT 12%',0,0);
+    $pdf->Cell(58,5,'Less: VAT 12%',0,0);
     $pdf->Cell(30,5,"(".$rows['total_sales'].")",0,1,'R');    
     $pdf->SetXY(115,235);//Coordinates for Fixed Position
-    $pdf->Cell(53,5,'Less: SC/PWD Discount',0,0);
+    $pdf->Cell(58,5,'Less: SC/PWD Discount',0,0);
     $pdf->Cell(30,5,"(".number_format($rows['total_discount'],2).")",0,1,'R');
     $pdf->SetXY(115,240);//Coordinates for Fixed Position
     $pdf->SetFont('Calibri','B',11);
-    $pdf->Cell(30,5,'Total Amount Due',0,0);
+    $pdf->Cell(58,5,'Total Amount Due',0,0);
     $pdf->SetFont('Calibri','U',11);
-    $pdf->Cell(53,5,number_format($rows['total_amount'],2),0,1,'R');
+    $pdf->Cell(30,5,number_format($rows['total_amount'],2),0,1,'R');
     // 
     $pdf->SetXY(10,220);//Coordinates for Fixed Position
     $pdf->SetFont('Calibri','B',10);
