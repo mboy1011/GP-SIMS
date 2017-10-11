@@ -490,8 +490,8 @@ class CRUD
 			return false;
 		}else{
 			$sql1 = mysqli_query($db,"DELETE FROM tbl_CMdetails WHERE cmd_id='$did'");
-			$sql2 = mysqli_query($db,"DELETE FROM tbl_CM WHERE cmd_id='$did'");
-			if (!$sql1||$sql2) {
+			$sql2 = mysqli_query($db,"DELETE FROM tbl_CM WHERE cm_no='$did'");
+			if (!$sql1&&$sql2) {
 				return false;
 			}else{
 				return true;
