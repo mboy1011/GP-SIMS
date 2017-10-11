@@ -185,7 +185,8 @@ $pdf->Cell(30,5,'',0,0);
 $pdf->Cell(50,5,number_format($rows['total_amount'],2),0,1,'R');
 
 $pdf->AutoPrint();
-$pdf->Output('D',"SI:".sprintf("%04d",$si_no).'.pdf');
+// $pdf->Output('D',"SI:".sprintf("%04d",$si_no).'.pdf');
+$pdf->Output();
 }else if(isset($_POST['printPO'])){
     $po = mysqli_real_escape_string($db,$_POST['po_no']);
     $sql = mysqli_query($db,"SELECT DATE_FORMAT(tbl_PO.po_date,'%M %d, %Y') as po_date, SUM(tbl_POdetails.prod_amount) as prod_amount, tbl_PO.prepare_by, tbl_PO.noted_by FROM tbl_PO INNER JOIN tbl_POdetails ON tbl_PO.po_no=tbl_POdetails.po_no WHERE tbl_PO.po_no='$po'");
@@ -307,11 +308,23 @@ $pdf->Output('D',"SI:".sprintf("%04d",$si_no).'.pdf');
         $arr[] = $row;
     }
     $pdf->SetFont('Calibri','',10);
+    // 
+    $fontSize=11;
+    $tempFontSize=$fontSize;
     for ($i=0; $i < count($arr); $i++) { 
         $pdf->Cell(10,5,$o++,0,0,'L');
-        $pdf->Cell(85,5,$arr[$i][name]." ".$arr[$i][packing],0,0,'L');
+        $pdf->Cell(87.5,5,$arr[$i][name]." ".$arr[$i][packing],0,0,'L');
         $pdf->SetFont('Calibri','',10);
-        $pdf->Cell(20,5,$arr[$i][lot_no],0,0,'C');
+    // Shrink Font Size until it fits the cell width
+        $cellWidth = 17;
+        while ($pdf->GetStringWidth($arr[$i][lot_no])> $cellWidth) {
+            $pdf->SetFontSize($tempFontSize -= 0.2);
+        }
+        $pdf->Cell($cellWidth,5,$arr[$i][lot_no],0,0,'L');
+    // reset font size to standard
+        $tempFontSize=$fontSize;
+        $pdf->SetFontSize($fontSize);
+    // 
         $pdf->SetFont('Calibri','',11);
         $pdf->Cell(16,5,$arr[$i][expiry_date],0,0,'C');
         $pdf->Cell(15,5,$arr[$i][quantity],0,0,'C');
@@ -392,7 +405,8 @@ $pdf->Output('D',"SI:".sprintf("%04d",$si_no).'.pdf');
     $pdf->SetFont('Calibri','B',6);
     $pdf->Cell(47,5,'Cashier/Authorized Representative',0,0,'C');
     $pdf->Cell(47,5,'Customer Signature Over Printed Name',0,0,'C');
-    $pdf->AutoPrint();
-    $pdf->Output('D','DR:'.sprintf("%04d",$si_no).'.pdf');    
+    // $pdf->AutoPrint();
+    // $pdf->Output('D','DR:'.sprintf("%04d",$si_no).'.pdf');    
+    $pdf->Output();
 }
 ?>
