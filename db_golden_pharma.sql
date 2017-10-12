@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 04, 2017 at 12:27 PM
+-- Generation Time: Oct 12, 2017 at 09:25 AM
 -- Server version: 5.6.36
--- PHP Version: 7.0.16
+-- PHP Version: 7.1.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -129,7 +129,7 @@ CREATE TABLE IF NOT EXISTS `tbl_employee` (
   `mname` varchar(45) DEFAULT NULL,
   `position` varchar(45) DEFAULT NULL,
   `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tbl_employee`
@@ -290,6 +290,7 @@ CREATE TABLE IF NOT EXISTS `tbl_overdue` (
 --
 
 CREATE TABLE IF NOT EXISTS `tbl_PO` (
+  `po_id` int(11) NOT NULL,
   `po_no` int(11) NOT NULL,
   `sup_id` int(11) DEFAULT NULL,
   `po_totalAmount` float(11,2) NOT NULL,
@@ -297,7 +298,7 @@ CREATE TABLE IF NOT EXISTS `tbl_PO` (
   `noted_by` text NOT NULL,
   `prepare_by` text NOT NULL,
   `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -314,7 +315,7 @@ CREATE TABLE IF NOT EXISTS `tbl_POdetails` (
   `prod_qty` varchar(45) DEFAULT NULL,
   `prod_amount` float(11,2) DEFAULT NULL,
   `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -434,7 +435,7 @@ CREATE TABLE IF NOT EXISTS `tbl_useraccounts` (
   `usertype` varchar(10) NOT NULL,
   `password` varchar(255) DEFAULT NULL,
   `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tbl_useraccounts`
@@ -442,7 +443,8 @@ CREATE TABLE IF NOT EXISTS `tbl_useraccounts` (
 
 INSERT INTO `tbl_useraccounts` (`uid`, `emp_id`, `username`, `usertype`, `password`, `timestamp`) VALUES
 (0, 0, 'root', 'admin', '$2y$10$CtRjar6CkH0rRBYi3qndm.qtSUYQOglnrYMd7Bjm7dE3ZuVHVfsRO', '2017-09-26 12:59:21'),
-(1, 16, 'admin', 'admin', '$2y$10$REQwAUbSjQKTtPNGpc.IZO0hW2UsbFGDh.03VkknzRsX7asMA7c1e', '2017-09-15 09:55:21');
+(1, 16, 'admin', 'admin', '$2y$10$REQwAUbSjQKTtPNGpc.IZO0hW2UsbFGDh.03VkknzRsX7asMA7c1e', '2017-09-15 09:55:21'),
+(2, 17, 'user', 'user', '$2y$10$uyQn/RL/jIN6fOeYeuUJt.onihvI.WJ82NsAY68ACyXEd/ri8GiIG', '2017-10-06 03:35:05');
 
 -- --------------------------------------------------------
 
@@ -624,13 +626,14 @@ ALTER TABLE `tbl_expenses`
 -- Indexes for table `tbl_PO`
 --
 ALTER TABLE `tbl_PO`
-  ADD PRIMARY KEY (`po_no`);
+  ADD PRIMARY KEY (`po_id`);
 
 --
 -- Indexes for table `tbl_POdetails`
 --
 ALTER TABLE `tbl_POdetails`
-  ADD PRIMARY KEY (`pod_no`);
+  ADD PRIMARY KEY (`pod_no`),
+  ADD KEY `pod_no` (`pod_no`);
 
 --
 -- Indexes for table `tbl_products`
@@ -702,7 +705,7 @@ ALTER TABLE `tbl_customers`
 -- AUTO_INCREMENT for table `tbl_employee`
 --
 ALTER TABLE `tbl_employee`
-  MODIFY `emp_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=20;
+  MODIFY `emp_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
 --
 -- AUTO_INCREMENT for table `tbl_expenses`
 --
@@ -712,12 +715,12 @@ ALTER TABLE `tbl_expenses`
 -- AUTO_INCREMENT for table `tbl_PO`
 --
 ALTER TABLE `tbl_PO`
-  MODIFY `po_no` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `po_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `tbl_POdetails`
 --
 ALTER TABLE `tbl_POdetails`
-  MODIFY `pod_no` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `pod_no` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `tbl_products`
 --
@@ -742,7 +745,7 @@ ALTER TABLE `tbl_supplier`
 -- AUTO_INCREMENT for table `tbl_useraccounts`
 --
 ALTER TABLE `tbl_useraccounts`
-  MODIFY `uid` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+  MODIFY `uid` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- Constraints for dumped tables
 --
