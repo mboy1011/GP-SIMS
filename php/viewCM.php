@@ -261,7 +261,13 @@ $oop = new CRUD();
                                <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs" data-cm="<?php echo $row['cm_no']; ?>" data-si="<?php echo $row['sales_no']; ?>" data-cus="<?php echo $row['full_name']; ?>" data-res="<?php echo $row['cm_reason']; ?>" data-ta="<?php echo $row['cm_totalAmount']; ?>" data-sm="<?php echo $row['salesman']; ?>" data-date="<?php echo $row['cm_date']; ?>"  data-title="Edit"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
                             </td>      
                             <td>
+                              <?php 
+                             if ($user_type=='admin') {
+                             ?>
                                 <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-dsi="<?php echo $row['sales_no']; ?>" data data-did="<?php echo $row['cm_no']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
+                                <?php 
+                             }
+                             ?>
                             </td> 
                           </tr>
                       <?php } ?>

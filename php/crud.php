@@ -356,7 +356,7 @@ class CRUD
 		if ($sql->num_rows>0) {
 			return false;
 		}else{
-			$sql2 = mysqli_query($db,"INSERT INTO tbl_PO (sup_id,po_totalAmount,po_date,noted_by,prepare_by) VALUES ('".$su."','".$tt."','".$td."','".$nt."','".$pp."')");
+			$sql2 = mysqli_query($db,"INSERT INTO tbl_PO (po_no,sup_id,po_totalAmount,po_date,noted_by,prepare_by) VALUES ('".$po."','".$su."','".$tt."','".$td."','".$nt."','".$pp."')");
 			if (!$sql2) {
 				return false;
 			}else{
@@ -516,6 +516,16 @@ class CRUD
 		if (!$sql||!$sql1) {
 			return false;
 		} else {
+			return true;
+		}
+	}
+	public function upPO($no,$sup,$d,$ta,$nb,$pb)
+	{
+		require 'config.php';
+		$sql = mysqli_query($db,"UPDATE tbl_PO SET sup_id='$sup', po_totalAmount='$ta',po_date='$d',noted_by='$nb',prepare_by='$pb' WHERE po_no='$no'");
+		if (!$sql) {
+			return false;
+		}else{
 			return true;
 		}
 	}

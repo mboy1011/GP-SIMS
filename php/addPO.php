@@ -191,7 +191,7 @@ $oop = new CRUD();
                     $row = mysqli_fetch_assoc($sql);
                     $max = $row['Max']+1;
                  ?>
-                 <input type="number" step="any" id="po" name="po_no" class="form-control" value="<?php echo $max;?>" disabled>
+                 <input type="number" step="any" id="po" name="po_no" class="form-control" value="<?php echo $max;?>" readonly="">
              </div>
          </div>
          <div class="col-sm-5">

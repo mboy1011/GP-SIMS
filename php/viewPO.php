@@ -14,6 +14,8 @@ $oop = new CRUD();
     <link rel="stylesheet" type="text/css" href="../css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/fixedColumns.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/buttons.dataTables.min.css">
+        <!-- DatePicker -->
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-datepicker3.min.css">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../css/style_css.css">
 </head>
@@ -154,15 +156,13 @@ $oop = new CRUD();
         </div>
 <?php
     if (isset($_POST['update'])) {
-        $id = mysqli_real_escape_string($db,$_POST['id']);
-        $proname = mysqli_real_escape_string($db,$_POST['proname']);
-        $desc = mysqli_real_escape_string($db,$_POST['desc']);
-        $lot = mysqli_real_escape_string($db,$_POST['lot']);
-        $price = mysqli_real_escape_string($db,$_POST['price']);
-        $exp = mysqli_real_escape_string($db,$_POST['exp']);
-        $pack = mysqli_real_escape_string($db,$_POST['pack']);
-        $qty = mysqli_real_escape_string($db,$_POST['qty']);
-        $sql = $oop->upPro($id,$proname,$desc,$lot,$price,$exp,$pack,$qty);
+        $no = mysqli_real_escape_string($db,$_POST['po_no']);
+        $sup = mysqli_real_escape_string($db,$_POST['po_sup']);
+        $d = mysqli_real_escape_string($db,$_POST['po_d']);
+        $ta = mysqli_real_escape_string($db,$_POST['po_ta']);
+        $nb = mysqli_real_escape_string($db,$_POST['po_nb']);
+        $pb = mysqli_real_escape_string($db,$_POST['po_pb']);
+        $sql = $oop->upPO($no,$sup,$d,$ta,$nb,$pb);
         if(!$sql){
                    ?>
                       <div class="alert alert-warning alert-dismissable">
@@ -224,7 +224,7 @@ $oop = new CRUD();
                         </tr>
                     </thead>
                     <?php
-                      $result = mysqli_query($db, "SELECT * FROM tbl_PO") or die(mysql_error());
+                      $result = mysqli_query($db, "SELECT * FROM tbl_PO INNER JOIN tbl_supplier ON tbl_supplier.sup_id=tbl_PO.sup_id") or die(mysql_error());
                       $i=1;
                     ?>
                     <tbody>
@@ -232,7 +232,7 @@ $oop = new CRUD();
                           <tr>
                             <td><?php echo $i++; ?></td>
                             <td><?php echo sprintf('%05d',$row['po_no']); ?></td>
-                            <td><?php echo $row['sup_id']; ?></td>
+                            <td><?php echo $row['sup_name']; ?></td>
                             <td><?php echo $row['po_date']; ?></td>
                             <td><?php echo number_format($row['po_totalAmount'],2); ?></td>
                             <td><?php echo $row['noted_by']; ?></td>
@@ -249,7 +249,13 @@ $oop = new CRUD();
                                data-sup="<?php echo $row['sup_id']; ?>" data-date="<?php echo $row['po_date']; ?>" data-am="<?php echo $row['po_totalAmount']; ?>" data-nb="<?php echo $row['noted_by']; ?>" data-pb="<?php echo $row['prepare_by']; ?>" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
                             </td>      
                             <td>
+                              <?php 
+                             if ($user_type=='admin') {
+                             ?>
                                 <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['po_no']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
+                               <?php 
+                             }
+                             ?>
                             </td> 
                           </tr>
                       <?php } ?>
@@ -268,10 +274,12 @@ $oop = new CRUD();
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title">Edit P.O Details</h4>
       </div>
+      <form method="POST" action="">
       <div class="modal-body">
+        <input type="number" step="any" name="po_no" id="u_id" hidden="">
         <div class="input-group">
           <span class="input-group-addon">Supplier:</span>  
-          <select name="edit_cus" class="form-control">
+          <select name="po_sup" id="u_s" class="form-control">
             <?php  
             $cus = mysqli_query($db,"SELECT * FROM tbl_supplier");
             while ($rows = mysqli_fetch_assoc($cus)) {
@@ -280,10 +288,28 @@ $oop = new CRUD();
             ?>
           </select>
         </div>
+        <div class="input-group date form_date">
+            <span class="input-group-addon" >Date:</span>
+            <input name="po_d" id="u_d" class="form-control" size="16" type="text" placeholder="">
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon">Total Amount:</span>  
+          <input type="number" id="u_ta" step="any" name="po_ta" placeholder="Total Amount" class="form-control">
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon">Noted By:</span>  
+          <input type="text" id="u_nb" name="po_nb" placeholder="Note By" class="form-control">
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon">Prepared By:</span>  
+          <input type="text" id="u_pb" name="po_pb" placeholder="Prepared By" class="form-control">
+        </div>
       </div>
       <div class="modal-footer">
-
+        <button class="btn btn-warning" type="submit" name="update"><b class="fa fa-check fa-bg">&nbsp;</b>Yes</button>
+         <button type="button" class="btn btn-default" data-dismiss="modal"><b class="fa fa-close fa-bg">&nbsp;</b>No</button>
       </div>
+      </form>
     </div>
 
   </div>
@@ -319,6 +345,9 @@ $oop = new CRUD();
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script type="text/javascript" src="../js/script.js"></script>
 <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+<!-- DatePicker -->
+<script type="text/javascript" src="../js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="../js/bootstrap-datepicker.en-AU.min.js"></script>
 <!-- DataTables -->
 <script type="text/javascript" src="../js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="../js/dataTables.bootstrap.min.js"></script>
@@ -367,6 +396,12 @@ $(document).ready(function(){
         var am = $(this).data('am');
         var nb = $(this).data('nb');
         var pb = $(this).data('pb');
+        $("#u_d").val(date);
+        $("#u_ta").val(am);
+        $("#u_nb").val(nb);
+        $("#u_pb").val(pb);
+        $("#u_s").val(sup);
+        $("#u_id").val(id);
     });
     $('.btn-deletes').click(function(event) {
        var del_id = $(this).data('did');
@@ -382,6 +417,12 @@ $(document).ready(function(){
         }
     }
     check();    
+    $('.form_date').datepicker({
+    format: "yyyy/mm/dd",
+    language: 'en-AU',
+    todayHighlight: true,
+    autoclose: true
+    });
 });
 </script>
 </body>

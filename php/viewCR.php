@@ -238,7 +238,7 @@ $oop = new CRUD();
                         </tr>
                     </thead>
                     <?php
-                      $result = mysqli_query($db, "SELECT tbl_customers.full_name,LPAD(tbl_CR.cr_no,4,0) as cr_no,DATE_FORMAT(tbl_CR.cr_date,'%m-%d-%Y') as cr_date,tbl_CR.cr_totalSales,tbl_CR.timestamp,tbl_CR.pay_type,tbl_CR.check_no FROM tbl_CR INNER JOIN tbl_customers ON tbl_customers.cus_id=tbl_CR.cus_id ORDER BY tbl_CR.cr_no") or die(mysql_error());
+                      $result = mysqli_query($db, "SELECT tbl_customers.full_name,LPAD(tbl_CR.cr_no,4,0) as cr_no,DATE_FORMAT(tbl_CR.cr_date,'%m-%d-%Y') as cr_date,DATE_FORMAT(tbl_CR.cr_date,'%Y/%m/%d') as cr_date1,tbl_CR.cr_totalSales,tbl_CR.timestamp,tbl_CR.pay_type,tbl_CR.check_no FROM tbl_CR INNER JOIN tbl_customers ON tbl_customers.cus_id=tbl_CR.cus_id ORDER BY tbl_CR.cr_no") or die(mysql_error());
                       $i=1;
                     ?>
                     <tbody>
@@ -259,10 +259,16 @@ $oop = new CRUD();
                             <td><button class="b-infos btn btn-info btn-xs" id="infos" data-cr="<?php echo $row['cr_no'];?>"><span class="fa fa-question"></span></button>
                             </td>
                             <td>
-                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit" data-cr="<?php echo $row['cr_no'];?>" data-cus="<?php echo $row['full_name']; ?>" data-ts="<?php echo $row['cr_totalSales'];?>" data-date="<?php echo $row['cr_date'];?>" data-pt="<?php echo $row['pay_type'];?>" data-ch="<?php echo $row['check_no'];?>" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
+                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit" data-cr="<?php echo $row['cr_no'];?>" data-cus="<?php echo $row['full_name']; ?>" data-ts="<?php echo $row['cr_totalSales'];?>" data-date="<?php echo $row['cr_date1'];?>" data-pt="<?php echo $row['pay_type'];?>" data-ch="<?php echo $row['check_no'];?>" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
                             </td>      
                             <td>
+                              <?php 
+                             if ($user_type=='admin') {
+                             ?>
                                 <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['cr_no']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
+                                <?php 
+                             }
+                             ?>
                             </td> 
                           </tr>
                       <?php } ?>
