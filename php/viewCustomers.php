@@ -68,7 +68,6 @@ $oop = new CRUD();
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fa fa-fw fa-user-md"></b><?php echo $name;?><b class="fa fa-angle-down"></b></a>
                 <ul class="dropdown-menu">
-                    <li><a href="#"><i class="fa fa-fw fa-user"></i> Edit Profile</a></li>
                     <li class="divider"></li>
                     <li><a href="logout"><i class="fa fa-fw fa-power-off"></i> Logout</a></li>
                 </ul>
@@ -336,7 +335,13 @@ if(isset($_POST['importSubmit'])){
                                <b data-placement="top"  title="Edit"><button class="btn-edit btn btn-warning btn-xs"  data-title="Edit" data-id="<?php echo $row['cus_id']; ?>"  data-fn="<?php echo $row['full_name']; ?>" data-ad="<?php echo $row['address']; ?>" data-tin="<?php echo $row['tin']; ?>" data-bstyle="<?php echo $row['bstyle']; ?>" data-opidno="<?php echo $row['opidno']; ?>" data-terms="<?php echo $row['terms']; ?>" data-dis1="<?php echo $row['discount1']; ?>" data-dis2="<?php echo $row['discount2']; ?>" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
                             </td>      
                             <td>
+                              <?php 
+                              if ($user_type=='admin') {
+                              ?>
                                 <b data-placement="top" title="Delete"><button class="btn-delete btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['cus_id']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
+                              <?php 
+                              }
+                              ?>
                             </td> 
                           </tr>
                       <?php } ?>

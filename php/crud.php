@@ -529,5 +529,15 @@ class CRUD
 			return true;
 		}
 	}
+	public function upOS($os)
+	{
+		require 'config.php';
+		$sql = mysqli_query($db,"UPDATE tbl_products SET status='$os',quantity=null WHERE status='OUT OF STOCKS'");
+		if (!$sql) {
+			return false;
+		}else{
+			return true;
+		}
+	}
 }
 ?>

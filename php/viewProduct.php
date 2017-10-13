@@ -70,7 +70,6 @@ $oop = new CRUD();
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fa fa-fw fa-user-md"></b><?php echo $name;?><b class="fa fa-angle-down"></b></a>
                 <ul class="dropdown-menu">
-                    <li><a href="#"><i class="fa fa-fw fa-user"></i> Edit Profile</a></li>
                     <li class="divider"></li>
                     <li><a href="logout"><i class="fa fa-fw fa-power-off"></i> Logout</a></li>
                 </ul>
@@ -261,7 +260,13 @@ $oop = new CRUD();
                                <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs" data-id="<?php echo $row['prod_id'];?>" data-name="<?php echo $row['name'];?>" data-desc="<?php echo $row['description'];?>" data-lot="<?php echo $row['lot_no'];?>" data-price="<?php echo $row['price'];?>" data-expd="<?php echo $row['expiry_date'];?>" data-pack="<?php echo $row['packing'];?>" data-qty="<?php echo $row['quantity'];?>" data-title="Edit"  data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
                             </td>      
                             <td>
+                              <?php 
+                              if ($user_type=='admin') {
+                              ?>
                                 <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['prod_id']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
+                              <?php 
+                              }
+                              ?>
                             </td> 
                           </tr>
                       <?php } ?>

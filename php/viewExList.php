@@ -71,7 +71,6 @@ $oop = new CRUD();
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fa fa-fw fa-user-md"></b><?php echo $name;?><b class="fa fa-angle-down"></b></a>
                 <ul class="dropdown-menu">
-                    <li><a href="#"><i class="fa fa-fw fa-user"></i> Edit Profile</a></li>
                     <li class="divider"></li>
                     <li><a href="logout"><i class="fa fa-fw fa-power-off"></i> Logout</a></li>
                 </ul>
@@ -322,7 +321,13 @@ $oop = new CRUD();
                                <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit" data-cus="<?php echo $row['ex_custName'];?>" data-cat="<?php echo $row['cat_id'];?>" data-am="<?php echo $row['ex_amount'];?>" data-date="<?php echo $row['ex_date']?>" data-id="<?php echo $row['ex_id']; ?>" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
                             </td>      
                             <td>
+                              <?php 
+                             if ($user_type=='admin') {
+                             ?>
                                 <b data-placement="top" title="Delete"><button class="btn-deletes btn btn-danger btn-xs"  data-title="delete" data-did="<?php echo $row['ex_id']; ?>" data-toggle="modal"  data-target="#delete" ><span class=" glyphicon glyphicon-trash"></span></button></b>   
+                                <?php 
+                             }
+                             ?>
                             </td> 
                           </tr>
                       <?php } ?>

@@ -66,7 +66,6 @@ $oop = new CRUD();
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fa fa-fw fa-user-md"></b><?php echo $name;?><b class="fa fa-angle-down"></b></a>
                 <ul class="dropdown-menu">
-                    <li><a href="#"><i class="fa fa-fw fa-user"></i> Edit Profile</a></li>
                     <li class="divider"></li>
                     <li><a href="logout"><i class="fa fa-fw fa-power-off"></i> Logout</a></li>
                 </ul>
@@ -208,7 +207,7 @@ $oop = new CRUD();
             <div class="col-sm-4">
                 <div class="input-group">
                     <span class="input-group-addon">Supplier:</span>
-                    <select name="supplier" class="form-control">
+                    <select name="supplier" class="form-control" required="">
                        <?php  
                         $sup = mysqli_query($db,"SELECT * FROM tbl_supplier");
                         while ($out = mysqli_fetch_array($sup)) {

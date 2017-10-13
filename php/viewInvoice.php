@@ -71,7 +71,6 @@ $oop = new CRUD();
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fa fa-fw fa-user-md"></b><input type="hidden" id="user" value="<?php echo $name;?>"><?php echo $name;?><b class="fa fa-angle-down"></b></a>
                 <ul class="dropdown-menu">
-                    <li><a href="#"><i class="fa fa-fw fa-user"></i> Edit Profile</a></li>
                     <li class="divider"></li>
                     <li><a href="logout"><i class="fa fa-fw fa-power-off"></i> Logout</a></li>
                 </ul>
@@ -350,14 +349,8 @@ $oop = new CRUD();
                              ?>
                              </td>
                              <td>
-                             <?php 
-                             if ($user_type=='admin') {
-                             ?>
                               <button class="btn btn-warning btn-sm btn-edits" name="" data-toggle="modal" data-target="#edit" data-si="<?php echo $row['sales_no']; ?>" data-cus="<?php echo $row['cus_id']; ?>" data-date="<?php echo $row['dates1']?>" data-less="<?php echo $row['VAT']; ?>" data-gross="<?php echo $row['total_amount']; ?>" data-net="<?php echo $row['total_sales']; ?>" data-vat="<?php echo $row['amount_net']; ?>" data-dis1="<?php echo $row['discount1']; ?>" data-dis2="<?php echo $row['discount2']; ?>" data-tdis="<?php echo $row['total_discount']; ?>" data-due="<?php echo $row['due_date']; ?>"><b class="fa fa-pencil fa-bg">&nbsp;
                              </b></button>
-                             <?php
-                             }
-                             ?>
                              </td>
                              <td>
                              <?php 
@@ -458,7 +451,9 @@ if ($user_type=='admin') {
 
   </div>
 </div>          
-
+<?php 
+}
+?>
 <div id="edit" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <!-- Modal content-->
@@ -531,9 +526,6 @@ if ($user_type=='admin') {
 
   </div>
 </div>
-<?php
-}
-?>
         </div>
             <!-- /.row -->
         <!-- /.container-fluid -->

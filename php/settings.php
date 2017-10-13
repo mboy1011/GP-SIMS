@@ -67,7 +67,6 @@ if ($user_type!='admin') {
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="fa fa-fw fa-user-md"></b><?php echo $name;?><b class="fa fa-angle-down"></b></a>
                 <ul class="dropdown-menu">
-                    <li><a href="#"><i class="fa fa-fw fa-user"></i> Edit Profile</a></li>
                     <li class="divider"></li>
                     <li><a href="logout"><i class="fa fa-fw fa-power-off"></i> Logout</a></li>
                 </ul>
@@ -221,6 +220,28 @@ if(isset($_POST['backup'])){
         </div>
         <?php
     }
+}elseif(isset($_POST['upOS'])){
+    $os = mysqli_real_escape_string($db,$_POST['os']);
+    if ($os!='0') {
+        $sql = $oop->upOS($os);
+        if (!$sql) {
+            ?>
+            <div class="alert alert-warning alert-dismissable">
+                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                 <strong><b class="fa fa-close">&nbsp;</b>Failed to update or out of stocks status not found!</strong>
+            </div>
+            <?php
+        }else{
+            ?>
+            <div class="alert alert-success alert-dismissable">
+                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                 <strong><b class="fa fa-check">&nbsp;</b>Successfully Updated!</strong>
+            </div>
+            <?php
+        }
+    }else{
+
+    }
 }
 ?>
             </div>
@@ -238,9 +259,6 @@ if(isset($_POST['backup'])){
                           echo"<option value=".$row['Year']."> ";
                           echo $row['Year'];
                           echo"</option>";
-                          // echo "<option>";
-                          // echo 2018;
-                          // echo "</option>";
                         }
                         ?>
                 </select>
@@ -263,10 +281,10 @@ if(isset($_POST['backup'])){
                 <div class="input-group">
                     <span class="input-group-addon">Out of Stocks</span>
                     <select name="os" class="form-control">
-                        <option value="">DO NOTHING</option>
-                        <option value="">MARK INACTIVE</option>
+                        <option value="0">DO NOTHING</option>
+                        <option value="INACTIVE">MARK INACTIVE</option>
                     </select>
-                    <span class="input-group-btn"><button class="btn btn-primary" type="submit">Submit</button></span>
+                    <span class="input-group-btn"><button class="btn btn-primary" type="submit" name="upOS">Submit</button></span>
                 </div>
             </div>
             </form>

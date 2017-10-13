@@ -38,7 +38,7 @@ class PDF_AutoPrint extends PDF_JavaScript
         $this->Cell(82,7,'Telefax (088) 857-3088',0,0,'C');
         $this->SetXY(75,35);
         $this->SetFont('Calibri','B',11);
-        $this->Cell(82,7,'DEIVERY RECEIPT',0,1,'C');
+        $this->Cell(82,7,'DELIVERY RECEIPT',0,1,'C');
     }
     function head2(){
         $this->addFont('Calibri','B','calibri.php');
@@ -60,7 +60,7 @@ class PDF_AutoPrint extends PDF_JavaScript
         $this->Cell(82,7,'Telefax (088) 857-3088',0,0,'C');
         $this->SetXY(75,35);
         $this->SetFont('Calibri','B',11);
-        $this->Cell(82,7,'DEIVERY RECEIPT',0,1,'C');
+        $this->Cell(82,7,'PURCHASE ORDER',0,1,'C');
     }
 }
 if (isset($_POST['printSI'])) {
@@ -206,9 +206,9 @@ $pdf->Output();
     $pdf->AddPage();
     $pdf->SetTitle("Print Purchase Order",true);
     $pdf->head2();
-    $pdf->SetFont('Calibri','B',13);
-    $pdf->SetXY(75,35);
-    $pdf->Cell(82,7,'Purhase Order',0,0,'C');
+    // $pdf->SetFont('Calibri','B',13);
+    // $pdf->SetXY(75,35);
+    // $pdf->Cell(82,7,'Purhase Order',0,0,'C');
     $pdf->SetXY(130,40);
     $pdf->Cell(25,7,'Date: ',0,0,'R');
     $pdf->SetXY(175,40);
@@ -232,7 +232,7 @@ $pdf->Output();
     $pdf->SetFont('Calibri','',11);
     for ($i=0; $i < count($arr); $i++) { 
         $pdf->Cell(10,5,$o++,1,0,'C');
-        $pdf->Cell(80,5,$arr[$i][prod_name],1,0,'C');
+        $pdf->Cell(80,5,$arr[$i][prod_name],1,0,'L');
         $pdf->Cell(40,5,$arr[$i][prod_maker],1,0,'C');
         $pdf->Cell(20,5,$arr[$i][prod_qty],1,0,'C');
         $pdf->Cell(20,5,number_format($arr[$i][prod_price],2),1,0,'C');
