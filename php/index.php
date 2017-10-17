@@ -303,14 +303,14 @@ require 'session.php';
                           </thead>
                           <tbody>
                             <?php 
-                            $queryExp = mysqli_query($db,"SELECT * FROM tbl_expensesLast INNER JOIN tbl_category ON tbl_expensesLast.cat_id=tbl_category.cat_id");
+                            $queryExp = mysqli_query($db,"SELECT * FROM tbl_expensesLast INNER JOIN tbl_category ON tbl_expensesLast.cat_id=tbl_category.cat_id LEFT JOIN tbl_employee ON tbl_employee.emp_id=tbl_expensesLast.emp_id");
                             $i=1; 
                             while($row = mysqli_fetch_array($queryExp,MYSQLI_ASSOC)){?>
                               <tr>
                                   <td><?php echo $i++;?></td>
                                   <td><?php echo $row['ex_date'];?></td>
                                   <td><?php echo $row['cat_name'];?></td>
-                                  <td><?php echo $row['ex_custName'];?></td>
+                                  <td><?php echo $row['fname']." ".$row['lname'];?></td>
                                   <td><?php echo number_format($row['ex_amount'],2);?></td>
                               </tr>
                             <?php }?>
