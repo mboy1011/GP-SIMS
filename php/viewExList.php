@@ -270,7 +270,7 @@ $oop = new CRUD();
                   </div>
                   <div class="input-group">
                   <span class="input-group-addon">Category:</span>
-                    <select name="category" class="form-control" >
+                    <select name="category" class="form-control" required="">
                             <?php
                               $result =mysqli_query($db, "SELECT * FROM tbl_category");
                               while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){
