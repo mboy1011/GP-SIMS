@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 13, 2017 at 09:40 AM
+-- Generation Time: Oct 17, 2017 at 04:08 AM
 -- Server version: 5.6.36
 -- PHP Version: 7.1.2
 
@@ -150,7 +150,7 @@ CREATE TABLE IF NOT EXISTS `tbl_expenses` (
   `ex_id` int(11) NOT NULL,
   `cat_id` int(11) DEFAULT NULL,
   `ex_date` date DEFAULT NULL,
-  `ex_custName` varchar(45) DEFAULT NULL,
+  `emp_id` int(11) DEFAULT NULL,
   `ex_amount` float(11,2) DEFAULT NULL,
   `timestamp` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -161,12 +161,6 @@ CREATE TABLE IF NOT EXISTS `tbl_expenses` (
 -- Stand-in structure for view `tbl_expensesLast`
 --
 CREATE TABLE IF NOT EXISTS `tbl_expensesLast` (
-`ex_id` int(11)
-,`cat_id` int(11)
-,`ex_date` date
-,`ex_custName` varchar(45)
-,`ex_amount` float(11,2)
-,`timestamp` timestamp
 );
 
 -- --------------------------------------------------------
@@ -175,12 +169,6 @@ CREATE TABLE IF NOT EXISTS `tbl_expensesLast` (
 -- Stand-in structure for view `tbl_expensesToday`
 --
 CREATE TABLE IF NOT EXISTS `tbl_expensesToday` (
-`ex_id` int(11)
-,`cat_id` int(11)
-,`ex_date` date
-,`ex_custName` varchar(45)
-,`ex_amount` float(11,2)
-,`timestamp` timestamp
 );
 
 -- --------------------------------------------------------
@@ -469,8 +457,7 @@ INSERT INTO `tbl_year` (`year`) VALUES
 -- Structure for view `tbl_expensesLast`
 --
 DROP TABLE IF EXISTS `tbl_expensesLast`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tbl_expensesLast` AS select `tbl_expenses`.`ex_id` AS `ex_id`,`tbl_expenses`.`cat_id` AS `cat_id`,`tbl_expenses`.`ex_date` AS `ex_date`,`tbl_expenses`.`ex_custName` AS `ex_custName`,`tbl_expenses`.`ex_amount` AS `ex_amount`,`tbl_expenses`.`timestamp` AS `timestamp` from `tbl_expenses` where (`tbl_expenses`.`ex_date` <= curdate());
+-- in use(#1356 - View 'db_golden_pharma.tbl_expensesLast' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them)
 
 -- --------------------------------------------------------
 
@@ -478,8 +465,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- Structure for view `tbl_expensesToday`
 --
 DROP TABLE IF EXISTS `tbl_expensesToday`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tbl_expensesToday` AS select `tbl_expenses`.`ex_id` AS `ex_id`,`tbl_expenses`.`cat_id` AS `cat_id`,`tbl_expenses`.`ex_date` AS `ex_date`,`tbl_expenses`.`ex_custName` AS `ex_custName`,`tbl_expenses`.`ex_amount` AS `ex_amount`,`tbl_expenses`.`timestamp` AS `timestamp` from `tbl_expenses` where (`tbl_expenses`.`ex_date` = curdate());
+-- in use(#1356 - View 'db_golden_pharma.tbl_expensesToday' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them)
 
 -- --------------------------------------------------------
 

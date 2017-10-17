@@ -235,14 +235,14 @@ class CRUD
 		if ($query->num_rows>0) {
 			return false;
 		}else{
-			mysqli_query($db,"INSERT INTO tbl_expenses (cat_id,ex_date,ex_custName,ex_amount) VALUES ('".$ca."','".$dt."','".$cn."','".$am."')");
+			mysqli_query($db,"INSERT INTO tbl_expenses (cat_id,ex_date,emp_id,ex_amount) VALUES ('".$ca."','".$dt."','".$cn."','".$am."')");
 			return true;
 		}
 	}
 	public function updateExp($cn,$dt,$ca,$am,$id)
 	{
 		require 'config.php';
-		$sql = mysqli_query($db,"UPDATE tbl_expenses SET cat_id='$ca',ex_date='$dt',ex_custName='$cn',ex_amount='$am' WHERE ex_id='$id'");
+		$sql = mysqli_query($db,"UPDATE tbl_expenses SET cat_id='$ca',ex_date='$dt',emp_id='$cn',ex_amount='$am' WHERE ex_id='$id'");
 		if (!$sql) {
 			return false;
 		}else{

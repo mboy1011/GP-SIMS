@@ -174,7 +174,7 @@ $oop = new CRUD();
           <?php
         }
     }else if (isset($_POST['addEXP'])) {
-        $cn = mysqli_real_escape_string($db,$_POST['custname']);
+        $cn = mysqli_real_escape_string($db,$_POST['empname']);
         $dt = mysqli_real_escape_string($db,$_POST['date']);
         $ca = mysqli_real_escape_string($db,$_POST['category']);
         $am = mysqli_real_escape_string($db,$_POST['amount']);
@@ -195,7 +195,7 @@ $oop = new CRUD();
           <?php
         }
     }else if (isset($_POST['updateExp'])) {
-        $cn = mysqli_real_escape_string($db,$_POST['upcustname']);
+        $cn = mysqli_real_escape_string($db,$_POST['upempname']);
         $dt = mysqli_real_escape_string($db,$_POST['update']);
         $ca = mysqli_real_escape_string($db,$_POST['upcategory']);
         $am = mysqli_real_escape_string($db,$_POST['upamount']);
@@ -253,8 +253,16 @@ $oop = new CRUD();
                 <form method="POST" action="">
                 <div class="modal-body">
                   <div class="input-group">
-                    <span class="input-group-addon">Customer Name: </span>
-                    <input type="text" name="custname" class="form-control" required="">
+                    <span class="input-group-addon">Employee Name: </span>
+                    <select name="empname" class="form-control">
+                      <option value="">-- Select Employee --</option>}
+                       <?php
+                        $emp = mysqli_query($db,"SELECT * FROM tbl_employee WHERE emp_id!=0");
+                        while ($rows = mysqli_fetch_assoc($emp)) {
+                          echo "<option value=".$rows['emp_id'].">".$rows['lname']." ".$rows['fname']." ".$rows['mname']."</option>";      
+                        }
+                       ?>
+                    </select>
                   </div>
                   <div class="input-group date form_date">
                     <span class="input-group-addon" ><b class="fa fa-calendar"></b></span>
@@ -305,7 +313,7 @@ $oop = new CRUD();
                         </tr>
                     </thead>
                     <?php
-                      $result = mysqli_query($db, "SELECT tbl_expenses.timestamp,tbl_expenses.ex_id,tbl_expenses.cat_id,tbl_expenses.ex_custName,tbl_expenses.ex_amount,tbl_category.cat_name,DATE_FORMAT(tbl_expenses.ex_date,'%m-%d-%Y') as ex_date FROM tbl_expenses INNER JOIN tbl_category ON tbl_category.cat_id=tbl_expenses.cat_id ORDER BY tbl_expenses.ex_id ASC") or die(mysql_error());
+                      $result = mysqli_query($db, "SELECT tbl_expenses.timestamp,tbl_expenses.ex_id,tbl_expenses.cat_id,tbl_employee.fname,tbl_employee.lname,tbl_expenses.emp_id,tbl_employee.mname,tbl_expenses.ex_amount,tbl_category.cat_name,DATE_FORMAT(tbl_expenses.ex_date,'%m-%d-%Y') as ex_date, DATE_FORMAT(tbl_expenses.ex_date,'%Y-%m-%d') as exdates   FROM tbl_expenses INNER JOIN tbl_category ON tbl_category.cat_id=tbl_expenses.cat_id LEFT JOIN tbl_employee ON tbl_expenses.emp_id=tbl_employee.emp_id ORDER BY tbl_expenses.ex_id ASC") or die(mysqli_error());
                       $i=1;
                     ?>
                     <tbody>
@@ -313,12 +321,12 @@ $oop = new CRUD();
                           <tr>
                             <td><?php echo $i++;?></td>
                             <td><?php echo $row['cat_name']?></td>
-                            <td><?php echo $row['ex_custName']; ?></td>
+                            <td><?php echo $row['fname']." ".$row['mname']." ".$row['lname']; ?></td>
                             <td><?php echo $row['ex_date']; ?></td>
                             <td><?php echo number_format($row['ex_amount'],2); ?></td>
                             <td><?php echo $row['timestamp']; ?></td>
                             <td>
-                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit" data-cus="<?php echo $row['ex_custName'];?>" data-cat="<?php echo $row['cat_id'];?>" data-am="<?php echo $row['ex_amount'];?>" data-date="<?php echo $row['ex_date']?>" data-id="<?php echo $row['ex_id']; ?>" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
+                               <b data-placement="top"  title="Edit"><button class="btn-edits btn btn-warning btn-xs"  data-title="Edit" data-cus="<?php echo $row['emp_id'];?>" data-cat="<?php echo $row['cat_id'];?>" data-am="<?php echo $row['ex_amount'];?>" data-date="<?php echo $row['exdates']?>" data-id="<?php echo $row['ex_id']; ?>" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></b> 
                             </td>      
                             <td>
                               <?php 
@@ -362,8 +370,16 @@ $oop = new CRUD();
       <div class="modal-body">
           <input type="hidden" name="upid" id="exid">
           <div class="input-group">
-            <span class="input-group-addon">Customer Name: </span>
-            <input type="text" id="cust" name="upcustname" class="form-control" required="">
+            <span class="input-group-addon">Employee Name: </span>
+            <select name="upempname" id="cust" class="form-control">
+              <option value="">-- Select Employee --</option>}
+               <?php
+                $emp = mysqli_query($db,"SELECT * FROM tbl_employee WHERE emp_id!=0");
+                while ($rows = mysqli_fetch_assoc($emp)) {
+                  echo "<option value=".$rows['emp_id'].">".$rows['lname']." ".$rows['fname']." ".$rows['mname']."</option>";      
+                }
+               ?>
+            </select>
           </div>
           <div class="input-group date form_date">
             <span class="input-group-addon" ><b class="fa fa-calendar"></b></span>
