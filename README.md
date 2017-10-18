@@ -1,9 +1,11 @@
 # GP-SIMS
-<b>Sales and Inventory Management System</b>
+<h1>Sales and Inventory Management System</h1>
+<p>The SIMS is designed only for our client. If you want a suggestion or make any improvements just Fork.</p>
 
 Requirements:
-  * [PHP 5.6 - Later](http://php.net/downloads.php)
-  * [MySQL 5 - Later](https://www.mysql.com/downloads/)
+  * [PHP 7 - Later](http://php.net/downloads.php)
+  * [MySQL 5.5 - Later](https://www.mysql.com/downloads/)
   * Web Server ([Apache](https://httpd.apache.org/))
-  * Web Browsers
+  * Web Browsers ([Google Chrome](https://google.com/chrome/))
+<b>Capstone Project 2017</b>
 
