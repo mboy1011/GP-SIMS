@@ -181,10 +181,11 @@ $oop = new CRUD();
             $tsales = mysqli_real_escape_string($db,$_POST['tsales']);
             $term = mysqli_real_escape_string($db,$_POST['terms']);
             $td = mysqli_real_escape_string($db,$_POST['total_discount']);
+            $dr = mysqli_real_escape_string($db,$_POST['si_dr']);
             $date = date_create($today);
             date_add($date,date_interval_create_from_date_string($term));
             $due = date_format($date,"Y-m-d");
-            $insert = $oop->insertSI($sales_no,$cust_id,$prod,$qty,$tad,$dis1,$dis2,$today,$prepare,$check,$vat,$net,$tsales,$term,$date,$due,$td);
+            $insert = $oop->insertSI($sales_no,$cust_id,$prod,$qty,$tad,$dis1,$dis2,$today,$prepare,$check,$vat,$net,$tsales,$term,$date,$due,$td,$dr);
             if(!$insert) {
                 ?>
                      <div class="alert alert-warning alert-dismissable">
@@ -259,9 +260,10 @@ $oop = new CRUD();
             <div class="col-sm-4">
                 <div class="input-group">
             <?php
-            $max = mysqli_query($db,"SELECT MAX(sales_no) as max_id FROM tbl_sales");     
+            $max = mysqli_query($db,"SELECT MAX(sales_no) as max_id,MAX(dr_no) as max_dr FROM tbl_sales");     
             $rowss = mysqli_fetch_assoc($max); 
             $max_id=$rowss['max_id']+1;      
+            $max_id1=$rowss['max_dr']+1;      
             ?>
                     <span class="input-group-addon">Sales Invoice No.</span>
                     <input type="number" step="any"  name="sales_no" min="<?php echo $max_id; ?>" value="<?php echo sprintf("%04d",$max_id);?>" id="salesno" class="form-control" required="" readonly>
@@ -294,6 +296,10 @@ $oop = new CRUD();
                 <div class="input-group">
                     <span class="input-group-addon">OSCA/PWD ID No.</span>
                     <input type="text" step="any" name="oidno" value="" id="si_osca" class="form-control">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">DR No.</span>
+                    <input type="text" step="any" value="<?php echo sprintf("%04d",$max_id1);?>" name="si_dr" id="si_dr" class="form-control">
                 </div>
             </div>                
         </div>

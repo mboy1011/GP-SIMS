@@ -244,7 +244,8 @@ $oop = new CRUD();
         $dis2 = mysqli_real_escape_string($db,$_POST['edit_dis2']);
         $tdis = mysqli_real_escape_string($db,$_POST['edit_tdis']);
         $due = mysqli_real_escape_string($db,$_POST['edit_due']);
-        $up = $oop->upSI($si,$cus,$date,$less,$gross,$net,$vat,$dis1,$dis2,$tdis,$due);
+        $dr = mysqli_real_escape_string($db,$_POST['edit_dr']);
+        $up = $oop->upSI($si,$cus,$date,$less,$gross,$net,$vat,$dis1,$dis2,$tdis,$due,$dr);
         if (!$up) {
           ?>
             <div class="alert alert-warning alert-dismissable">
@@ -269,6 +270,7 @@ $oop = new CRUD();
                         <tr>
                             <th>ID</th>
                             <th>Sales No.</th>
+                            <th>DR No.</th>
                             <th>Customer Name</th>
                             <th>Date</th>
                             <th>Less: VAT (%)</th>
@@ -287,7 +289,7 @@ $oop = new CRUD();
                         </tr>
                     </thead>
                     <?php
-                     $result = mysqli_query($db,"SELECT tbl_sales.total_discount,tbl_customers.full_name,tbl_sales.sales_id,LPAD(tbl_sales.sales_no,4,0) as sales_no,DATE_FORMAT(tbl_sales.dates,'%m/%d/%Y') as dates,DATE_FORMAT(tbl_sales.dates,'%Y/%m/%d') as dates1,tbl_sales.VAT,tbl_sales.total_amount,tbl_sales.total_sales,tbl_sales.due_date,tbl_sales.amount_net,tbl_sales.status,tbl_customers.cus_id,tbl_sales.discount1,tbl_sales.discount2 FROM tbl_customers INNER JOIN tbl_sales ON tbl_sales.cus_id=tbl_customers.cus_id ORDER BY sales_no") or die(mysqli_error());
+                     $result = mysqli_query($db,"SELECT tbl_sales.total_discount,LPAD(tbl_sales.dr_no,4,0) as dr_no,tbl_customers.full_name,tbl_sales.sales_id,LPAD(tbl_sales.sales_no,4,0) as sales_no,DATE_FORMAT(tbl_sales.dates,'%m/%d/%Y') as dates,DATE_FORMAT(tbl_sales.dates,'%Y/%m/%d') as dates1,tbl_sales.VAT,tbl_sales.total_amount,tbl_sales.total_sales,tbl_sales.due_date,tbl_sales.amount_net,tbl_sales.status,tbl_customers.cus_id,tbl_sales.discount1,tbl_sales.discount2 FROM tbl_customers INNER JOIN tbl_sales ON tbl_sales.cus_id=tbl_customers.cus_id ORDER BY sales_no") or die(mysqli_error());
                       // $result = mysqli_query($db, "SELECT * FROM tbl_sales") or die(mysql_error());
 
                     ?>
@@ -298,6 +300,7 @@ $oop = new CRUD();
                           <tr>
                             <td><?php echo $o++; ?></td>
                             <td><?php echo $row['sales_no']; ?></td>
+                            <td><?php echo $row['dr_no']; ?></td>
                             <td><?php echo $row['full_name']; ?></td>            
                             <td><?php echo $row['dates']; ?></td> 
                             <td><?php echo $row['VAT']; ?></td> 
@@ -349,7 +352,7 @@ $oop = new CRUD();
                              ?>
                              </td>
                              <td>
-                              <button class="btn btn-warning btn-sm btn-edits" name="" data-toggle="modal" data-target="#edit" data-si="<?php echo $row['sales_no']; ?>" data-cus="<?php echo $row['cus_id']; ?>" data-date="<?php echo $row['dates1']?>" data-less="<?php echo $row['VAT']; ?>" data-gross="<?php echo $row['total_amount']; ?>" data-net="<?php echo $row['total_sales']; ?>" data-vat="<?php echo $row['amount_net']; ?>" data-dis1="<?php echo $row['discount1']; ?>" data-dis2="<?php echo $row['discount2']; ?>" data-tdis="<?php echo $row['total_discount']; ?>" data-due="<?php echo $row['due_date']; ?>"><b class="fa fa-pencil fa-bg">&nbsp;
+                              <button class="btn btn-warning btn-sm btn-edits" name="" data-toggle="modal" data-target="#edit" data-si="<?php echo $row['sales_no']; ?>" data-cus="<?php echo $row['cus_id']; ?>" data-date="<?php echo $row['dates1']?>" data-less="<?php echo $row['VAT']; ?>" data-gross="<?php echo $row['total_amount']; ?>" data-net="<?php echo $row['total_sales']; ?>" data-vat="<?php echo $row['amount_net']; ?>" data-dis1="<?php echo $row['discount1']; ?>" data-dis2="<?php echo $row['discount2']; ?>" data-dr="<?php echo $row['dr_no']; ?>" data-tdis="<?php echo $row['total_discount']; ?>" data-due="<?php echo $row['due_date']; ?>"><b class="fa fa-pencil fa-bg">&nbsp;
                              </b></button>
                              </td>
                              <td>
@@ -467,6 +470,10 @@ if ($user_type=='admin') {
         <div class="input-group">
           <span class="input-group-addon">Sales Invoice No:</span>  
           <input type="number" step="any" name="edit_si" id="edit_si" class="form-control" readonly="">
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon">Delivery Receipt No:</span>  
+          <input type="number" step="any" name="edit_dr" id="edit_dr" class="form-control">
         </div>
         <div class="input-group">
           <span class="input-group-addon">Customers:</span>  
@@ -697,6 +704,7 @@ $(document).ready(function(){
       var dis2 = $(this).data('dis2');
       var tdis = $(this).data('tdis');
       var due = $(this).data('due');
+      var dr = $(this).data('dr');
       $("#edit_si").val(si);
       $("#edit_cus").val(cus);
       $("#edit_date").val(date);
@@ -708,6 +716,7 @@ $(document).ready(function(){
       $("#edit_dis2").val(dis2);
       $("#edit_tdis").val(tdis);
       $("#edit_due").val(due);
+      $("#edit_dr").val(dr);
     });
     function check() {
         var val = $("#notify").text();

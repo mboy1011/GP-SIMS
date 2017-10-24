@@ -379,14 +379,14 @@ class CRUD
 			}
 		}	
 	}
-	public function insertSI($sales_no,$cust_id,$prod,$qty,$tad,$dis1,$dis2,$today,$prepare,$check,$vat,$net,$tsales,$term,$date,$due,$td)
+	public function insertSI($sales_no,$cust_id,$prod,$qty,$tad,$dis1,$dis2,$today,$prepare,$check,$vat,$net,$tsales,$term,$date,$due,$td,$dr)
 	{
 		require 'config.php';
 		$sql = mysqli_query($db,"SELECT * FROM tbl_sales WHERE sales_no='$sales_no' AND cus_id='$cust_id'");
         if ($sql->num_rows>0) {
      		return false;       
         }else{
-            $sql1 = mysqli_query($db,"INSERT INTO tbl_sales (sales_no,cus_id,dates,prepared_by,checked_by,VAT,total_amount,total_sales,amount_net,due_date,discount1,discount2,total_discount) VALUES ('".$sales_no."','".$cust_id."','".$today."','".$prepare."','".$check."','".$vat."','".$tad."','".$net."','".$tsales."','".$due."','".$dis1."','".$dis2."','".$td."')");
+            $sql1 = mysqli_query($db,"INSERT INTO tbl_sales (sales_no,cus_id,dates,prepared_by,checked_by,VAT,total_amount,total_sales,amount_net,due_date,discount1,discount2,total_discount,dr_no) VALUES ('".$sales_no."','".$cust_id."','".$today."','".$prepare."','".$check."','".$vat."','".$tad."','".$net."','".$tsales."','".$due."','".$dis1."','".$dis2."','".$td."','".$dr."')");
             if (!$sql1) {
             	return false;
             }else{
@@ -414,10 +414,10 @@ class CRUD
 			return true;
 		}
 	}
-	public function upSI($si,$cus,$date,$less,$gross,$net,$vat,$dis1,$dis2,$tdis,$due)
+	public function upSI($si,$cus,$date,$less,$gross,$net,$vat,$dis1,$dis2,$tdis,$due,$dr)
 	{
 		require 'config.php';
-		$sql = mysqli_query($db,"UPDATE tbl_sales SET sales_no='$si',cus_id='$cus',dates='$date',VAT='$less',total_amount='$gross',total_sales='$net',amount_net='$vat',discount1='$dis1',discount2='$dis2',total_discount='$tdis',due_date='$due' WHERE sales_no='$si'");
+		$sql = mysqli_query($db,"UPDATE tbl_sales SET sales_no='$si',cus_id='$cus',dates='$date',VAT='$less',total_amount='$gross',total_sales='$net',amount_net='$vat',discount1='$dis1',discount2='$dis2',total_discount='$tdis',due_date='$due',dr_no='$dr' WHERE sales_no='$si'");
 		if (!$sql) {
 			return false;
 		}else{

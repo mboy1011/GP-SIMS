@@ -2,10 +2,10 @@
 -- version 4.4.15.9
 -- https://www.phpmyadmin.net
 --
--- Host: 127.0.0.1
--- Generation Time: Oct 17, 2017 at 08:20 AM
--- Server version: 5.6.36
--- PHP Version: 7.1.2
+-- Host: localhost
+-- Generation Time: Oct 24, 2017 at 09:56 PM
+-- Server version: 5.6.35
+-- PHP Version: 7.0.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -158,9 +158,9 @@ CREATE TABLE IF NOT EXISTS `tbl_expenses` (
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `tbl_expensesLast`
+-- Stand-in structure for view `tbl_expenseslast`
 --
-CREATE TABLE IF NOT EXISTS `tbl_expensesLast` (
+CREATE TABLE IF NOT EXISTS `tbl_expenseslast` (
 `ex_id` int(11)
 ,`cat_id` int(11)
 ,`ex_date` date
@@ -172,9 +172,9 @@ CREATE TABLE IF NOT EXISTS `tbl_expensesLast` (
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `tbl_expensesToday`
+-- Stand-in structure for view `tbl_expensestoday`
 --
-CREATE TABLE IF NOT EXISTS `tbl_expensesToday` (
+CREATE TABLE IF NOT EXISTS `tbl_expensestoday` (
 `ex_id` int(11)
 ,`cat_id` int(11)
 ,`ex_date` date
@@ -347,6 +347,7 @@ CREATE TABLE IF NOT EXISTS `tbl_sales` (
   `sales_id` int(11) NOT NULL,
   `sales_no` int(11) NOT NULL,
   `cus_id` int(11) DEFAULT NULL,
+  `dr_no` int(11) NOT NULL,
   `dates` date DEFAULT NULL,
   `prepared_by` varchar(45) DEFAULT NULL,
   `checked_by` varchar(45) DEFAULT NULL,
@@ -381,9 +382,9 @@ CREATE TABLE IF NOT EXISTS `tbl_salesdetails` (
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `tbl_SOA`
+-- Stand-in structure for view `tbl_soa`
 --
-CREATE TABLE IF NOT EXISTS `tbl_SOA` (
+CREATE TABLE IF NOT EXISTS `tbl_soa` (
 `sales_no` int(11)
 ,`cus_id` int(11)
 ,`dates` varchar(10)
@@ -456,30 +457,23 @@ CREATE TABLE IF NOT EXISTS `tbl_year` (
   `year` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `tbl_year`
---
+-- --------------------------------------------------------
 
-INSERT INTO `tbl_year` (`year`) VALUES
-(2017);
+--
+-- Structure for view `tbl_expenseslast`
+--
+DROP TABLE IF EXISTS `tbl_expenseslast`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tbl_expenseslast` AS select `tbl_expenses`.`ex_id` AS `ex_id`,`tbl_expenses`.`cat_id` AS `cat_id`,`tbl_expenses`.`ex_date` AS `ex_date`,`tbl_expenses`.`emp_id` AS `emp_id`,`tbl_expenses`.`ex_amount` AS `ex_amount`,`tbl_expenses`.`timestamp` AS `timestamp` from `tbl_expenses` where (`tbl_expenses`.`ex_date` <= curdate());
 
 -- --------------------------------------------------------
 
 --
--- Structure for view `tbl_expensesLast`
+-- Structure for view `tbl_expensestoday`
 --
-DROP TABLE IF EXISTS `tbl_expensesLast`;
+DROP TABLE IF EXISTS `tbl_expensestoday`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tbl_expensesLast` AS select `tbl_expenses`.`ex_id` AS `ex_id`,`tbl_expenses`.`cat_id` AS `cat_id`,`tbl_expenses`.`ex_date` AS `ex_date`,`tbl_expenses`.`emp_id` AS `emp_id`,`tbl_expenses`.`ex_amount` AS `ex_amount`,`tbl_expenses`.`timestamp` AS `timestamp` from `tbl_expenses` where (`tbl_expenses`.`ex_date` <= curdate());
-
--- --------------------------------------------------------
-
---
--- Structure for view `tbl_expensesToday`
---
-DROP TABLE IF EXISTS `tbl_expensesToday`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tbl_expensesToday` AS select `tbl_expenses`.`ex_id` AS `ex_id`,`tbl_expenses`.`cat_id` AS `cat_id`,`tbl_expenses`.`ex_date` AS `ex_date`,`tbl_expenses`.`emp_id` AS `emp_id`,`tbl_expenses`.`ex_amount` AS `ex_amount`,`tbl_expenses`.`timestamp` AS `timestamp` from `tbl_expenses` where (`tbl_expenses`.`ex_date` = curdate());
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tbl_expensestoday` AS select `tbl_expenses`.`ex_id` AS `ex_id`,`tbl_expenses`.`cat_id` AS `cat_id`,`tbl_expenses`.`ex_date` AS `ex_date`,`tbl_expenses`.`emp_id` AS `emp_id`,`tbl_expenses`.`ex_amount` AS `ex_amount`,`tbl_expenses`.`timestamp` AS `timestamp` from `tbl_expenses` where (`tbl_expenses`.`ex_date` = curdate());
 
 -- --------------------------------------------------------
 
@@ -506,7 +500,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 --
 DROP TABLE IF EXISTS `tbl_monthly_income`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tbl_monthly_income` AS select sum(`tbl_CR`.`cr_totalSales`) AS `Total`,monthname(`tbl_CR`.`cr_date`) AS `Month`,year(`tbl_CR`.`cr_date`) AS `Year` from `tbl_CR` group by month(`tbl_CR`.`cr_date`);
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tbl_monthly_income` AS select sum(`tbl_cr`.`cr_totalSales`) AS `Total`,monthname(`tbl_cr`.`cr_date`) AS `Month`,year(`tbl_cr`.`cr_date`) AS `Year` from `tbl_cr` group by month(`tbl_cr`.`cr_date`);
 
 -- --------------------------------------------------------
 
@@ -547,11 +541,11 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
--- Structure for view `tbl_SOA`
+-- Structure for view `tbl_soa`
 --
-DROP TABLE IF EXISTS `tbl_SOA`;
+DROP TABLE IF EXISTS `tbl_soa`;
 
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tbl_SOA` AS select `tbl_sales`.`sales_no` AS `sales_no`,`tbl_sales`.`cus_id` AS `cus_id`,date_format(`tbl_sales`.`dates`,'%m-%d-%Y') AS `dates`,`tbl_sales`.`due_date` AS `due_date`,`tbl_customers`.`terms` AS `terms`,`tbl_sales`.`total_amount` AS `total`,(select ifnull(sum(`tbl_CM`.`cm_totalAmount`),0) from `tbl_CM` where (`tbl_CM`.`sales_no` = `tbl_sales`.`sales_no`)) AS `DEBIT`,(select ifnull(sum(`tbl_CRdetails`.`amount`),0) from `tbl_CRdetails` where (`tbl_CRdetails`.`sales_no` = `tbl_sales`.`sales_no`)) AS `CREDIT`,`tbl_sales`.`status` AS `status`,cast(((`tbl_sales`.`total_amount` - (select ifnull(sum(`tbl_CM`.`cm_totalAmount`),0) from `tbl_CM` where (`tbl_CM`.`sales_no` = `tbl_sales`.`sales_no`))) - (select ifnull(sum(`tbl_CRdetails`.`amount`),0) from `tbl_CRdetails` where (`tbl_CRdetails`.`sales_no` = `tbl_sales`.`sales_no`))) as decimal(11,2)) AS `BALANCE` from (`tbl_sales` join `tbl_customers` on((`tbl_customers`.`cus_id` = `tbl_sales`.`cus_id`)));
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tbl_soa` AS select `tbl_sales`.`sales_no` AS `sales_no`,`tbl_sales`.`cus_id` AS `cus_id`,date_format(`tbl_sales`.`dates`,'%m-%d-%Y') AS `dates`,`tbl_sales`.`due_date` AS `due_date`,`tbl_customers`.`terms` AS `terms`,`tbl_sales`.`total_amount` AS `total`,(select ifnull(sum(`tbl_cm`.`cm_totalAmount`),0) from `tbl_cm` where (`tbl_cm`.`sales_no` = `tbl_sales`.`sales_no`)) AS `DEBIT`,(select ifnull(sum(`tbl_crdetails`.`amount`),0) from `tbl_crdetails` where (`tbl_crdetails`.`sales_no` = `tbl_sales`.`sales_no`)) AS `CREDIT`,`tbl_sales`.`status` AS `status`,cast(((`tbl_sales`.`total_amount` - (select ifnull(sum(`tbl_cm`.`cm_totalAmount`),0) from `tbl_cm` where (`tbl_cm`.`sales_no` = `tbl_sales`.`sales_no`))) - (select ifnull(sum(`tbl_crdetails`.`amount`),0) from `tbl_crdetails` where (`tbl_crdetails`.`sales_no` = `tbl_sales`.`sales_no`))) as decimal(11,2)) AS `BALANCE` from (`tbl_sales` join `tbl_customers` on((`tbl_customers`.`cus_id` = `tbl_sales`.`cus_id`)));
 
 -- --------------------------------------------------------
 
