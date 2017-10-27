@@ -227,11 +227,12 @@ $oop = new CRUD();
                     </thead>
                     <?php
                       $result = mysqli_query($db, "SELECT * FROM tbl_products") or die(mysql_error());
+                      $i=1;
                     ?>
                     <tbody>
                       <?php while($row = mysqli_fetch_array($result,MYSQLI_ASSOC)){?>
                           <tr>
-                            <td><?php echo $row['prod_id']; ?></td>
+                            <td><?php echo $i++; ?></td>
                             <td><?php echo $row['name']; ?></td>
                             <td><?php echo $row['description']; ?></td>            
                             <td><?php echo $row['lot_no']; ?></td>  

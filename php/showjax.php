@@ -116,7 +116,7 @@ tbl_salesdetails.prod_id=tbl_products.prod_id AND tbl_salesdetails.sales_no='$si
 			<button class="btn btn-warning btn-xs" id="btn-update" name="btn-update" data-ups=<?php echo $row['cmd_id'];?> data-si="<?php echo sprintf('%04d',$row['sales_no']);?>"><b class="fa fa-pencil"></b></button>
 		</td>
 		<td>
-			<button class="btn btn btn-danger btn-xs" id="btn-delete" name="btn-delete" data-dids=<?php echo $row['cmd_id'];?>><b class="fa fa-times">&nbsp;</b></button></b>   
+			<button class="btn btn btn-danger btn-xs" id="btn-delete" name="btn-delete" data-dids=<?php echo $row['cmd_id'];?>><b class="fa fa-times">&nbsp;</b></button>  
 		</td>
 	</tr>
 <?php			
@@ -142,6 +142,21 @@ tbl_salesdetails.prod_id=tbl_products.prod_id AND tbl_salesdetails.sales_no='$si
 		</td>
 	</tr>
 <?php
+		}
+	}else if ($_POST['si_d']) {
+		$si = mysqli_real_escape_string($db,$_POST['si_d']);
+		$sql = mysqli_query($db,"SELECT tbl_products.name,tbl_products.description,tbl_products.packing,tbl_products.lot_no,tbl_salesdetails.quantity,tbl_salesdetails.price,tbl_salesdetails.amount FROM tbl_salesdetails INNER JOIN tbl_products ON tbl_salesdetails.prod_id=tbl_products.prod_id WHERE tbl_salesdetails.sales_no='$si'");
+		$i=1;
+		while ($row = mysqli_fetch_array($sql)) {
+?>
+	<tr>
+		<td><?php echo $i++;?></td>
+		<td><?php echo $row['name'].' '.$row['description'].' '.$row['packing'].' ('.$row['lot_no'].')';?></td>
+		<td><?php echo $row['quantity'];?></td>
+		<td><?php echo number_format($row['price'],2);?></td>
+		<td><?php echo number_format($row['amount'],2);?></td>
+	</tr>
+<?php			
 		}
 	}
 ?>	

@@ -282,6 +282,7 @@ $oop = new CRUD();
                             <th>Total Discount</th>
                             <th>Due Date</th>
                             <th>Status</th>
+                            <th>Info</th>
                             <th>Print Action(s)</th> 
                             <th>Edit</th> 
                             <th>Delete</th>
@@ -307,9 +308,9 @@ $oop = new CRUD();
                             <td><?php echo number_format($row['total_amount'],2); ?></td> 
                             <td><?php echo number_format($row['total_sales'],2); ?></td> 
                             <td><?php echo number_format($row['amount_net'],2); ?></td>  
-                            <td><?php echo $row['discount1']?></td>
-                            <td><?php echo $row['discount2']?></td>
-                            <td><?php echo $row['total_discount']?></td>
+                            <td><?php echo $row['discount1'];?></td>
+                            <td><?php echo $row['discount2'];?></td>
+                            <td><?php echo number_format($row['total_discount'],2);?></td>
                             <td><?php echo $row['due_date'];?></td>
                             <td>
                             <?php
@@ -332,6 +333,9 @@ $oop = new CRUD();
                               }
                              ?>
                              </td>  
+                             <td>
+                               <button type="button" class="b-infos btn btn-link btn-sm" data-insi="<?php echo $row['sales_no'];?>"><i class="fa fa-info"></i></button>
+                             </td>
                              <td>
                              <?php
                               if ($row['status']!='CANCELLED') {
@@ -533,6 +537,38 @@ if ($user_type=='admin') {
 
   </div>
 </div>
+<!-- Info -->
+<div id="info" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Sales Invoice Details</h4>
+      </div>
+      <div class="modal-body">
+          <div class="panel-body" style="height:200px; overflow-y: auto;">
+                <div class="table-responsive">      
+                  <table class="table table-hover table-fixed table-striped">
+                    <thead class="thead-inverse">
+                      <tr>
+                        <th>ID</th>
+                        <th>Particular</th>
+                        <th>QTY</th>
+                        <th>Price</th>
+                        <th>Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody id="si_details">
+                    </tbody>
+                  </table>       
+                </div>
+          </div><!-- panel body-->
+      </div>
+    </div>
+    <!--  -->
+  </div>  
+</div> 
         </div>
             <!-- /.row -->
         <!-- /.container-fluid -->
@@ -583,25 +619,25 @@ $(document).ready(function(){
   
             // Total over this page
             pageTotal = api
-                .column( 5, { page: 'current'} )
-                .data()
-                .reduce( function (a, b) {
-                    return intVal(a) + intVal(b);
-                }, 0 );
-            pageTotal1 = api
                 .column( 6, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 );
-            pageTotal2 = api
+            pageTotal1 = api
                 .column( 7, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 );
+            pageTotal2 = api
+                .column( 8, { page: 'current'} )
+                .data()
+                .reduce( function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0 );
             pageTotal3 = api
-                .column( 10, { page: 'current'} )
+                .column( 11, { page: 'current'} )
                 .data()
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
@@ -613,17 +649,17 @@ $(document).ready(function(){
             $(api.column(2).footer()).html(
                 'Date To: '+max
             );
-            $( api.column( 5 ).footer() ).html(
-                'Total: ₱'+pageTotal.toFixed(2)
-            );
             $( api.column( 6 ).footer() ).html(
-                'Total: ₱'+pageTotal1.toFixed(2)
+                'Total Gross: ₱'+pageTotal.toFixed(2)
             );
             $( api.column( 7 ).footer() ).html(
-                'Total: ₱'+pageTotal2.toFixed(2)
+                'Total Net Sales: ₱'+pageTotal1.toFixed(2)
             );
-            $( api.column( 10 ).footer() ).html(
-                'Total: ₱'+pageTotal3.toFixed(2)
+            $( api.column( 8 ).footer() ).html(
+                'Total VAT: ₱'+pageTotal2.toFixed(2)
+            );
+            $( api.column( 11 ).footer() ).html(
+                'Total Discount: ₱'+pageTotal3.toFixed(2)
             );
         },
         "pageLength": -1,
@@ -730,6 +766,13 @@ $(document).ready(function(){
     language: 'en-AU',
     todayHighlight: true,
     autoclose: true
+    });
+    $('.b-infos').click(function(event) {
+      var si = parseInt($(this).data('insi'));
+      $.post('showjax.php', {si_d: si}, function(data, textStatus, xhr) {
+         $("#si_details").html(data);
+         $("#info").modal();
+      });
     });
 });
 </script>

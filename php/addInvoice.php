@@ -595,29 +595,40 @@ $(document).ready(function() {
 
     $("#addprod").click(function(event) {
        var prod_len = $("#add_product_list").children('tbody').children('tr').length;
+       var val = $("#sel_cust").val();
        if(prod_len <= 19){       
-           var product = $("#cprod").val();
-           var quantity = $("#qty").val();
-           var salesno = $("#salesno").val();
-           var custid = $("#custid").val();
-           var qty = $("#qty").val();
-           var boxes = parseInt($("#boxes").val());
-           if (qty>boxes||qty<0) {
+            if(val!=0){
+               var product = $("#cprod").val();
+               var quantity = $("#qty").val();
+               var salesno = $("#salesno").val();
+               var custid = $("#custid").val();
+               var qty = $("#qty").val();
+               var boxes = parseInt($("#boxes").val());
+               if(product!=0){
+                   if (qty>boxes||qty<0) {
+                        $("#warning").modal();
+                        $("#text").text("There's not enough quantity.");
+                   }else if(qty==0||qty==null){
+                        $("#warning").modal();
+                        $("#text").text("Quantity is invalid.");
+                   }else{
+                        if(item>4) {
+                            $("#warning").modal();
+                            $("#text").text("Number of Item exceeds on Sales Invoice.");
+                        }else{
+                            $.post('addjax.php', {product: product, quantity: quantity, custid: custid, salesno: salesno},function (data,textStatus,xhr) {
+                               calc();
+                               viewData();
+                            });  
+                        }   
+                   }
+               }else{
                 $("#warning").modal();
-                $("#text").text("There's not enough quantity.");
-           }else if(qty==0||qty==null){
-                $("#warning").modal();
-                $("#text").text("Quantity is invalid.");
+                $("#text").text("Select Product");    
+               }
            }else{
-                if(item>4) {
-                    $("#warning").modal();
-                    $("#text").text("Number of Item exceeds on Sales Invoice.");
-                }else{
-                    $.post('addjax.php', {product: product, quantity: quantity, custid: custid, salesno: salesno},function (data,textStatus,xhr) {
-                       calc();
-                       viewData();
-                    });  
-                }   
+            $("#warning").modal();
+            $("#text").text("Select Customer");
            }
        }else{
             $("#warning").modal();
